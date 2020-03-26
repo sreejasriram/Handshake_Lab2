@@ -5,6 +5,7 @@ var connect_sql = require('../Database/database_connect');
 var connect_queries = require('../Database/database_queries');
 const Student = require('../Models/StudentModel');
 const Company = require('../Models/CompanyModel');
+const query =require('../Database/queries');
 
 
 
@@ -29,12 +30,24 @@ connect_sql.query(connect_queries.student_signup,[stud_details.firstname,stud_de
 */
 
 
-exports.signup = (cmpny_details,callback)=>{
+// exports.company_signup = (cmpny_details,callback)=>{
+//     console.log(cmpny_details)
+//     try{
+//         connect_sql.query(connect_queries.company_signup,[cmpny_details.name,cmpny_details.email,cmpny_details.password,cmpny_details.loc], (err,rows) => {
+//             callback(err,rows)
+//         });
+//     }
+//     catch(e)
+//     {
+//        callback(e,null)
+//     }
+// };
+exports.company_signup = (cmpny_details,callback)=>{
     console.log(cmpny_details)
     try{
-        connect_sql.query(connect_queries.company_signup,[cmpny_details.name,cmpny_details.email,cmpny_details.password,cmpny_details.loc], (err,rows) => {
-            callback(err,rows)
-        });
+        query.saveDocuments(Company.createModel(),cmpny_details,{runValidators:false}, (err,rows) => {
+                    callback(err,rows)
+                });
     }
     catch(e)
     {
@@ -43,11 +56,10 @@ exports.signup = (cmpny_details,callback)=>{
 };
 
 
-exports.signin = (cmpny_details,callback)=>{
+exports.company_signin = (cmpny_details,callback)=>{
     console.log(cmpny_details)
-    
     try{
-        connect_sql.query(connect_queries.company_signin,[cmpny_details.username,cmpny_details.password], (err,rows) => {
+        query.findDocumentsByQuery(Company.createModel(),{email:cmpny_details.email,password:cmpny_details.password}, (err,rows) => {
             callback(err,rows)
         });
     }

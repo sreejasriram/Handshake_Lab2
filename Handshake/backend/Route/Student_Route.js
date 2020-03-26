@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 var app = express();
 var StudRepo = require('../Repository/Student_Repository');
-const Student = require('../Models/StudentModel');
-const Company = require('../Models/CompanyModel');
 
 
 router.post('/student_signup',(req,res)=>{
@@ -11,8 +9,7 @@ router.post('/student_signup',(req,res)=>{
     console.log(req.body);
     StudRepo.student_signup(req.body,(err,rows)=>{
         if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-           
+            console.log(`${err.code}:${err.sqlMessage}`)  
             res.json({"error":"failure"})
         }
         else
@@ -20,32 +17,126 @@ router.post('/student_signup',(req,res)=>{
     }) 
 })
 
-router.get('/student_signin',(req,res)=>{
+router.get('/student_signin/:email/:password',(req,res)=>{
     console.log("In student signin get request");
-    console.log(req.body);
-    StudRepo.signin(req.body,(err,rows)=>{
+    console.log(req.params.email);
+    console.log(req.params.password);
+
+    StudRepo.student_signin(req.params,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
            res.status(500).send(err.code+" : "+err.sqlMessage)
 
         }
         else if(rows)
-            {
-                
+            {     
             console.log(`student found`)
             console.log(rows)
-            res.cookie('student',req.body.username,{maxAge: 90000000, httpOnly: false, path : '/'});
-             res.json({"result": rows.id})
+            res.cookie('student',req.params.email,{maxAge: 90000000, httpOnly: false, path : '/'});
+             res.json({"result": rows._id})
         }
-
         else{
             res.json({"result": "Not found"})
 
-        }
-
-           
+        }        
     }) 
 })
+
+
+
+router.post('/student_basic_edited',(req,res)=>{
+    console.log("In student profile post request");
+    console.log(req.body);
+    StudRepo.student_basic_edited(req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)  
+            res.json({"error":"failure"})
+        }
+        else if(rows){
+        console.log(rows)
+        res.json({"result":rows})
+        }
+    })  
+})
+router.post('/student_skill_edited',(req,res)=>{
+    console.log("In student skills post request");
+    console.log(req.body);
+    StudRepo.student_skill_edited(req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)  
+            res.json({"error":"failure"})
+        }
+        else if(rows){
+        console.log(rows)
+        res.json({"result":rows})
+        }
+    })  
+})
+
+router.post('/student_journey_edited',(req,res)=>{
+    console.log("In student journey post request");
+    console.log(req.body);
+    StudRepo.student_journey_edited(req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)  
+            res.json({"error":"failure"})
+        }
+        else if(rows){
+        console.log(rows)
+        res.json({"result":rows})
+        }
+    })  
+})
+
+
+router.post('/student_contact_edited',(req,res)=>{
+    console.log("In student contact post request");
+    console.log(req.body);
+    StudRepo.student_contact_edited(req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)  
+            res.json({"error":"failure"})
+        }
+        else if(rows){
+        console.log(rows)
+        res.json({"result":rows})
+        }
+    })  
+})
+
+router.post('/student_profilepic_edited',(req,res)=>{
+    console.log("In student profile pic post request");
+    console.log(req.body);
+    StudRepo.student_profilepic_edited(req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)  
+            res.json({"error":"failure"})
+        }
+        else if(rows){
+        console.log(rows)
+        res.json({"result":rows})
+        }
+    })  
+})
+
+
+router.get('/student_profile_info/:id',(req,res)=>{
+    console.log("In student get profile request");
+    console.log(req.params);
+    StudRepo.student_profile_info(req.params,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)  
+            res.json({"error":"failure"})
+        }
+        else if(rows){
+            console.log("in route")
+        console.log(rows)
+        res.json({"rows":rows})
+        } 
+    })  
+})
+
+
 
 router.post('/get_student_basic',(req,res)=>{
     console.log("In student basic retrieve post request");

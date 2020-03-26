@@ -12,7 +12,7 @@ const findDocumentsByQuery = (modelObject, query, options,callback) => {
         }).lean();
     } catch (error) {
         console.log("Error while saving data:" + error)
-        callback(err,null)
+        callback(error,null)
     }
 }
 
@@ -31,16 +31,26 @@ const saveDocuments = (modelObject, data,options,callback) => {
  
     } catch (error) {
         console.log("Error while saving data:" + error)
-        callback(err,null)
+        callback(error,null)
     }
 }
 
-const updateField = async (modelObject, id, update) => {
+
+const updateField = (modelObject, id, update,callback) => {
     try {
-        return await modelObject.findOneAndUpdate({ id }, update, { useFindAndModify: false });
+        modelObject.findOneAndUpdate(id, update, { useFindAndModify: false,new:true },(err, data)=>{
+            if (data){
+                console.log("success")
+                console.log(data)
+                callback(err,data)
+            }
+            else if(err){
+                callback(err,data)
+            }
+        });
     } catch (error) {
-        logger.error("Error while updating data:" + error)
-        throw new Error(error);
+        console.log("Error while saving data:" + error)
+        callback(error,null)
     }
 }
 

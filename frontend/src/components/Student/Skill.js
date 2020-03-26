@@ -12,203 +12,126 @@ import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import {environment} from '../../Utils/constants';
 
 
-const useStyles = makeStyles({
-    root: {
-        minWidth: 275,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-});
-
-
 class Skill extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            skill: "",
-            dataRetrieved: false,
-            redirect: false,
-            profileData: [],
-            rerender: false,
+            skills: "",
+           
+            redirect: true,
+            rerender: false
         }
         this.editProfile = this.editProfile.bind(this);
         this.saveProfile = this.saveProfile.bind(this);
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
         this.cancel = this.cancel.bind(this);
-
     }
-
-
     inputChangeHandler = (e) => {
+        const value = e.target.value
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: value
         })
     }
     editProfile = (e) => {
-        var headers = new Headers();
         e.preventDefault();
         this.setState({
             redirect: true
         })
     }
     cancel = (e) => {
-        var headers = new Headers();
-        //prevent page from refresh
         e.preventDefault();
-     //   window.history.back();
-     this.setState({
-      redirect:false
-      })
+        this.setState({
+            redirect: false
+        })
     }
+    componentWillReceiveProps(nextProps) {
+            if (this.props.skills!==nextProps.skills)
+            this.setState({ skills:nextProps.skills});
+          
+            
+
+            if (this.state.skills) {
+                this.setState({redirect:false})}
+
+
+
+        }
     saveProfile = (e) => {
-        var headers = new Headers();
         e.preventDefault();
         let stud_id = sessionStorage.getItem('id');
         this.setState({
-            redirect: false,
+             redirect: false,
             rerender: false
         })
         const edit_data = {
             id: stud_id,
-            skill: this.state.skill,
-            type: "skill"
+            skills: this.state.skills
         }
-        const data = {
-            id: stud_id,
-            type: "skill"
-        }
-        axios.post(environment.baseUrl+'/student/student_profile', edit_data)
+        console.log(edit_data)
+        axios.post(environment.baseUrl+'/student/student_skill_edited', edit_data)
             .then(response => {
                 console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows.length) {
-                    if (edit_data.type == "basic") {
-                        this.setState({
-                            rerender: true
-                        });
-                    }
+                console.log(response.data.result)
+                if (response.data.result) {
+                    this.setState({
+                        
+                        rerender: false,
+                        skills: response.data.result.skills
+
+                    });
                 } else if (response.data.error) {
                     console.log("response" + response.data.error)
                 }
             }
             )
-
-           .then(response => {
-                axios.post(environment.baseUrl+'/student/get_student_skill', data)
-                    .then(response => {
-                        console.log("in frontend after response");
-                        console.log(response.data.rows.length)
-                        if (response.data.rows) {
-                            this.setState({
-                                dataRetrieved: true,
-                                profileData: response.data.rows,
-                                rerender: true
-
-                            });
-                        } else if (response.data.error) {
-                            console.log("response" + response.data.error)
-                        }
-                    })
-                })
-        }
-            
-
-    componentDidMount() {
-        let stud_id = sessionStorage.getItem('id');
-        console.log("inside did mount")
-        console.log(stud_id)
-        const data = {
-            id: stud_id,
-            type: "skill"
-        }
-        console.log(data)
-        axios.post(environment.baseUrl+'/student/get_student_skill', data)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows.length) {
-                    this.setState({
-                        dataRetrieved: true,
-                        profileData: response.data.rows,
-                        skill: response.data.rows[0].skill,
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            })
     }
 
 
     render() {
         let renderRedirect = null;
-        let profileData = this.state.profileData;
-        console.log(profileData)
-        if (this.state.redirect === true || profileData.length == 0) {
+      
+        if (this.state.redirect === true){
             renderRedirect = (
-                <div> <Card>
-                <CardContent> 
-                <Typography color="black" gutterBottom><b><p style={{ fontSize: '24px' }}>Skills</p></b></Typography>
-
-                <div style={{ width: '30%' }} class="form-group">
-
-                    <input onChange={this.inputChangeHandler} type="text" class="form-control" name="skill" value={this.state.skill} placeholder="Skill" />
-                    </div>
-                    <button onClick={this.saveProfile} class="btn btn-primary">save</button>&nbsp;
-                    <button onClick={this.cancel} class="btn btn-primary" style={{backgroundColor:"#F7F7F7",color:"black"}}>Cancel</button>
-                    </CardContent></Card><br/><br/>
+                <div>
+                    <Card>
+                        <CardContent>
+                        <Typography color="black" gutterBottom><b><p style={{ fontSize: '24px' }}>Skills</p></b></Typography>
+                            <div style={{ width: '70%' }} class="form-group">
+                                <input onChange={this.inputChangeHandler} type="text" class="form-control" name="skills" value={this.state.skills} placeholder="Skills" />
+                                
+                            </div>
+                            <button onClick={this.saveProfile} class="btn btn-primary">save</button>&nbsp;
+                            <button onClick={this.cancel} class="btn btn-primary" style={{backgroundColor:"#F7F7F7",color:"black"}}>Cancel</button>
+                        </CardContent></Card><br /><br />
                 </div>
             );
 
+
         }
         else if (this.state.redirect === false || this.state.rerender === true) {
-            if (profileData.length > 0) {
-                renderRedirect = (
-                    profileData.map((data, index) => {
-                        return (
+                renderRedirect = 
                             <div>
-                                <div key={data.stud_id}>
-                                <Card>
+                                    <Card>
                                         <CardContent>
                                         <div class="row">
                                             <div class="col-md-10">
-
                                             <Typography color="black" gutterBottom>
-                                            <b><p style={{ fontSize: '24px' }}>Skills</p></b>
+                                                <b><p style={{ fontSize: '24px' }}>Skills</p></b>
+
                                             </Typography>
                                             </div>
                                             <div class="col-md-2">
                                             <CreateOutlinedIcon onClick={this.editProfile} style={{ alignContent: 'right',height:"15px",width:"15px" }}></CreateOutlinedIcon>
                                             </div>
                                             </div>
-                                    <p>{data.skill}</p>
-                                    </CardContent>
-                                        </Card>
+                                         <p>{this.state.skills}</p>
+
+                                        </CardContent>
+                                    </Card>
                                     <br /><br />
                                 </div>
-                                {/* <div class="container">
-                                    <div class="login-form">
-                                        <div class="main-div">
-                                            <button onClick={this.editProfile} class="btn btn-primary">Edit Profile</button>
-                                        </div>
-                                    </div>
-                                </div> */}
-                                </div>
-
-                        )
-                    }))
-            }
-
+           
         }
-
         return (
             <div>
                 {renderRedirect}
@@ -216,4 +139,133 @@ class Skill extends Component {
         )
     }
 }
+
+// class Skill extends Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             skills: "",
+//             redirect: true,
+//             rerender: false
+//         }
+//         this.editProfile = this.editProfile.bind(this);
+//         this.saveProfile = this.saveProfile.bind(this);
+//         this.inputChangeHandler = this.inputChangeHandler.bind(this);
+//         this.cancel = this.cancel.bind(this);
+
+//     }
+
+
+//     inputChangeHandler = (e) => {
+//         this.setState({
+//             [e.target.name]: e.target.value
+//         })
+//     }
+//     editProfile = (e) => {
+//         e.preventDefault();
+//         this.setState({
+//             redirect: true
+//         })
+//     }
+//     cancel = (e) => {
+//         e.preventDefault();
+//      this.setState({
+//       redirect:false
+//       })
+//     }
+//     componentWillReceiveProps(nextProps) {
+//         if (this.props.skills!==nextProps.skills)
+//         this.setState({ skills:nextProps.skills});
+        
+//         if (this.state.skills) {
+//             this.setState({redirect:false})}
+
+//     }
+//     saveProfile = (e) => {
+//         e.preventDefault();
+//         let stud_id = sessionStorage.getItem('id');
+//         this.setState({
+//             redirect: false,
+//             rerender: false
+//         })
+//         const edit_data = {
+//             id: stud_id,
+//             skills: this.state.skills
+//         }
+//         console.log(edit_data)
+
+//         axios.post(environment.baseUrl+'/student/student_profile_edited', edit_data)
+//             .then(response => {
+//                 console.log("in frontend after response");
+//                 console.log(response.data.result)
+//                 if (response.data.result) {
+//                         this.setState({
+//                             rerender: false,
+//                             skills: response.data.result.skills,
+//                         });
+                    
+//                 } else if (response.data.error) {
+//                     console.log("response" + response.data.error)
+//                 }
+//             }
+//             )
+//         }
+            
+
+
+
+//     render() {
+//         let renderRedirect = null;
+  
+//         if (this.state.redirect === true){
+//             renderRedirect = (
+//                 <div> <Card>
+//                 <CardContent> 
+//                 <Typography color="black" gutterBottom><b><p style={{ fontSize: '24px' }}>Skills</p></b></Typography>
+
+//                 <div style={{ width: '30%' }} class="form-group">
+
+//                     <input onChange={this.inputChangeHandler} type="text" class="form-control" name="skills" value={this.state.skills} placeholder="Skills" />
+//                     </div>
+//                     <button onClick={this.saveProfile} class="btn btn-primary">save</button>&nbsp;
+//                     <button onClick={this.cancel} class="btn btn-primary" style={{backgroundColor:"#F7F7F7",color:"black"}}>Cancel</button>
+//                     </CardContent></Card><br/><br/>
+//                 </div>
+//             );
+
+//         }
+//         else if (this.state.redirect === false || this.state.rerender === true) {
+//                 renderRedirect = 
+//                             <div>
+//                                 <Card>
+//                                         <CardContent>
+//                                         <div class="row">
+//                                             <div class="col-md-10">
+
+//                                             <Typography color="black" gutterBottom>
+//                                             <b><p style={{ fontSize: '24px' }}>Skills</p></b>
+//                                             </Typography>
+//                                             </div>
+//                                             <div class="col-md-2">
+//                                             <CreateOutlinedIcon onClick={this.editProfile} style={{ alignContent: 'right',height:"15px",width:"15px" }}></CreateOutlinedIcon>
+//                                             </div>
+//                                             </div>
+//                                     <p>{this.state.skills}</p>
+//                                     </CardContent>
+//                                         </Card>
+//                                     <br /><br />
+                             
+//                                 </div>
+
+                     
+
+//         }
+
+//         return (
+//             <div>
+//                 {renderRedirect}
+//             </div>
+//         )
+//     }
+// }
 export default Skill;

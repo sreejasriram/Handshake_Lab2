@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Route} from 'react-router-dom';
 import NavbarPage from './LandingPage/Navbar';
-
 import CmpySignup from './Company/Signup';
 import CmpyLogin from './Company/Login';
 import CmpyJobs from './Company/Jobs';

@@ -85,7 +85,7 @@ router.post('/apply_job',upload.single('file'),(req,res)=>{
 router.post('/company_signup',(req,res)=>{
     console.log("In Company signup post request");
     console.log(req.body);
-    CmpnyRepo.signup(req.body,(err,rows)=>{
+    CmpnyRepo.company_signup(req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -95,19 +95,21 @@ router.post('/company_signup',(req,res)=>{
     }) 
 })
 
-router.post('/company_signin',(req,res)=>{
+
+
+router.get('/company_signin/:email/:password',(req,res)=>{
     console.log("In company signin post request");
-    console.log(req.body);
-    CmpnyRepo.signin(req.body,(err,rows)=>{
+    console.log(req.params);
+        CmpnyRepo.company_signin(req.params,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
 
         }
-        else if (rows.length != 0){
+        else if (rows){
             console.log(`company found`)
-            res.cookie('company',"company",{maxAge: 90000000, httpOnly: false, path : '/'});
-            res.json({"result": rows[0].cmpy_id})
+            res.cookie('company',req.params.email,{maxAge: 90000000, httpOnly: false, path : '/'});
+            res.json({"result": rows._id})
             }
         else {
             console.log(rows)

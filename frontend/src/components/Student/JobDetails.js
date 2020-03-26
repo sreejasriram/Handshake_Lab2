@@ -37,7 +37,7 @@ console.log(this.state.jobId)
 
     }
     
-    componentWillReceiveProps(nextProps) {
+    ReceiveProps(nextProps) {
         if (this.props.jobId!==nextProps.jobId)
         this.setState({ jobId: nextProps.jobId,already_applied:false });
         const data = {

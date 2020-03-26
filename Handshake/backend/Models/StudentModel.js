@@ -7,7 +7,7 @@ const studentSchema = new Schema({
         required: true,
         auto: true
     },
-    id: { type: String, required: true },
+    id: { type: String, required: false },
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },

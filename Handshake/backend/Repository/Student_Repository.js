@@ -23,10 +23,9 @@ exports.student_signup = (stud_details,callback)=>{
 };
 
 
-exports.signin = (stud_details,callback)=>{
+exports.student_signin = (stud_details,callback)=>{
     console.log(stud_details)
     try{
-        //connect_sql.query(connect_queries.student_signin,[stud_details.username,stud_details.password], (err,rows) => {
         query.findDocumentsByQuery(Student.createModel(),{email:stud_details.email,password:stud_details.password}, (err,rows) => {
             callback(err,rows)
         });
@@ -36,6 +35,122 @@ exports.signin = (stud_details,callback)=>{
        callback(e,null)
     }
 };
+
+exports.student_basic_edited = (stud_details,callback)=>{
+    console.log(stud_details)
+    const update_data = {
+        dob: stud_details.dob,
+        city: stud_details.city,
+        state: stud_details.state,
+        country: stud_details.country
+    }
+    console.log(update_data)
+    console.log(stud_details.id)
+
+    try{
+        query.updateField(Student.createModel(),{_id:stud_details.id},update_data, (err,rows) => {
+                    callback(err,rows)
+                });
+    }
+    catch(e)
+    {
+       callback(e,null)
+    }
+};
+
+exports.student_skill_edited = (stud_details,callback)=>{
+    console.log(stud_details)
+    const update_data = {
+        skills: stud_details.skills
+    }
+    console.log(update_data)
+    console.log(stud_details.id)
+
+    try{
+        query.updateField(Student.createModel(),{_id:stud_details.id},update_data, (err,rows) => {
+                    callback(err,rows)
+                });
+    }
+    catch(e)
+    {
+       callback(e,null)
+    }
+};
+
+exports.student_journey_edited= (stud_details,callback)=>{
+    console.log(stud_details)
+    const update_data = {
+        career_objective: stud_details.career_objective
+    }
+    console.log(update_data)
+    console.log(stud_details.id)
+
+    try{
+        query.updateField(Student.createModel(),{_id:stud_details.id},update_data, (err,rows) => {
+                    callback(err,rows)
+                });
+    }
+    catch(e)
+    {
+       callback(e,null)
+    }
+};
+
+exports.student_contact_edited = (stud_details,callback)=>{
+    console.log(stud_details)
+    const update_data = {
+        email: stud_details.email,
+        mobile: stud_details.mobile
+    }
+    console.log(update_data)
+    console.log(stud_details.id)
+
+    try{
+        query.updateField(Student.createModel(),{_id:stud_details.id},update_data, (err,rows) => {
+                    callback(err,rows)
+                });
+    }
+    catch(e)
+    {
+       callback(e,null)
+    }
+};
+
+exports.student_profilepic_edited = (stud_details,callback)=>{
+    console.log(stud_details)
+    const update_data = {
+        name: stud_details.name
+    }
+    console.log(update_data)
+    console.log(stud_details.id)
+
+    try{
+        query.updateField(Student.createModel(),{_id:stud_details.id},update_data, (err,rows) => {
+                    callback(err,rows)
+                });
+    }
+    catch(e)
+    {
+       callback(e,null)
+    }
+};
+
+
+exports.student_profile_info = (stud_details,callback)=>{
+    console.log(stud_details)
+    try{
+        query.findDocumentsByQuery(Student.createModel(),{_id:stud_details.id}, (err,rows) => {
+                    callback(err,rows)
+                });
+    }
+    catch(e)
+    {
+       callback(e,null)
+    }
+};
+
+
+
 
 exports.basic_retrieve = (student,callback)=>{
     console.log(student)
