@@ -1,14 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var app = express();
-var connect_sql = require('../Database/database_connect');
-var connect_queries = require('../Database/database_queries');
-const Student = require('../Models/StudentModel');
-const Company = require('../Models/CompanyModel');
-const query =require('../Database/queries');
-
-
-
+// var connect_sql = require('../Database/database_connect');
+// var connect_queries = require('../Database/database_queries');
+// const Student = require('../Models/StudentModel');
+// const Company = require('../Models/CompanyModel');
+const query = require('../Database/queries');
 
 /* ****************Error handling*********************************
 app.use(function(err, req, res, next) {
@@ -69,19 +66,19 @@ exports.company_signin = (cmpny_details,callback)=>{
     }
 };
 
-exports.jobs = (job_details,callback)=>{
-    console.log(job_details)
-    try{
-        connect_sql.query(connect_queries.company_jobs,[job_details.id,job_details.title,job_details.postingDate,job_details.deadline,
-            job_details.loc,job_details.salary,job_details.desc,job_details.cat], (err,rows) => {
-            callback(err,rows)
-        });
-    }
-    catch(e)
-    {
-       callback(e,null)
-    }
-};
+// exports.post_job = (job_details,callback)=>{
+//     console.log(job_details)
+//     try{
+//         connect_sql.query(connect_queries.company_jobs,[job_details.id,job_details.title,job_details.postingDate,job_details.deadline,
+//             job_details.loc,job_details.salary,job_details.desc,job_details.cat], (err,rows) => {
+//             callback(err,rows)
+//         });
+//     }
+//     catch(e)
+//     {
+//        callback(e,null)
+//     }
+// };
 exports.job_apply = (application,callback)=>{
     console.log(application)
     try{

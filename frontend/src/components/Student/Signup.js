@@ -5,7 +5,7 @@ import {Redirect} from 'react-router';
 import {Link} from 'react-router-dom';
 import {environment} from '../../Utils/constants';
 
-
+ 
 class Signup extends Component{
     constructor(props){
         super(props);

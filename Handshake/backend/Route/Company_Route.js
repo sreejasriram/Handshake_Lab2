@@ -6,6 +6,8 @@ var multer  = require('multer')
 var path = require('path');
 const Student = require('../Models/StudentModel');
 const Company = require('../Models/CompanyModel');
+var kafka = require('../kafka/client');
+
 
 
 
@@ -82,10 +84,24 @@ router.post('/apply_job',upload.single('file'),(req,res)=>{
 
 
 
+// router.post('/company_signup',(req,res)=>{
+//     console.log("In Company signup post request");
+//     console.log(req.body);
+//     CmpnyRepo.company_signup(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else
+//         res.json({"result":"success"})
+//     }) 
+// })
+
+
 router.post('/company_signup',(req,res)=>{
     console.log("In Company signup post request");
     console.log(req.body);
-    CmpnyRepo.company_signup(req.body,(err,rows)=>{
+    kafka.make_request('company-signup',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -96,11 +112,34 @@ router.post('/company_signup',(req,res)=>{
 })
 
 
+// router.get('/company_signin/:email/:password',(req,res)=>{
+//     console.log("In company signin post request");
+//     console.log(req.params);
+//         CmpnyRepo.company_signin(req.params,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+
+//         }
+//         else if (rows){
+//             console.log(`company found`)
+//             res.cookie('company',req.params.email,{maxAge: 90000000, httpOnly: false, path : '/'});
+//             res.json({"result": rows._id})
+//             }
+//         else {
+//             console.log(rows)
+//             console.log(`company not found`)
+//             res.json({"error":"failure"})
+
+//         }
+//     }) 
+// })
+
 
 router.get('/company_signin/:email/:password',(req,res)=>{
     console.log("In company signin post request");
     console.log(req.params);
-        CmpnyRepo.company_signin(req.params,(err,rows)=>{
+    kafka.make_request('company-signin',req.params,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -121,10 +160,25 @@ router.get('/company_signin/:email/:password',(req,res)=>{
 })
 
 
-router.post('/company_jobs',(req,res)=>{
+// router.post('/post_job',(req,res)=>{
+//     console.log("In company jobs post request");
+//     console.log(req.body);
+//     CmpnyRepo.jobs(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else
+//         res.json({"result":"success"})
+//     }) 
+// })
+
+
+router.post('/post_job',(req,res)=>{
     console.log("In company jobs post request");
     console.log(req.body);
-    CmpnyRepo.jobs(req.body,(err,rows)=>{
+    req.body.type = "add";
+    kafka.make_request('company-jobs',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -135,10 +189,56 @@ router.post('/company_jobs',(req,res)=>{
 })
 
 
-router.post('/company_jobs_retrieve',(req,res)=>{
-    console.log("In company jobs retrieve post request");
+// router.post('/company_events',(req,res)=>{
+//     console.log("In company Event post request");
+//     console.log(req.body);
+//     CmpnyRepo.events(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else
+//         res.json({"result":"success"})
+//     }) 
+// })
+
+
+router.post('/post_events',(req,res)=>{
+    console.log("In company Event post request");
     console.log(req.body);
-    CmpnyRepo.jobs_retrieve(req.body,(err,rows)=>{
+    req.body.type = "add";
+    kafka.make_request('company-events',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else
+        res.json({"result":"success"})
+    }) 
+})
+
+// router.post('/company_jobs',(req,res)=>{
+//     console.log("In company jobs retrieve post request");
+//     console.log(req.body);
+//     CmpnyRepo.jobs_retrieve(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})
+//     }
+        
+//     }) 
+// })
+
+router.get('/getjobs/:companyId',(req,res)=>{
+    console.log("In company jobs retrieve post request");
+    console.log(req.params);
+    req.body.type = "retrieve";
+    req.body.companyId = req.params.companyId;
+    kafka.make_request('company-jobs',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -147,6 +247,38 @@ router.post('/company_jobs_retrieve',(req,res)=>{
         console.log(rows)
         res.json({rows})
     }
+        
+    }) 
+})
+
+// router.post('/company_events_retrieve',(req,res)=>{
+//     console.log("In company events retrieve post request");
+//     console.log(req.body);
+//     CmpnyRepo.events_retrieve(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})}
+        
+//     }) 
+// })
+
+router.get('/getevents/:companyId',(req,res)=>{
+    console.log("In company events retrieve post request");
+    console.log(req.params);
+    req.body.type = "retrieve";
+    req.body.companyId = req.params.companyId;
+    kafka.make_request('company-events',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})}
         
     }) 
 })
@@ -318,18 +450,8 @@ router.put('/updateStudentstatus', (req,res)=>{
 })
 
 
-router.post('/company_events',(req,res)=>{
-    console.log("In company Event post request");
-    console.log(req.body);
-    CmpnyRepo.events(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else
-        res.json({"result":"success"})
-    }) 
-})
+
+
 router.post('/save_edited_event',(req,res)=>{
     console.log("In company save event post request");
     console.log(req.body);
@@ -370,20 +492,7 @@ router.post('/edit_job_retrieve',(req,res)=>{
 })
 
 
-router.post('/company_events_retrieve',(req,res)=>{
-    console.log("In company events retrieve post request");
-    console.log(req.body);
-    CmpnyRepo.events_retrieve(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})}
-        
-    }) 
-})
+
 
 router.post('/edit_event_retrieve',(req,res)=>{
     console.log("In company events retrieve post request");

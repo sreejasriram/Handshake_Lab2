@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var app = express();
-var connect_sql = require('../Database/database_connect');
-var connect_queries = require('../Database/database_queries');
-const Student = require('../Models/StudentModel');
-const Company = require('../Models/CompanyModel');
+// var connect_sql = require('../Database/database_connect');
+// var connect_queries = require('../Database/database_queries');
+// const Student = require('../Models/StudentModel');
+// const Company = require('../Models/CompanyModel');
 const query =require('../Database/queries');
 
 

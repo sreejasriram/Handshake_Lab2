@@ -11,71 +11,38 @@ import Typography from '@material-ui/core/Typography';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import {environment} from '../../Utils/constants';
 
-const useStyles = makeStyles({
-    root: {
-        minWidth: 275,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-});
-
 class Events extends Component {
     constructor(props) {
         super(props);
         this.state = {
             name: "",
-            eventDesc: "",
+            description: "",
             time: "",
             date: "",
-            loc: "",
-            Elig: "",
+            location: "",
+            eligibility: "",
             dataRetrieved: false,
             redirect: false,
             eventData: [],
-            // edit:false,
             editEvent: "",
             view_applicants: false
 
         }
         this.postEvents = this.postEvents.bind(this);
-        // this.editEvents = this.editEvents.bind(this);
         this.viewApplicants = this.viewApplicants.bind(this);
 
     }
 
-
-
-    //submit Login handler to send a request to the node backend
     postEvents = (e) => {
         var headers = new Headers();
-        //prevent page from refresh
         e.preventDefault();
         this.setState({
             redirect: true
 
         })
     }
-    //     editEvents = (e) => {
-    //         var headers = new Headers();
-    //         //prevent page from refresh
-    // console.log(e.target.value);
-    //         this.setState({
-    //             edit: true,
-    //             editEvent:e.target.value
 
-    //         })
-    //     }
     viewApplicants = (e) => {
-
         this.setState({
             view_applicants: true,
             editEvent: e.target.value
@@ -84,10 +51,10 @@ class Events extends Component {
     componentDidMount() {
         let cmpny_id = sessionStorage.getItem('id');
         const data = {
-            id: cmpny_id
+            companyId: cmpny_id
         }
 
-        axios.post(environment.baseUrl+'/company/company_events_retrieve', data)
+        axios.get(environment.baseUrl+'/company/getevents/'+data.companyId)//company_events_retrieve
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -100,8 +67,6 @@ class Events extends Component {
                     console.log("response" + response.data.error)
 
                 }
-
-
             })
     }
 
@@ -115,9 +80,6 @@ class Events extends Component {
             renderRedirect = <Redirect to={`/ViewEventApplicants/${this.state.editEvent}`} />
         }
 
-        // if (this.state.edit === true) {
-        //     renderRedirect = <Redirect to={`/editEvents/${this.state.editEvent}`} />
-        // }
         let eventData = this.state.eventData;
         console.log(eventData)
         return (
@@ -133,29 +95,25 @@ class Events extends Component {
                     <div class="col-md-10"> 
                     {eventData.map((data, index) => {
                         return (
-                            <div key={data.event_id}>
+                            <div key={data._id}>
                                 <br /><br />
                                 <Card>
                                     <CardContent>
                                         <Typography color="black" gutterBottom>
                                             <h3>{data.name}</h3></Typography>
-                                        <p>{data.eventDesc}</p>
+                                        <p>{data.description}</p>
                                         <p><b>Time: </b>{data.date.substring(0, 10)} at {data.time}</p>
-                                        <p><b>Location:</b> {data.loc}</p><br /><br />
-                                        {/* <button onClick={this.editEvents} class="btn btn-primary"  value={data.event_id}>Edit Event</button> */}
+                                        <p><b>Location:</b> {data.location}</p><br /><br />
                                         <button onClick={this.viewApplicants} class="btn btn-primary" value={data.event_id} style={{ backgroundColor: '#1569E0', marginLeft: '800px', borderRadius: '15px' }}>View Applicants</button>
                                     </CardContent></Card>
                             </div>
                         )
-                    })}</div>
-                    
+                    })}</div>   
                     <div class="col-md-1"> </div>
                 </div>
-
                 </div>
             </div>
         )
     }
 }
-//export Login Component
 export default Events;

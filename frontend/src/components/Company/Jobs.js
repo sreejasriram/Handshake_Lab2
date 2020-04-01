@@ -1,117 +1,68 @@
-
 import React, {Component} from 'react';
 import '../../App.css';
 import axios from 'axios';
 import {Redirect} from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import {environment} from '../../Utils/constants';
 
 
-const useStyles = makeStyles({
-    root: {
-        minWidth: 275,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-});
-
-//Define a Login Component
 class Jobs extends Component{
-    //call the constructor method
     constructor(props){
-        //Call the constrictor of Super class i.e The Component
         super(props);
-        //maintain the state required for this component
         this.state = {
             title : "",
-            postingDate: "",
+            posting_date: "",
             deadline : "",
-            loc: "",
+            location: "",
             salary: "",
-            desc : "",
-            cat: "",
+            description : "",
+            category: "",
             added: false,
             canceled:false
-
-            //id: this.props.location.state.id
-            // authFlag : false,
-            // cred:false
-            
         }
-        //Bind the handlers to this class
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
-       
         this.postJobs = this.postJobs.bind(this);
         this.cancel = this.cancel.bind(this);
 
     }
-    //Call the Will Mount to set the auth Flag to false
-    // componentWillMount(){
-    //     this.setState({
-    //         authFlag : false
-            
-    //     })
-    // }
-    //username change handler to update state variable with the text entered by the user
+    
     inputChangeHandler = (e) => {
         this.setState({
             [e.target.name] : e.target.value
         })
         console.log(e.target.name)
-
         console.log(e.target.value)
     }
   
     cancel = (e) => {
         var headers = new Headers();
-        //prevent page from refresh
         e.preventDefault();
-     //   window.history.back();
      this.setState({
         canceled: true
       })
-    
-
     }
-    //submit Login handler to send a request to the node backend
+
+
     postJobs = (e) => {
         var headers = new Headers();
-        //prevent page from refresh
         e.preventDefault();
         let cmpny_id = sessionStorage.getItem('id');
         console.log(cmpny_id)
         const data = {
             title : this.state.title,
-            postingDate: this.state.postingDate,
+            posting_date: this.state.posting_date,
             deadline : this.state.deadline,
-            loc: this.state.loc,
+            location: this.state.location,
             salary: this.state.salary,
-            desc : this.state.desc,
-            cat: this.state.cat,
-            id: cmpny_id
+            description : this.state.description,
+            category: this.state.category,
+            companyId: cmpny_id
 
         }
-        console.log(data)
-     
-        axios.defaults.withCredentials = true;
-       
+        console.log(data)  
+        axios.defaults.withCredentials = true;       
         console.log("in frontend before axios");
-        axios.post(environment.baseUrl+'/company/company_jobs',data)
+        axios.post(environment.baseUrl+'/company/post_job',data)
             .then(response => {
               console.log("in frontend after response");
 
@@ -150,22 +101,23 @@ class Jobs extends Component{
                                 <input onChange = {this.inputChangeHandler} type="text" class="form-control" name="title" placeholder="Title"/>
                             </div>
                             <div class="form-group">
-                                <input onChange = {this.inputChangeHandler} type="date" class="form-control" name="postingDate"  placeholder="Posting Date"/>
+                                <input onChange = {this.inputChangeHandler} type="date" class="form-control" name="posting_date"  placeholder="Posting Date"/>
                             </div>
                             <div class="form-group">
                                 <input onChange = {this.inputChangeHandler} type="date" class="form-control" name="deadline" placeholder="Deadline"/>
                             </div>
                             <div class="form-group">
-                                <input onChange = {this.inputChangeHandler} type="text" class="form-control" name="loc" placeholder="Location"/>
+                                <input onChange = {this.inputChangeHandler} type="text" class="form-control" name="location" placeholder="Location"/>
                             </div>
                             <div class="form-group">
                                 <input onChange = {this.inputChangeHandler} type="number" class="form-control" name="salary" placeholder="Salary"/>
                             </div>
                             <div class="form-group">
-                                <input onChange = {this.inputChangeHandler} type="text" class="form-control" name="desc" placeholder="Description"/>
+                                <input onChange = {this.inputChangeHandler} type="text" class="form-control" name="description" placeholder="Description"/>
                             </div>
                             <div class="form-group">
-                            Category: <select onChange = {this.inputChangeHandler} name="cat">
+                            Category: <select onChange = {this.inputChangeHandler} name="category">
+                            <option value="" selected disabled hidden>Choose here</option>
                                     <option value = "Internship">Internship</option>
                                     <option value = "Part-Time">Part time</option>
                                     <option value = "Full-Time">Full time</option>
@@ -185,5 +137,4 @@ class Jobs extends Component{
         )
     }
 }
-//export Login Component
 export default Jobs;

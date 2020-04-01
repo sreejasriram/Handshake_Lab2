@@ -2,27 +2,68 @@ var express = require('express');
 var router = express.Router();
 var app = express();
 var StudRepo = require('../Repository/Student_Repository');
+var kafka = require('../kafka/client');
 
 
+// router.post('/student_signup',(req,res)=>{
+//     console.log("In student signup post request");
+//     console.log(req.body);
+//     StudRepo.student_signup(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)  
+//             res.json({"error":"failure"})
+//         }
+//         else
+//         res.json({"result":"success"})
+//     }) 
+// })
 router.post('/student_signup',(req,res)=>{
     console.log("In student signup post request");
     console.log(req.body);
-    StudRepo.student_signup(req.body,(err,rows)=>{
+    kafka.make_request('login-signup',req.body,(err,rows)=>{
         if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)  
+            console.log(`${err.code}:${err.sqlMessage}`)
+           
             res.json({"error":"failure"})
         }
-        else
+        else{
+        console.log(rows)
         res.json({"result":"success"})
+        }
     }) 
 })
+// router.get('/student_signin/:email/:password',(req,res)=>{
+//     console.log("In student signin get request");
+//     console.log(req.params.email);
+//     console.log(req.params.password);
+
+//     StudRepo.student_signin(req.params,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//            res.status(500).send(err.code+" : "+err.sqlMessage)
+
+//         }
+//         else if(rows)
+//             {     
+//             console.log(`student found`)
+//             console.log(rows)
+//             res.cookie('student',req.params.email,{maxAge: 90000000, httpOnly: false, path : '/'});
+//              res.json({"result": rows._id})
+//         }
+//         else{
+//             res.json({"result": "Not found"})
+
+//         }        
+//     }) 
+// })
+
 
 router.get('/student_signin/:email/:password',(req,res)=>{
     console.log("In student signin get request");
     console.log(req.params.email);
     console.log(req.params.password);
-
-    StudRepo.student_signin(req.params,(err,rows)=>{
+    kafka.make_request('signup-login',req.params,(err,rows)=>{
+    // StudRepo.student_signin(req.params,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
            res.status(500).send(err.code+" : "+err.sqlMessage)

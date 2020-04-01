@@ -13,94 +13,54 @@ import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import {environment} from '../../Utils/constants';
 
 
-const useStyles = makeStyles({
-    root: {
-        minWidth: 275,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-});
 class Home extends Component {
     constructor(props) {
         super(props);
         let cmpny_id = sessionStorage.getItem('id');
         this.state = {
             title: "",
-            postingDate: "",
+            posting_date: "",
             deadline: "",
-            loc: "",
+            location: "",
             salary: "",
-            desc: "",
-            cat: "",
-            // id: this.props.location.state.id,
+            description: "",
+            category: "",
             dataRetrieved: false,
             redirect: false,
             jobData: [],
-            // edit:false,
-             editJob:"",
+            editJob:"",
             view_applicants:false,
-            id:cmpny_id
+            companyId:cmpny_id
 
 
 
         }
-      
-       
-        console.log(cmpny_id)
-        console.log(this.state.id)
 
         this.postJobs = this.postJobs.bind(this);
-        // this.editJobs = this.editJobs.bind(this);
         this.viewApplicants = this.viewApplicants.bind(this);
     }
 
-
-
-    //submit Login handler to send a request to the node backend
     postJobs = (e) => {
         var headers = new Headers();
-        //prevent page from refresh
         e.preventDefault();
         this.setState({
             redirect: true
-
         })
     }
-//     editJobs = (e) => {
-//         var headers = new Headers();
-//         //prevent page from refresh
-// console.log(e.target.value);
-//         this.setState({
-//             edit: true,
-//             editJob:e.target.value
 
-//         })
-//     }
     viewApplicants = (e) => {
-      
         this.setState({
             view_applicants: true,
             editJob:e.target.value
         })
     }
 
-    componentDidMount() {
-        
+    componentDidMount() {   
         const data = {
-           // id: cmpny_id
-           id: this.state.id
+            companyId: this.state.companyId
         }
         console.log(data)
-        axios.post(environment.baseUrl+'/company/company_jobs_retrieve', data)
+        axios.get(environment.baseUrl+'/company/getjobs/'+data.companyId)
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -130,10 +90,6 @@ class Home extends Component {
         if (this.state.view_applicants === true) {
             renderRedirect = <Redirect to={`/ViewApplicants/${this.state.editJob}`}/>
         }
-        
-        // if (this.state.edit === true) {
-        //     renderRedirect = <Redirect to={`/editJobs/${this.state.editJob}`} />
-        // }
         let jobData = this.state.jobData;
         console.log(jobData)
         return (
@@ -143,7 +99,6 @@ class Home extends Component {
                         <div class="main-div">
                             <div class="panel">
                                 <h2>Job Postings </h2>
-
                             </div>
                             <button onClick={this.postJobs} class="btn btn-primary">Add New Job</button>
                             <div>
@@ -154,7 +109,7 @@ class Home extends Component {
                                     {jobData.map((data, index) => {
                                         
                                         return (
-                                            <div key={data.job_id}>
+                                            <div key={data._id}>
                                                 <br/><br/>
                                                  <Card>
                                         <CardContent>
@@ -162,25 +117,13 @@ class Home extends Component {
                                                 <b><h5>{data.title}                                                                                
                                                 </h5></b> </Typography>
 
-                                                <p><b>Role:</b> {data.jobDesc}</p> 
-                                                <p><b>Location:</b> {data.loc}</p>
-                                                <p><b>Category:</b> {data.cat}</p>
-                                                <button onClick={this.viewApplicants} class="btn btn-primary" value={data.job_id}  style={{backgroundColor:'#1569E0', marginLeft:'800px', borderRadius:'15px'}} >View Applicants</button>
+                                                <p><b>Role:</b> {data.description}</p> 
+                                                <p><b>Location:</b> {data.location}</p>
+                                                <p><b>Category:</b> {data.category}</p>
+                                                <button onClick={this.viewApplicants} class="btn btn-primary" value={data._id}  style={{backgroundColor:'#1569E0', marginLeft:'800px', borderRadius:'15px'}} >View Applicants</button>
                                                 </CardContent></Card>
                                                 {/* <button onClick={this.editJobs} class="btn btn-primary"  value={data.job_id}>Edit Job</button> */}
                                             </div>
-
-//////////////
-                                        // <div style={{padding:'10px 0px 10px 50px'}}>
-                                        // <div className="row App-align">
-                                        //     <div className="col-md-9" style={{ fontSize: "23px", color: "#1569E0",marginLeft:"-10px" }}>{job.title}</div>
-                                        //     <div className="col-md-3"><button class="btn btn-primary" style={{backgroundColor:'#1569E0', marginLeft:'15px', borderRadius:'15px'}} value={job.jobId} onClick={this.viewApplicants}>View Applicants</button></div>
-                                        // </div>
-                                        // <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-usd" style={{ color: "#1569E0" }}></span> {job.salary+" per hour"}</div>
-                                        // <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-map-marker" style={{ color: "#1569E0" }}></span> {job.location}</div>
-                                        // <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-calendar" style={{ color: "#1569E0" }}></span> Ends on {job.deadline.substring(0,10)}</div>
-                                        // </div>
-//////
 
                                         )
                                     })}
