@@ -69,12 +69,12 @@ router.get('/student_signin/:email/:password',(req,res)=>{
            res.status(500).send(err.code+" : "+err.sqlMessage)
 
         }
-        else if(rows)
+        else if(rows.length)
             {     
             console.log(`student found`)
             console.log(rows)
             res.cookie('student',req.params.email,{maxAge: 90000000, httpOnly: false, path : '/'});
-             res.json({"result": rows._id})
+            res.json({"result": rows[0]._id})
         }
         else{
             res.json({"result": "Not found"})
@@ -385,6 +385,105 @@ else
 })
 
 
+router.get('/all_events_retrieve',(req,res)=>{
+    console.log("In student all events retrieve get request");
+    req.body.type = "retrieve_all_events";
+    kafka.make_request('company-events',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})
+    }
+        
+    }) 
+})
 
+router.get('/all_jobs_retrieve',(req,res)=>{
+    console.log("In company all jobs retrieve get request");
+    req.body.type = "retrieve_all_jobs";
+    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})
+    }
+        
+    }) 
+})
+
+router.get('/jobs_details/:jobId',(req,res)=>{
+    console.log("In company jobs retrieve post request");
+    console.log(req.params)
+    req.body.type = "retrieve_job_details_with_id";
+    req.body.jobId = req.params.jobId;
+    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})
+    }
+        
+    }) 
+})
+
+router.get('/events_details/:eventId',(req,res)=>{
+    console.log("In event details by id retrieve get request");
+    console.log(req.params)
+    req.body.type = "retrieve_event_details_with_id";
+    req.body.eventId = req.params.eventId;
+    kafka.make_request('company-events',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})
+    }
+        
+    }) 
+})
+
+
+router.post('/apply_event',(req,res)=>{
+    console.log("In company apply event post request");
+    console.log(req.body);
+    req.body.type = "apply_event";
+
+    kafka.make_request('company-events',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else
+        res.json({"result":"success"})
+    }) 
+})
+
+router.get('/list_applied_events/:studentId',(req,res)=>{
+    console.log("In company list_applied_events get request");
+    console.log(req.params)
+    req.body.type = "list_applied_events";
+    req.body.studentId = req.params.studentId;
+    kafka.make_request('company-events',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})
+    }
+    }) 
+})
 
 module.exports = router

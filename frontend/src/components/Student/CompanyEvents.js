@@ -1,11 +1,9 @@
-
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import cookie from 'react-cookies';
-
 import { Card, CardContent, Button, IconButton, InputBase } from '@material-ui/core/';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,51 +12,22 @@ import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import StudentNavbar from './StudentNavbar'
 import {environment} from '../../Utils/constants';
 
-
-const useStyles = makeStyles({
-    root: {
-        minWidth: 275,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-});
-
 class CompanyEvents extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // title: "",
-            // postingDate: "",
-            // deadline: "",
-            // loc: "",
-            // salary: "",
-            // desc: "",
-            // cat: "",
             dataRetrieved: false,
             eventData: [],
             view: false,
             eventindex: 0,
             namesearch: ""
-
         }
         this.viewRegisteredEvents = this.viewRegisteredEvents.bind(this);
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
         this.showEvent = this.showEvent.bind(this);
-
-
     }
     viewRegisteredEvents = (e) => {
         var headers = new Headers();
-        //prevent page from refresh
         e.preventDefault();
         this.setState({
             view: true
@@ -73,6 +42,7 @@ class CompanyEvents extends Component {
         })
         console.log(e.target.value)
     }
+
     showEvent = (e) => {
         console.log(e)
         this.setState({
@@ -82,7 +52,7 @@ class CompanyEvents extends Component {
 
 
     componentDidMount() {
-        axios.post(environment.baseUrl+'/company/all_events_retrieve')
+        axios.get(environment.baseUrl+'/student/all_events_retrieve')
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -109,25 +79,15 @@ class CompanyEvents extends Component {
         if (this.state.view === true) {
             renderRedirect = <Redirect to='/viewRegisteredEvents' />
         }
-        ///
-        let events = null;
-        let detailedevent = null;
-        let eventdetailed = null;
         let namesearch = this.state.namesearch;
-
         console.log(namesearch)
         if (this.state.eventData) {
-            console.log("aa")
-
             if (namesearch.length > 0) {
-                console.log("bb")
-
                 eventData = eventData.filter((event) => {
                     return (event.name.indexOf(namesearch) > -1)
                 })
             }
         }
-        ///
 
         console.log(eventData)
         return (
@@ -149,24 +109,23 @@ class CompanyEvents extends Component {
                 </div>
 
                <br/>
-                {/* <button onClick={this.postJobs} class="btn btn-primary">Add New Job</button> */}
-                {/* {renderRedirect} */}
+             
                 <div class="row">
                 <div class="col-md-1"></div>
                     <div class="col-md-9">
                 {eventData.map((data, index) => {
                     return (
-                        <div key={data.event_id}>
+                        <div key={data._id}>
                             <Card>
                                 <CardContent>
                                     <Typography color="black" gutterBottom>
-                                        <Link to={`/eventdetails/${data.event_id}`} activeClassName="active">
+                                        <Link to={`/eventdetails/${data._id}`} activeClassName="active">
                                             <h5>{data.name}</h5>
                                             
                                         </Link>  
-                                        <p> {data.eventDesc} </p>
+                                        <p> {data.description} </p>
                                             <p> <EventNoteIcon fontSize="medium"></EventNoteIcon> {data.date.substring(0,10)}
-                                            <LocationOnOutlinedIcon fontSize="medium"></LocationOnOutlinedIcon> {data.loc}
+                                            <LocationOnOutlinedIcon fontSize="medium"></LocationOnOutlinedIcon> {data.location}
                                             
                                             </p>
                                     </Typography>

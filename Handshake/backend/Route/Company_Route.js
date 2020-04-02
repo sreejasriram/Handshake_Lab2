@@ -145,10 +145,11 @@ router.get('/company_signin/:email/:password',(req,res)=>{
             res.json({"error":"failure"})
 
         }
-        else if (rows){
+        else if (rows.length){
             console.log(`company found`)
             res.cookie('company',req.params.email,{maxAge: 90000000, httpOnly: false, path : '/'});
-            res.json({"result": rows._id})
+            console.log(rows)
+            res.json({"result": rows[0]._id})
             }
         else {
             console.log(rows)
@@ -283,20 +284,7 @@ router.get('/getevents/:companyId',(req,res)=>{
     }) 
 })
 
-router.post('/all_jobs_retrieve',(req,res)=>{
-    console.log("In company jobs retrieve post request");
-    CmpnyRepo.all_jobs_retrieve((err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
-        
-    }) 
-})
+
 router.post('/list_all_students',(req,res)=>{
     console.log("In company students retrieve post request");
     CmpnyRepo.list_all_students((err,rows)=>{
@@ -312,66 +300,12 @@ router.post('/list_all_students',(req,res)=>{
     }) 
 })
 
-router.post('/all_events_retrieve',(req,res)=>{
-    console.log("In company events retrieve post request");
-    CmpnyRepo.all_events_retrieve((err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
-        
-    }) 
-})
-
-router.post('/jobs_details',(req,res)=>{
-    console.log("In company jobs retrieve post request");
-    console.log(req.body)
-    CmpnyRepo.jobs_details(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
-        
-    }) 
-})
-
-router.post('/events_details',(req,res)=>{
-    console.log("In company event details retrieve post request");
-    console.log(req.body)
-    CmpnyRepo.events_details(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
-        
-    }) 
-})
 
 
-router.post('/apply_event',(req,res)=>{
-    console.log("In company apply event post request");
-    console.log(req.body);
-    CmpnyRepo.apply_event(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else
-        res.json({"result":"success"})
-    }) 
-})
+
+
+
+
 router.post('/job_already_applied',(req,res)=>{
     console.log("In company jobs post request");
     console.log(req.body);
@@ -424,20 +358,7 @@ router.post('/list_applied_jobs',(req,res)=>{
     }
     }) 
 })
-router.post('/list_applied_events',(req,res)=>{
-    console.log("In company list_applied_events post request");
-    console.log(req.body);
-    CmpnyRepo.list_applied_events(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
-    }) 
-})
+
 router.put('/updateStudentstatus', (req,res)=>{
     CmpnyRepo.updateStudentstatus(req.body,(err,result)=>{
         console.log(req.body)

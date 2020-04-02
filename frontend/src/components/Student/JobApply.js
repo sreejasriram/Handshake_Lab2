@@ -11,21 +11,13 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {environment} from '../../Utils/constants';
 
-
-
-  
-//Define a Login Component
 class JobApply extends Component {
-    //call the constructor method
     constructor(props) {
-        //Call the constrictor of Super class i.e The Component
         super(props);
-        //maintain the state required for this component
         this.state = {
             cmpy_id: this.props.cmpy_id,
             resume: "",
             job_id: this.props.job_id,
-            // id: this.props.location.state.id,
             dataRetrieved: false,
             redirect: false,
             profileData: [],
@@ -33,12 +25,10 @@ class JobApply extends Component {
             resume:"",
             open: false,
             setOpen: true
-            // name, location, description, contact information,
         }
         this.submitJob = this.submitJob.bind(this);
         this.onApply = this.onApply.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);   
-        // this.inputChangeHandler = this.inputChangeHandler.bind(this);
         this.handleClickOpen = this.handleClickOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
     }
@@ -63,20 +53,13 @@ class JobApply extends Component {
     };
   
     handleFileChange = (e) => {
-        // console.log(e.target.files[0]);
         this.setState({
             resume: e.target.files[0]
         })
     }
-    // UNSAFE_componentWillReceiveProps(nextProps) {
-    //     if (this.props.open!==nextProps.open)
-    //     this.setState({ open:nextProps.open});
-    //     console.log("aaa")
-    //     console.log(this.state.open)
-    // }
+   
     submitJob = async (e) => {
         var headers = new Headers();
-        //prevent page from refresh
         e.preventDefault();
         let fdata = new FormData();
         fdata.append('cmpy_id', this.state.cmpy_id);
@@ -84,7 +67,6 @@ class JobApply extends Component {
         fdata.append('stud_id',sessionStorage.getItem('id'));
         fdata.append('app_date',new Date().toISOString().slice(0, 19).replace('T', ' '));
         
-        // fdata.append('status',"Pending");
         fdata.append('file', this.state.resume);
        
         const config = {
@@ -105,7 +87,6 @@ class JobApply extends Component {
                         setOpen: false
 
                     });
-                    // console.log(response.data.rows[0].title)
                 } else if (response.data.error) {
                     console.log("response" + response.data.error)
                 }
@@ -152,5 +133,4 @@ class JobApply extends Component {
         )
     }
 }
-//export Login Component
 export default JobApply;

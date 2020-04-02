@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+// var companyModel = require('./CompanyModel')
+autoIncrement = require('mongoose-auto-increment');
+
+// var company = companyModel.createModel()
 
 const jobSchema = new Schema({
     _id: {
@@ -8,7 +12,9 @@ const jobSchema = new Schema({
         auto: true
     },
     id: { type: String, required: false },
-    companyId:{ type: String, required: true },
+    // companyId:{ type: mongoose.Schema.Types.ObjectId, required: true, ref: 'company' },
+    companyId:{ type: mongoose.Schema.Types.ObjectId, required: true},
+
     title: { type: String, required: true },
     posting_date: { type: String, required: true },
     deadline: { type: String, required: true },
@@ -19,7 +25,7 @@ const jobSchema = new Schema({
     applications: [
         {
             id: String,
-            studentId: String,
+            studentId: mongoose.Schema.Types.ObjectId,
             status: String,
             appliedDate: String,
             resume: String
@@ -27,6 +33,8 @@ const jobSchema = new Schema({
     ]
 }, { _id: false }, { collection: 'jobs' });
 
+autoIncrement.initialize(mongoose.connection);
+jobSchema.plugin(autoIncrement.plugin, { model: 'jobs', field: 'applications.id',startAt: 1 });
 const createModel = function () {
     return mongoose.model("jobs", jobSchema)
 }

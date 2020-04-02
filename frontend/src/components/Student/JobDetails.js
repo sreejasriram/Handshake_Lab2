@@ -7,9 +7,6 @@ import JobApply from './JobApply';
 import cookie from 'react-cookies';
 import {environment} from '../../Utils/constants';
 
-
-
-
 class JobDetails extends Component {
     constructor(props) {
         super(props);
@@ -17,36 +14,31 @@ class JobDetails extends Component {
             cmpy_id: "",
             dataRetrieved: false,
             jobData: [],
-          //  jobId: props.match.params,
             jobId: this.props.jobId,
             applied: false,
             already_applied : false
         }
         this.ApplyJob = this.ApplyJob.bind(this);
-console.log(this.state.jobId)
+        console.log(this.state.jobId)
     }
     ApplyJob = (e) => {
         var headers = new Headers();
-        //prevent page from refresh
         e.preventDefault();
-
-        //   <JobApply/>
         this.setState({
             applied: true
         });
 
     }
     
-    ReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
         if (this.props.jobId!==nextProps.jobId)
         this.setState({ jobId: nextProps.jobId,already_applied:false });
         const data = {
-            // id: this.state.jobId.jobId
-            id: nextProps.jobId
+            jobId: nextProps.jobId
          }
          console.log(this.props.jobId)
-         console.log(data.id)
-         axios.post(environment.baseUrl+'/company/jobs_details', data)
+         console.log(data.jobId)
+         axios.get(environment.baseUrl+'/student/jobs_details/'+data.jobId)
              .then(response => {
                  console.log("in frontend after response");
                  console.log(response.data.rows)
@@ -66,7 +58,6 @@ console.log(this.state.jobId)
                  if(this.state.jobData.length) {
                  var data = {
                      cmpy_id:this.state.jobData[0].cmpy_id,
-                    // job_id:this.state.jobId.jobId,
                      job_id:nextProps.jobId,
                      stud_id:sessionStorage.getItem('id')
                  }
@@ -94,12 +85,11 @@ console.log(this.state.jobId)
     componentDidMount() {
         console.log("did mount")
         const data = {
-           // id: this.state.jobId.jobId
-           id: this.props.jobId
+           jobId: this.props.jobId
         }
         console.log(data.id)
-        axios.post(environment.baseUrl+'/company/jobs_details', data)
-            .then(response => {
+        axios.get(environment.baseUrl+'/student/jobs_details/'+data.jobId)
+        .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
                 if (response.data.rows.length) {
@@ -155,7 +145,7 @@ console.log(this.state.jobId)
         console.log(jobData)
         if (this.state.applied == true) {
             console.log(jobData[0].cmpy_id)
-            renderRedirect = <JobApply cmpy_id={jobData[0].cmpy_id} job_id={this.props.jobId} open="true"/>
+            renderRedirect = <JobApply cmpy_id={jobData[0].companyId} job_id={this.props.jobId} open="true"/>
         }
         if (!jobData.length) {
           
@@ -166,7 +156,7 @@ console.log(this.state.jobId)
         if (this.state.already_applied == false && jobData[0]){
             console.log("inside")
             // applied = <button onClick={this.ApplyJob} class="btn btn-primary">Apply</button>
-            applied = <JobApply cmpy_id={jobData[0].cmpy_id} job_id={this.props.jobId} />
+            applied = <JobApply cmpy_id={jobData[0].companyId} job_id={this.props.jobId} />
             }
         return (
             <div>
@@ -175,26 +165,26 @@ console.log(this.state.jobId)
 
                 {jobData.map((data, index) => {
                     return (
-                        <div key={data.job_id}>
-                            <Link to={`/companydetails/${data.job_id}`} activeClassName="active">
-                                <h2>{data.name}</h2>
+                        <div key={data._id}>
+                            <Link to={`/companydetails/${data._id}`} activeClassName="active">
+                                <h2>{data.companydetails[0].name}</h2>
 
                             </Link>
 
                             <h3>{data.title}</h3>
                             <div class="row">
                                   <div class="col-md-3">
-                            <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-map-marker" style={{ color: "#1569E0" }}></span> {data.loc}</div>
+                            <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-map-marker" style={{ color: "#1569E0" }}></span> {data.location}</div>
                             </div> <div class="col-md-3">
-                            <div style={{ fontSize: "13px" }}><span  style={{ color: "#1569E0" }}></span> {data.cat}</div>
+                            <div style={{ fontSize: "13px" }}><span  style={{ color: "#1569E0" }}></span> {data.category}</div>
 
                             </div> <div class="col-md-3">
                             <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-usd" style={{ color: "#1569E0" }}></span> {data.salary+" per hour"}</div>
                             </div></div><br/>
-                            <div style={{ fontSize: "13px",height:"40px",width:"70%"  }}><span class="glyphicon glyphicon-calendar" style={{ color: "#1569E0" }}></span> Applications close on {data.deadline.substring(0,10)} at {data.deadline.substring(12,16)}</div>
+                            <div style={{ fontSize: "13px",height:"40px",width:"70%"  }}><span class="glyphicon glyphicon-calendar" style={{ color: "#1569E0" }}></span> Applications close on {data.deadline.substring(0,10)}</div>
 
 
-                            {data.jobDesc}
+                            {data.description}
                             <br /><br />
                             {applied}                           
                         </div>

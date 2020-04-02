@@ -1,5 +1,3 @@
-//company_profile
-
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
@@ -10,40 +8,30 @@ import cookie from 'react-cookies';
 import {environment} from '../../Utils/constants';
 
 
-
-
-//Define a Login Component
 class ShowCompany extends Component {
-    //call the constructor method
     constructor(props) {
-        //Call the constrictor of Super class i.e The Component
         super(props);
-        //maintain the state required for this component
         this.state = {
             name: "",
-            loc: "",
-            desc: "",
+            location: "",
+            description: "",
             contact: "",
-            // id: this.props.location.state.id,
             dataRetrieved: false,
             redirect: false,
             profileData: [],
             jobId: props.match.params
-
-
         }
     }
 
 
     
     componentDidMount() {
-        let cmpny_id = sessionStorage.getItem('id');
         const data = {
-            id: this.state.jobId.jobId
+            jobId: this.state.jobId.jobId
         }
         console.log(data)
 
-        axios.post(environment.baseUrl+'/company/jobs_details', data)
+        axios.get(environment.baseUrl+'/student/jobs_details/'+data.jobId)
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -76,12 +64,12 @@ class ShowCompany extends Component {
                         return (
                             <div>
                                 
-                            <div key={data.cmpy_id}>
+                            <div key={data.companydetails[0]._id}>
                                 <h3>{data.title}</h3>
-                                <h3>{data.name}</h3>
-                                <p>{data.cmpyDesc}</p>
-                                <p>{data.contact}</p>
-                                <p>{data.loc}</p><br /><br />
+                                <h3>{data.companydetails[0].name}</h3>
+                                <p>{data.companydetails[0].description}</p>
+                                <p>{data.companydetails[0].contact}</p>
+                                <p>{data.companydetails[0].location}</p><br /><br />
                             </div>
                             </div>
                    
@@ -101,5 +89,4 @@ class ShowCompany extends Component {
         )
     }
 }
-//export Login Component
 export default ShowCompany;

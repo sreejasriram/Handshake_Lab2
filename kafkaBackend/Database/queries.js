@@ -1,49 +1,162 @@
+const Company = require('../Models/CompanyModel');
 
-const findDocumentsByQuery = (modelObject, query, options,callback) => {
+var comp = Company.createModel()
+const updateField =  (modelObject, id, update, callback) => {
+    console.log("update")
     try {
-        modelObject.find(query, options,'_id',(err, data)=>{
-            if (data){
+        modelObject.findOneAndUpdate({_id: id }, update, { useFindAndModify: false,new:true }, (err, data) => {
+            if (data) {
                 console.log(data)
-                callback(err,data)
+                callback(err, data)
             }
-            else if(err){
-                callback(err,data)
+            else if (err) {
+                console.log(err)
+                callback(err, data)
+            }
+        });
+    } catch (error) {
+        console.log("Error while saving data:" + error)
+        callback(err, null)
+    }
+}
+const findDocumentsByQuery = (modelObject, query, options, callback) => {
+    try {
+        modelObject.find(query, options, '_id', (err, data) => {
+            if (data) {
+                console.log(data)
+                callback(err, data)
+            }
+            else if (err) {
+                callback(err, data)
             }
         }).lean();
     } catch (error) {
         console.log("Error while saving data:" + error)
-        callback(err,null)
+        callback(err, null)
     }
 }
 
-const saveDocuments = (modelObject, data,options,callback) => {
+// const findDocumentsByPopulate = (modelObject, query, options,callback) => {
+//     try {
+//         modelObject.find(query, options,'_id',(err, data)=>{
+//             if (data){
+//                 console.log(data)
+//                 callback(err,data)
+//             }
+//             else if(err){
+//                 callback(err,data)
+//             }
+//         }).lean();
+//     } catch (error) {
+//         console.log("Error while saving data:" + error)
+//         callback(err,null)
+//     }
+// }
+
+
+// function getUserWithPosts(username){
+//     return User.findOne({ username: username })
+//       .populate('posts').exec((err, posts) => {
+//         console.log("Populated User " + posts);
+//       })
+//   }
+
+const findDocumentsByLookup = (modelObject,lookupObject, query, callback) => {
     try {
-        let model = new modelObject(data,options);
-        console.log(model)
-        model.save(options,(err, data)=>{
-            if (data){
-                callback(err,data)
+        console.log(query)
+
+        const agg = [
+            { $match: query },
+            {
+                $lookup:
+                {
+                    from: lookupObject,
+                    localField: 'companyId',
+                    foreignField: '_id',
+                    as: 'companydetails'
+                },
+            },
+
+        ];
+        modelObject.aggregate(agg).exec((err, data) => {
+            if (data) {
+                console.log(data)
+                callback(err, data)
             }
-            else if(err){
-                callback(err,data)
+            else if (err) {
+                callback(err, data)
             }
         });
- 
+
+
     } catch (error) {
         console.log("Error while saving data:" + error)
-        callback(err,null)
+        callback(err, null)
     }
 }
 
-const updateField = async (modelObject, id, update) => {
+
+// const listApplicants = (modelObject,lookupObject, query, callback) => {
+//     try {
+//         console.log("in lookup")
+
+//         const agg = [
+//             { $match: query },
+//             {
+//                 $lookup:
+//                 {
+//                     from: lookupObject,
+//                     localField: 'companyId',
+//                     foreignField: '_id',
+//                     as: 'companydetails'
+//                 },
+//             },
+
+//         ];
+//         modelObject.aggregate(agg).exec((err, data) => {
+//             if (data) {
+//                 console.log(data)
+//                 callback(err, data)
+//             }
+//             else if (err) {
+//                 callback(err, data)
+//             }
+//         });
+
+
+//     } catch (error) {
+//         console.log("Error while saving data:" + error)
+//         callback(err, null)
+//     }
+// }
+
+
+
+
+
+const saveDocuments = (modelObject, data, options, callback) => {
     try {
-        return await modelObject.findOneAndUpdate({ id }, update, { useFindAndModify: false });
+        let model = new modelObject(data, options);
+        console.log(model)
+        model.save(options, (err, data) => {
+            if (data) {
+                callback(err, data)
+            }
+            else if (err) {
+                callback(err, data)
+            }
+        });
+
     } catch (error) {
-        logger.error("Error while updating data:" + error)
-        throw new Error(error);
+        console.log("Error while saving data:" + error)
+        callback(err, null)
     }
 }
+
+
+
 
 module.exports.findDocumentsByQuery = findDocumentsByQuery;
 module.exports.saveDocuments = saveDocuments;
 module.exports.updateField = updateField;
+module.exports.findDocumentsByLookup = findDocumentsByLookup;

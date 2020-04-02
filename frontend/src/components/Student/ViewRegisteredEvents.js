@@ -20,11 +20,11 @@ class ViewRegisteredEvents extends Component {
         super(props);
         this.state = {
             title: "",
-            postingDate: "",
+            posting_date: "",
             deadline: "",
-            loc: "",
+            location: "",
             salary: "",
-            desc: "",
+            description: "",
             cat: "",
             dataRetrieved: false,
             eventData: []
@@ -35,11 +35,11 @@ class ViewRegisteredEvents extends Component {
     componentDidMount() {
         const data = {
 
-            id: sessionStorage.getItem('id')
+            studentId: sessionStorage.getItem('id')
 
         }
 
-        axios.post(environment.baseUrl+'/company/list_applied_events',data)
+        axios.get(environment.baseUrl+'/student/list_applied_events/'+data.studentId)
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -78,9 +78,9 @@ class ViewRegisteredEvents extends Component {
                            <Card>
                                 <CardContent>
                                 <Typography color="black" gutterBottom> <h5>{data.name}</h5></Typography>
-                            <p> {data.eventDesc}</p>
-                            <p> <EventNoteIcon></EventNoteIcon> {data.date.substring(0,10)} at {data.time}</p>
-                            <p><LocationOnOutlinedIcon></LocationOnOutlinedIcon>{data.loc} </p>
+                            <p> {data.description}</p>
+                            <p> <EventNoteIcon></EventNoteIcon> {data.date.substring(0,10)}</p>
+                            <p><LocationOnOutlinedIcon></LocationOnOutlinedIcon>{data.location} </p>
                             </CardContent>
                             </Card>
                             <br /><br />
