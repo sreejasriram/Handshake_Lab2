@@ -50,7 +50,6 @@ class Students extends Component {
     }
     viewProfile = (e) => {
         var headers = new Headers();
-        //prevent page from refresh
         console.log(e.target.value);
         this.setState({
             view_profile: true,
@@ -60,8 +59,7 @@ class Students extends Component {
     }
     componentDidMount() {
         
-        console.log("aaaaa");
-        axios.post(environment.baseUrl+'/company/list_all_students')
+        axios.get(environment.baseUrl+'/company/list_all_students')
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -96,15 +94,15 @@ class Students extends Component {
             if (namesearch.length>0)
             {
                 stuData = stuData.filter((job) => {
-                    return (job.title.indexOf(namesearch) > -1 || job.name.indexOf(namesearch) > -1)
+                    return (job.name.indexOf(namesearch) > -1)
                 })
             }
             if (clgsearch.length>0)
             {
                 stuData = stuData.filter((job) => {
                     console.log(job)
-                    if (job.clg != null)
-                    return job.clg.indexOf(clgsearch) > -1
+                    if (job.college != null)
+                    return job.college.indexOf(clgsearch) > -1
                 })
             }
       
@@ -140,15 +138,15 @@ class Students extends Component {
                     <div class="col-md-7">
                 {stuData.map((data, index) => {
                     return (
-                        <div key={data.stud_id}>
+                        <div key={data._id}>
                             <Card>
                     <CardContent>
                    < Typography color="black" gutterBottom>
                    <b><p style={{ fontSize: '24px' }}>{data.name}</p></b></ Typography>
-                            <p> {data.clg}</p>
-                            <p> {data.degree},{data.major}</p>
-                            <p> {data.title} at {data.cmpy_name}</p>
-                            <button onClick={this.viewProfile} class="btn btn-primary"  value={data.stud_id}>View Profile</button>  
+                            <p> {data.college}</p>
+                            <p> {data.email}</p>
+                            <p> {data.mobile}</p>
+                            <button onClick={this.viewProfile} class="btn btn-primary"  value={data._id}>View Profile</button>  
 
                             <br /><br />
                             </CardContent></Card><br/>
