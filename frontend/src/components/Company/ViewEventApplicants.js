@@ -22,7 +22,7 @@ class ViewEventApplicants extends Component {
         this.state = {
             name: "",
             email: "",
-            phone: "",
+            mobile: "",
             event_id:this.props.match.params.eventId,
             dataRetrieved: false,
             redirect: false,
@@ -52,7 +52,7 @@ class ViewEventApplicants extends Component {
             event_id:this.state.event_id
         }
 
-        axios.post(environment.baseUrl+'/company/list_event_applicants', data)
+        axios.get(environment.baseUrl+'/company/list_event_applicants/'+data.event_id)
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -62,7 +62,7 @@ class ViewEventApplicants extends Component {
                         stuData: response.data.rows,
                         name: response.data.rows[0].name,
                         email: response.data.rows[0].email,
-                        phone: response.data.rows[0].phone
+                        mobile: response.data.rows[0].mobile
                     });
                   
                 } else if (response.data.error) {
@@ -102,9 +102,9 @@ class ViewEventApplicants extends Component {
                                                     < Typography color="black" gutterBottom>
                                                     <b><p style={{ fontSize: '24px' }}>{data.name}</p></b></ Typography>
                                                 <p><MailOutlineOutlinedIcon></MailOutlineOutlinedIcon> {data.email}</p>
-                                                <p><PhoneOutlinedIcon></PhoneOutlinedIcon> {data.phone}</p><br /><br />
+                                                <p><PhoneOutlinedIcon></PhoneOutlinedIcon> {data.mobile}</p><br /><br />
                                                
-                                                <button onClick={this.viewProfile} class="btn btn-primary"  value={data.stud_id}>View Profile</button>  
+                                                <button onClick={this.viewProfile} class="btn btn-primary"  value={data._id}>View Profile</button>  
                                                 </CardContent></Card>
                                             </div>
                                         )

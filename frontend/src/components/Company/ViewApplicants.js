@@ -20,15 +20,9 @@ import PhoneOutlinedIcon from '@material-ui/icons/PhoneOutlined';
 import {environment} from '../../Utils/constants';
 
 
-
-
-//Define a Login Component
 class ViewApplicants extends Component {
-    //call the constructor method
     constructor(props) {
-        //Call the constrictor of Super class i.e The Component
         super(props);
-        //maintain the state required for this component
         this.state = {
             name: "",
             email: "",
@@ -37,6 +31,7 @@ class ViewApplicants extends Component {
             dataRetrieved: false,
             redirect: false,
             stuData: [],
+            applications:[],
             view_profile:false,
             studId:"",
             showStatus : "",
@@ -65,10 +60,9 @@ class ViewApplicants extends Component {
 
     updateStatus = (studentId) => {
         let data ={
-            'companyId':sessionStorage.getItem('id'),
-            'jobId':this.state.job_id,
-            'studentId':studentId,
-            'status':this.state.showStatus
+            jobId:this.state.job_id,
+            studentId:studentId,
+            status:this.state.showStatus
         }
         console.log(data)
         axios.put(environment.baseUrl+'/company/updateStudentstatus', data)
@@ -88,27 +82,26 @@ class ViewApplicants extends Component {
                     })
             }})
     }
-    //submit Login handler to send a request to the node backend
   
     fetchApplicants()
     {
         let cmpny_id = sessionStorage.getItem('id');
         const data = {
-            id: cmpny_id,
             job_id:this.state.job_id
         }
 
-        axios.post(environment.baseUrl+'/company/list_applicants', data)
+        axios.get(environment.baseUrl+'/company/list_applicants/'+data.job_id)
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
                 if (response.data.rows.length>0) {
                     this.setState({
                         dataRetrieved: true,
-                        stuData: response.data.rows,
-                        name: response.data.rows[0].name,
-                        email: response.data.rows[0].email,
-                        phone: response.data.rows[0].phone
+                        stuData: response.data.rows[0].listApplicants,
+                        applications:response.data.rows[0].applications
+                        // name: response.data.rows[0].name,
+                        // email: response.data.rows[0].email,
+                        // mobile: response.data.rows[0].mobile
                     });
                   
                 } else if (response.data.error) {
@@ -131,44 +124,20 @@ class ViewApplicants extends Component {
 
 
     componentDidMount() {
-        // let cmpny_id = sessionStorage.getItem('id');
-        // const data = {
-        //     id: cmpny_id,
-        //     job_id:this.state.job_id
-        // }
-
-        // axios.post(environment.baseUrl+'/company/list_applicants', data)
-        //     .then(response => {
-        //         console.log("in frontend after response");
-        //         console.log(response.data.rows)
-        //         if (response.data.rows.length>0) {
-        //             this.setState({
-        //                 dataRetrieved: true,
-        //                 stuData: response.data.rows,
-        //                 name: response.data.rows[0].name,
-        //                 email: response.data.rows[0].email,
-        //                 phone: response.data.rows[0].phone
-        //             });
-                  
-        //         } else if (response.data.error) {
-        //             console.log("response" + response.data.error)
-        //         }
-        //     })
+      
         this.fetchApplicants()
     }
 
 
     render() {
         let renderRedirect = null;
-        // if (this.state.redirect === true) {
-        //     renderRedirect = <Redirect to='/jobs' />
-        // }
-        
+     let res=""
         if (this.state.view_profile === true) {
             renderRedirect = <Redirect to={`/ViewProfile/${this.state.studId}`}/>
         }
         
         let stuData = this.state.stuData;
+        let applications = this.state.applications
         console.log(stuData)
         return (
             <div>
@@ -185,34 +154,45 @@ class ViewApplicants extends Component {
                                 <div>
                                     {stuData.map((data, index) => {
                                         return (
-                                            <div key={data.stud_id}>
+                                            <div key={data._id}>
                                                 <Card>
                                                     <CardContent>
                                                     < Typography color="black" gutterBottom>
                                                     <b><p style={{ fontSize: '24px' }}>{data.name}</p></b></ Typography>
                                                 <p><MailOutlineOutlinedIcon></MailOutlineOutlinedIcon> {data.email}</p>
-                                                <p><PhoneOutlinedIcon></PhoneOutlinedIcon> {data.phone}</p>
-                                                <p>Status: {data.status}</p>
+                                                <p><PhoneOutlinedIcon></PhoneOutlinedIcon> {data.mobile}</p>
+                                                {applications.map((app, index) => {
+                                                   console.log(app)
+                                                       if (app.studentId===data._id){
+                                                        res=app.resume
+                                                    return(
+                                                    <div>
+                                                <p>Status: {app.status}</p>
+                                               
                                                
                                                 <button class="btn btn-primary" onClick={()=>this.previewResume()} style={{background:"none",textDecoration:"underline",color:"blue",border:"none"}}>View Resume</button><br/>
+                                                </div>)
+                                              
+                                            }
+                                                })}
                                                 <div class="row">
                                                      <div class="col-md-2">
-                                                     <button onClick={this.viewProfile} class="btn btn-primary"  value={data.stud_id}>View Profile</button> 
+                                                     <button onClick={this.viewProfile} class="btn btn-primary"  value={data._id}>View Profile</button> 
 
                                              
                                                      </div> <div class="col-md-8">
                                                     </div> <div class="col-md-2">
                                                     <select name="showStatus" onChange={this.inputChangeHandler} >
                                                         <option value="Change Status" disabled selected>Change Status</option>
-                                                        <option value="pending" >Pending</option>
-                                                        <option value="reviewed" >Reviewed</option>
-                                                        <option value="declined" >Declined</option>
+                                                        <option value="Pending" >Pending</option>
+                                                        <option value="Reviewed" >Reviewed</option>
+                                                        <option value="Declined" >Declined</option>
 
                                                     </select></div> </div>
                                                     <div class="row">
                                                     <div class="col-md-10"></div>
                                                     <div class="col-md-2">
-                                                    <button class="btn btn-primary"  onClick={()=>(this.updateStatus(data.stud_id))}>Update Status</button>
+                                                    <button class="btn btn-primary"  onClick={()=>(this.updateStatus(data._id))}>Update Status</button>
                                                     </div></div>
                                                 </CardContent></Card>
                                                     <Dialog
@@ -225,7 +205,7 @@ class ViewApplicants extends Component {
                                                         <DialogContent>
                                                             <div>
                                                             <object type="application/pdf"
-                                                                data={data.resume}
+                                                                data={res}
                                                                 width="500"
                                                                 height="800">
                                                             </object>
