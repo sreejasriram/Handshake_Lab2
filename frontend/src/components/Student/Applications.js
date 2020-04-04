@@ -4,7 +4,6 @@ import axios from 'axios';
 import { Redirect } from 'react-router';
 import {Link} from 'react-router-dom';
 import cookie from 'react-cookies';
-
 import { Card, CardContent, Button, IconButton, InputBase } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 import LocationOnRoundedIcon from '@material-ui/icons/LocationOnRounded';
@@ -18,34 +17,17 @@ import StudentNavbar from './StudentNavbar'
 import {environment} from '../../Utils/constants';
 
 
-const useStyles = makeStyles({
-    root: {
-        minWidth: 275,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-});
-
 class Applications extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: "",
-            postingDate: "",
-            deadline: "",
-            loc: "",
-            salary: "",
-            desc: "",
-            cat: "",
+            // title: "",
+            // postingDate: "",
+            // deadline: "",
+            // loc: "",
+            // salary: "",
+            // desc: "",
+            // cat: "",
             dataRetrieved: false,
             jobData: [],
             status:""
@@ -62,12 +44,10 @@ class Applications extends Component {
     }
     componentDidMount() {
         const data = {
-
-            id: sessionStorage.getItem('id')
-
+            studentId: sessionStorage.getItem('id')
         }
-
-        axios.post(environment.baseUrl+'/company/list_applied_jobs',data)
+        console.log("before axios")
+        axios.get(environment.baseUrl+'/student/list_applied_jobs/'+data.studentId)
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -98,7 +78,7 @@ class Applications extends Component {
 
                 jobData=jobData.filter((app) => {
                     console.log(app)
-                    return this.state.status.indexOf(app.status) > -1
+                    return this.state.status.indexOf(app.applications[0].status) > -1
                 })
             }
             console.log(jobData)
@@ -118,9 +98,9 @@ class Applications extends Component {
                     <div style={{fontWeight:'550',fontSize:'13px',padding:'16px'}}>Filter by Status</div>
                     <select id="status" name="status" style = {{width:"80%",fontSize:'13px',marginLeft:'16px'}} onChange={this.statusFilter} >
                         <option value="" disabled selected>+ Add Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="reviewed">Reviewed</option>
-                        <option value="declined">Declined</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Reviewed">Reviewed</option>
+                        <option value="Declined">Declined</option>
                     </select></div>
                 </CardContent>
             </Card></div>
@@ -133,16 +113,14 @@ class Applications extends Component {
                     <div class="col-md-8">
                 {jobData.map((data, index) => {
                     return (
-                        <div key={data.job_id}>
+                        <div key={data._id}>
                            <Card>
                             <CardContent>
                             <h5>{data.title}</h5>
-                            <p><BusinessOutlinedIcon fontSize="small"></BusinessOutlinedIcon> {data.name}</p>
-                            <p><LocationOnOutlinedIcon fontSize="small"></LocationOnOutlinedIcon> {data.loc}</p>
-                           
-                                 {/* <p><EventAvailableOutlinedIcon fontSize="small"></EventAvailableOutlinedIcon> {data.app_date.substring(0,10)}</p> */}
-                
-                            <p> <FlagOutlinedIcon fontSize="small"></FlagOutlinedIcon> {data.status}</p>
+                            <p><BusinessOutlinedIcon fontSize="small"></BusinessOutlinedIcon> {data.companydetails[0].name}</p>
+                            <p><LocationOnOutlinedIcon fontSize="small"></LocationOnOutlinedIcon> {data.companydetails[0].location}</p>
+                            <p><EventAvailableOutlinedIcon fontSize="small"></EventAvailableOutlinedIcon> {data.applications[0].appliedDate.substring(0,10)}</p>
+                            <p> <FlagOutlinedIcon fontSize="small"></FlagOutlinedIcon> {data.applications[0].status}</p>
                             </CardContent></Card>
                             <br /><br />
                         </div>

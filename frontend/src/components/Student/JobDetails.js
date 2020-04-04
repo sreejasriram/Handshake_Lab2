@@ -53,31 +53,31 @@ class JobDetails extends Component {
  
                  }
              })
-             .then(response => {
-                 console.log("i m here")
-                 if(this.state.jobData.length) {
-                 var data = {
-                     cmpy_id:this.state.jobData[0].cmpy_id,
-                     job_id:nextProps.jobId,
-                     stud_id:sessionStorage.getItem('id')
-                 }
-                 console.log(data)
-                 console.log(this.state.already_applied)
-                 axios.post(environment.baseUrl+'/company/job_already_applied', data)
-                 .then(response => {
-                 console.log("in frontend after response");
-                 console.log(response.data)
-                 if (response.data.result) {
-                     this.setState({
-                         already_applied:true
-                     });
-                 } else if (response.data.error) {
-                     console.log("response" + response.data.error)
-                     console.log(this.state.already_applied)
+        //      .then(response => {
+        //          console.log("i m here")
+        //          if(this.state.jobData.length) {
+        //          var data = {
+        //              cmpy_id:this.state.jobData[0].cmpy_id,
+        //              job_id:nextProps.jobId,
+        //              stud_id:sessionStorage.getItem('id')
+        //          }
+        //          console.log(data)
+        //          console.log(this.state.already_applied)
+        //          axios.post(environment.baseUrl+'/company/job_already_applied', data)
+        //          .then(response => {
+        //          console.log("in frontend after response");
+        //          console.log(response.data)
+        //          if (response.data.result) {
+        //              this.setState({
+        //                  already_applied:true
+        //              });
+        //          } else if (response.data.error) {
+        //              console.log("response" + response.data.error)
+        //              console.log(this.state.already_applied)
  
-                 }
-             })}
-         })
+        //          }
+        //      })}
+        //  })
  
          
 
@@ -103,33 +103,33 @@ class JobDetails extends Component {
 
                 }
             })
-            .then(response => {
-                console.log("i m here")
-                if(this.state.jobData.length) {
-                var data = {
-                    cmpy_id:this.state.jobData[0].cmpy_id,
-                   // job_id:this.state.jobId.jobId,
-                    job_id:this.props.jobId,
-                    stud_id:sessionStorage.getItem('id')
-                }
-                console.log(data)
-                axios.post(environment.baseUrl+'/company/job_already_applied', data)
-                .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.result)
-                if (response.data.result) {
-                    this.setState({
-                        already_applied:true
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
+            // .then(response => {
+            //     console.log("i m here")
+            //     if(this.state.jobData.length) {
+            //     var data = {
+            //         cmpy_id:this.state.jobData[0].cmpy_id,
+            //        // job_id:this.state.jobId.jobId,
+            //         job_id:this.props.jobId,
+            //         stud_id:sessionStorage.getItem('id')
+            //     }
+            //     console.log(data)
+            //     axios.post(environment.baseUrl+'/company/job_already_applied', data)
+            //     .then(response => {
+            //     console.log("in frontend after response");
+            //     console.log(response.data.result)
+            //     if (response.data.result) {
+            //         this.setState({
+            //             already_applied:true
+            //         });
+            //     } else if (response.data.error) {
+            //         console.log("response" + response.data.error)
 
-                }
-            }
-            )
-        }  
-        }  
-        )     
+            //     }
+            // }
+            // )
+        // }  
+        // }  
+        // )     
     }
 
 
@@ -145,7 +145,7 @@ class JobDetails extends Component {
         console.log(jobData)
         if (this.state.applied == true) {
             console.log(jobData[0].cmpy_id)
-            renderRedirect = <JobApply cmpy_id={jobData[0].companyId} job_id={this.props.jobId} open="true"/>
+            renderRedirect = <JobApply cmpy_id={jobData[0].companydetails[0]._id} job_id={this.props.jobId} open="true"/>
         }
         if (!jobData.length) {
           
@@ -156,7 +156,7 @@ class JobDetails extends Component {
         if (this.state.already_applied == false && jobData[0]){
             console.log("inside")
             // applied = <button onClick={this.ApplyJob} class="btn btn-primary">Apply</button>
-            applied = <JobApply cmpy_id={jobData[0].companyId} job_id={this.props.jobId} />
+            applied = <JobApply cmpy_id={jobData[0].companydetails[0]._id} job_id={this.props.jobId} />
             }
         return (
             <div>

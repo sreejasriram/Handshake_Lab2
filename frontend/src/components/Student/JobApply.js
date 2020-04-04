@@ -109,6 +109,8 @@ class JobApply extends Component {
             display = <Redirect to='/studJobs'/>
 
         }
+        console.log(this.state.job_id)
+        console.log(this.state.cmpy_id)
         return (
             <div>
                 <div>

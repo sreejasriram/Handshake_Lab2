@@ -104,7 +104,7 @@ class Events extends Component {
                                         <p>{data.description}</p>
                                         <p><b>Time: </b>{data.date.substring(0, 10)} at {data.time}</p>
                                         <p><b>Location:</b> {data.location}</p><br /><br />
-                                        <button onClick={this.viewApplicants} class="btn btn-primary" value={data.event_id} style={{ backgroundColor: '#1569E0', marginLeft: '800px', borderRadius: '15px' }}>View Applicants</button>
+                                        <button onClick={this.viewApplicants} class="btn btn-primary" value={data._id} style={{ backgroundColor: '#1569E0', marginLeft: '800px', borderRadius: '15px' }}>View Applicants</button>
                                     </CardContent></Card>
                             </div>
                         )
