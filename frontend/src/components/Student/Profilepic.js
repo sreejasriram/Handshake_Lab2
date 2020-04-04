@@ -125,7 +125,7 @@ class Basic extends Component {
                                         <div class="row">
                                             <div class="col-md-10">
                                             <Typography color="black" gutterBottom>
-                                            <h2>{this.state.name}</h2>
+                                            <h4><b>{this.state.name}</b></h4>
                                             </Typography>
                                             </div>
                                             <div class="col-md-2">

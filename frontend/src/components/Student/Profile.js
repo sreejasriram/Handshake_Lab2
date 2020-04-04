@@ -33,7 +33,7 @@ class Profile extends Component {
             skills: "",
             education: [
                 {
-                    id: "",
+                    // id: "",
                     college_name: "",
                     location:"",
                     degree: "",
@@ -71,7 +71,8 @@ class Profile extends Component {
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
-            
+                response.data.rows = response.data.rows[0]
+                console.log(response.data.rows)
                     if (response.data.rows) {
                         console.log("aaa")
                         this.setState({
@@ -86,9 +87,9 @@ class Profile extends Component {
                             country: response.data.rows.country,
                             career_objective: response.data.rows.career_objective,
                             mobile: response.data.rows.mobile,
-                            skills: response.data.rows.skills
+                            skills: response.data.rows.skills,
                             
-                        //     education:
+                            education: response.data.rows.education
                         //     experience:
                         });
                         if (response.data.rows.dob){
@@ -132,6 +133,10 @@ class Profile extends Component {
                 degree: this.state.degree,
                 major:this.state.major
         }
+
+        let education_props={
+            education: this.state.education
+    }
       
         return (
             <div style={{ backgroundColor: "#F7F7F7" }}>
@@ -145,8 +150,8 @@ class Profile extends Component {
                     </div>
                     <div class="col-md-7">
                         <Journey {...journey_props}/>
-                        {/* <Education />
-                        <Experience /> */}
+                         <Education {...education_props}/>
+                        {/* <Experience />  */}
                         <Contact {...contact_props}/>
                     </div>
                     <div class="col-md-1"> </div>

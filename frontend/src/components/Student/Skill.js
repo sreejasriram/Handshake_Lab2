@@ -17,7 +17,6 @@ class Skill extends Component {
         super(props);
         this.state = {
             skills: "",
-           
             redirect: true,
             rerender: false
         }
