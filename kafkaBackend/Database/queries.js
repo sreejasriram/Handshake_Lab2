@@ -3,8 +3,9 @@ const Company = require('../Models/CompanyModel');
 var comp = Company.createModel()
 const updateField =  (modelObject, id, update, callback) => {
     console.log("update")
+    console.log(id)
     try {
-        modelObject.findOneAndUpdate({_id: id }, update, { useFindAndModify: false,new:true }, (err, data) => {
+        modelObject.findOneAndUpdate(id, update, {useFindAndModify:false,new:true}, (err, data) => {
             if (data) {
                 console.log(data)
                 callback(err, data)
@@ -19,9 +20,45 @@ const updateField =  (modelObject, id, update, callback) => {
         callback(err, null)
     }
 }
+const editObj =  (modelObject, id, update, callback) => {
+    console.log("update")
+    try {
+        modelObject.findOneAndUpdate(id, update, {useFindAndModify:false,new:true}, (err, data) => {
+            if (data) {
+                console.log(data)
+                callback(err, data)
+            }
+            else if (err) {
+                console.log(err)
+                callback(err, data)
+            }
+        });
+    } catch (error) {
+        console.log("Error while saving data:" + error)
+        callback(err, null)
+    }
+}
+
 const findDocumentsByQuery = (modelObject, query, options, callback) => {
     try {
         modelObject.find(query, options, '_id', (err, data) => {
+            if (data) {
+                console.log(data)
+                callback(err, data)
+            }
+            else if (err) {
+                callback(err, data)
+            }
+        }).lean();
+    } catch (error) {
+        console.log("Error while saving data:" + error)
+        callback(err, null)
+    }
+}
+
+const getProfile = (modelObject, query, callback) => {
+    try {
+        modelObject.find(query, (err, data) => {
             if (data) {
                 console.log(data)
                 callback(err, data)
@@ -96,6 +133,45 @@ const findDocumentsByLookup = (modelObject,lookupObject, query, callback) => {
 }
 
 
+
+
+const getApplicantsforJob = (modelObject,lookupObject, query, callback) => {
+    try {
+        console.log(query)
+
+        const agg = [
+            { $match: query },
+            {
+                $lookup:
+                {
+                    from: lookupObject,
+                    localField: '_id',
+                    foreignField: 'applications.jobId',
+                    as: 'listApplicants'
+                },
+            },
+
+        ];
+        modelObject.aggregate(agg).exec((err, data) => {
+            if (data) {
+                console.log(data)
+                callback(err, data)
+            }
+            else if (err) {
+                callback(err, data)
+            }
+        });
+
+
+    } catch (error) {
+        console.log("Error while saving data:" + error)
+        callback(err, null)
+    }
+}
+
+
+
+
 // const listApplicants = (modelObject,lookupObject, query, callback) => {
 //     try {
 //         console.log("in lookup")
@@ -160,3 +236,7 @@ module.exports.findDocumentsByQuery = findDocumentsByQuery;
 module.exports.saveDocuments = saveDocuments;
 module.exports.updateField = updateField;
 module.exports.findDocumentsByLookup = findDocumentsByLookup;
+module.exports.editObj = editObj;
+module.exports.getApplicantsforJob = getApplicantsforJob;
+
+module.exports.getProfile = getProfile;

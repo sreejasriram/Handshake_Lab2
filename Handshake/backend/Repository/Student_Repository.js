@@ -36,6 +36,29 @@ exports.student_signin = (stud_details,callback)=>{
     }
 };
 
+
+exports.student_education_edited = (stud_details,callback)=>{
+    console.log(stud_details)
+    const update_data = {
+        dob: stud_details.dob,
+        city: stud_details.city,
+        state: stud_details.state,
+        country: stud_details.country
+    }
+    console.log(update_data)
+    console.log(stud_details.id)
+
+    try{
+        query.updateField(Student.createModel(),{_id:stud_details.id},update_data, (err,rows) => {
+                    callback(err,rows)
+                });
+    }
+    catch(e)
+    {
+       callback(e,null)
+    }
+};
+
 exports.student_basic_edited = (stud_details,callback)=>{
     console.log(stud_details)
     const update_data = {

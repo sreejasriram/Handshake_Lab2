@@ -24,7 +24,6 @@ const studentSchema = new Schema({
     registrations: { type: Array, required: false },
     education: [
         {
-            id: String,
             college_name: String,
             location: String,
             degree: String,
@@ -33,12 +32,12 @@ const studentSchema = new Schema({
             year_of_starting: Number,
             month_of_starting: Number,
             year_of_passing: Number,
-            month_of_passing: Number,
+            month_of_passing: Number
         }
     ],
     experience: [
         {
-            id: String,
+            // id: String,
             company: String,
             title: String,
             location: String,

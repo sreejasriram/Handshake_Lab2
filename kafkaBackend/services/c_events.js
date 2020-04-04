@@ -97,6 +97,31 @@ handle_request=(eventDetails, callback)=>{
             return callback(error,null)
         }
     }
+    else  if (eventDetails.type ===  "list_event_applicants") {
+        console.log(eventDetails.eventId)
+        try{
+                query.getProfile(Students.createModel(),{'registrations.eventId':ObjectId(eventDetails.eventId)},(err,result)=>{
+                callback(err,result)
+            });
+        }
+        catch(error){
+            return callback(error,null)
+        }
+    }
+
+    else  if (eventDetails.type ===  "list_event_applicants_profile") {
+        console.log(eventDetails.studentId)
+        try{
+                query.getProfile(Students.createModel(),{_id:ObjectId(eventDetails.studentId)},(err,result)=>{
+                callback(err,result)
+            });
+        }
+        catch(error){
+            return callback(error,null)
+        }
+    }
+    
+    
     
 }
 

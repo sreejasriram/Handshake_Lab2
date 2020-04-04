@@ -69,8 +69,10 @@ router.post('/apply_job',upload.single('file'),(req,res)=>{
                 resume: data.Location}
             }
 
-      
-    CmpnyRepo.job_apply(appDat,(err,rows)=>{
+            appDat.type = "apply_job";
+
+            kafka.make_request('company-jobs',appDat,(err,rows)=>{
+    // CmpnyRepo.job_apply(appDat,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -283,11 +285,79 @@ router.get('/getevents/:companyId',(req,res)=>{
         
     }) 
 })
+router.get('/list_event_applicants/:eventId',(req,res)=>{
+    console.log("In list event applicants from company get request");
+    console.log(req.params);
+    req.body.type = "list_event_applicants";
+    req.body.eventId = req.params.eventId;
+
+    kafka.make_request('company-events',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})}      
+    }) 
+})
+
+router.get('/list_applicants/:jobId',(req,res)=>{
+    console.log("In list job applicants from company post request");
+    console.log(req.params);
+    req.body.type = "list_job_applicants";
+    req.body.jobId = req.params.jobId;
+
+    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})}
+        
+    }) 
+})
 
 
-router.post('/list_all_students',(req,res)=>{
-    console.log("In company students retrieve post request");
-    CmpnyRepo.list_all_students((err,rows)=>{
+router.get('/get_student_profile/:studentId',(req,res)=>{
+    console.log("In get_student_profile get request");
+    console.log(req.params);
+    req.body.type = "list_event_applicants_profile";
+    req.body.studentId = req.params.studentId;
+
+    kafka.make_request('company-events',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})}
+        
+    }) 
+})
+
+
+router.put('/updateStudentstatus', (req,res)=>{
+    console.log(req.body);
+    req.body.type = "update_job_status";
+    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+        console.log(req.body)
+        if (err){
+            res.json({"error":err})
+        }
+        else{
+            res.json({'result':rows})}
+    })
+})
+
+
+router.get('/list_all_students',(req,res)=>{
+    console.log("In list_all_students from company retrieve post request");
+    req.body.type = "list_all_students_company";
+    kafka.make_request('profile',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -299,6 +369,11 @@ router.post('/list_all_students',(req,res)=>{
         
     }) 
 })
+
+
+
+
+
 
 
 
@@ -344,31 +419,9 @@ router.post('/event_already_applied',(req,res)=>{
     }) 
 })
 
-router.post('/list_applied_jobs',(req,res)=>{
-    console.log("In company list jobs post request");
-    console.log(req.body);
-    CmpnyRepo.list_applied_jobs(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
-    }) 
-})
 
-router.put('/updateStudentstatus', (req,res)=>{
-    CmpnyRepo.updateStudentstatus(req.body,(err,result)=>{
-        console.log(req.body)
-        if (err){
-            res.json({"error":err})
-        }
-        else{
-            res.json({'result':result})}
-    })
-})
+
+
 
 
 
@@ -464,49 +517,7 @@ router.post('/save_company_profile',(req,res)=>{
 })
 
 
-router.post('/get_student_profile',(req,res)=>{
-    console.log("In student profile view from company post request");
-    console.log(req.body);
-    CmpnyRepo.get_student_profile(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})}
-        
-    }) 
-})
-router.post('/list_applicants',(req,res)=>{
-    console.log("In list applicants from company post request");
-    console.log(req.body);
-    CmpnyRepo.list_applicants(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})}
-        
-    }) 
-})
-router.post('/list_event_applicants',(req,res)=>{
-    console.log("In list applicants from company post request");
-    console.log(req.body);
-    CmpnyRepo.list_event_applicants(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})}
-        
-        
-    }) 
-})
+
 
 
 

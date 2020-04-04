@@ -19,7 +19,6 @@ const eventSchema = new Schema({
     date: { type: String, required: false },
     location: { type: String, required: false },
     eligibility: { type: String, required: false },
-   
     registrations: [
         {
             // id: Number,
@@ -28,8 +27,7 @@ const eventSchema = new Schema({
         }
     ]
 }, { _id: false }, { collection: 'events' });
-// autoIncrement.initialize(mongoose.connection);
-// eventSchema.plugin(autoIncrement.plugin, { model: 'events', field: 'registrations.id'});
+
 
 const createModel = function () {
     return mongoose.model("events", eventSchema)

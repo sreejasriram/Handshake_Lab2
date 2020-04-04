@@ -24,7 +24,7 @@ const jobSchema = new Schema({
     category: { type: String, required: false },
     applications: [
         {
-            id: String,
+            // id: String,
             studentId: mongoose.Schema.Types.ObjectId,
             status: String,
             appliedDate: String,
@@ -33,8 +33,8 @@ const jobSchema = new Schema({
     ]
 }, { _id: false }, { collection: 'jobs' });
 
-autoIncrement.initialize(mongoose.connection);
-jobSchema.plugin(autoIncrement.plugin, { model: 'jobs', field: 'applications.id',startAt: 1 });
+// autoIncrement.initialize(mongoose.connection);
+// jobSchema.plugin(autoIncrement.plugin, { model: 'jobs', field: 'applications.id',startAt: 1 });
 const createModel = function () {
     return mongoose.model("jobs", jobSchema)
 }

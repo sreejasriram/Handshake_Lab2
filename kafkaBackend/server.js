@@ -7,6 +7,7 @@ var c_signup = require('./services/c_signup.js');
 var c_signin = require('./services/c_signin.js');
 var c_jobs = require('./services/c_jobs.js');
 var c_events = require('./services/c_events.js');
+var profile = require('./services/profile.js');
 
 
 var options = {
@@ -77,5 +78,6 @@ handleTopicRequest("company-signup",c_signup)
 handleTopicRequest("company-signin",c_signin)
 handleTopicRequest("company-jobs",c_jobs)
 handleTopicRequest("company-events",c_events)
+handleTopicRequest("profile",profile)
 
 
