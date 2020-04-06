@@ -70,58 +70,58 @@ class EventDetails extends Component {
                     this.setState({
                         dataRetrieved: true,
                         eventData: response.data.rows,
-                        cmpy_id: response.data.rows[0].companydetails[0]._id
+                        cmpy_id: response.data.rows.cmpy_id
                     });
                 } else if (response.data.error) {
                     console.log("response" + response.data.error)
 
                 }
             })
-            // .then(response => {
-            //     console.log("checking if event already applied")
-            //     let data = {
-            //         cmpy_id: this.state.eventData[0].cmpy_id,
-            //         event_id: this.state.eventId.eventId,
-            //         stud_id: sessionStorage.getItem('id')
-            //     }
-            //     console.log(data)
-            //     axios.post(environment.baseUrl + '/company/event_already_applied', data)
-            //         .then(response => {
-            //             console.log("in frontend after response");
-            //             console.log(response.data.result)
-            //             if (response.data.result) {
-            //                 this.setState({
-            //                     already_applied: true
-            //                 });
-            //             } else if (response.data.error) {
-            //                 console.log("response" + response.data.error)
+            .then(response => {
+                console.log("checking if event already applied")
+                let data = {
+                    // cmpy_id: this.state.eventData[0].cmpy_id,
+                    eventId: this.state.eventId.eventId,
+                    studentId: sessionStorage.getItem('id')
+                }
+                console.log(data)
+                axios.get(environment.baseUrl + '/company/event_already_applied/'+data.eventId + "/" + data.studentId)
+                    .then(response => {
+                        console.log("in frontend after response");
+                        console.log(response.data.result)
+                        if (response.data.result) {
+                            this.setState({
+                                already_applied: true
+                            });
+                        } else if (response.data.error) {
+                            console.log("response" + response.data.error)
 
-            //             }
-            //         })
-            // })
-            // .then(response => {
-            //     console.log("get student eligibility")
-            //     let data = {
-            //         cmpy_id: this.state.eventData[0].cmpy_id,
-            //         event_id: this.state.eventId.eventId,
-            //         id: sessionStorage.getItem('id')
-            //     }
-            //     console.log(data)
-            //     axios.post(environment.baseUrl + '/student/get_student_eligibility', data)
-            //         .then(response => {
-            //             console.log("in frontend after response");
-            //             console.log(response.data.rows)
-            //             if (response.data.rows) {
-            //                 this.setState({
-            //                     stud_major: response.data.rows[0],
-            //                     event_elig: response.data.rows[1]
-            //                 });
-            //             } else if (response.data.error) {
-            //                 console.log("response" + response.data.error)
+                        }
+                    })
+            })
+            .then(response => {
+                console.log("get student eligibility")
+                let data = {
+                    // cmpy_id: this.state.eventData[0].cmpy_id,
+                    eventId: this.state.eventId.eventId,
+                    studentId: sessionStorage.getItem('id')
+                }
+                console.log(data)
+                axios.get(environment.baseUrl + '/company/get_student_eligibility/'+data.eventId + "/" + data.studentId)
+                    .then(response => {
+                        console.log("in frontend after response");
+                        console.log(response.data.rows)
+                        if (response.data.rows) {
+                            this.setState({
+                                stud_major: response.data.rows,
+                                // event_elig: response.data.rows[1]
+                            });
+                        } else if (response.data.error) {
+                            console.log("response" + response.data.error)
 
-            //             }
-            //         })
-            // })
+                        }
+                    })
+            })
     }
 
 
@@ -129,8 +129,14 @@ class EventDetails extends Component {
         let renderRedirect = null;
         let applied = null
         let eventData = this.state.eventData;
-        let stud_major = this.state.stud_major.major;
-        let event_elig = this.state.event_elig;
+        let stud_major
+        console.log(this.state.stud_major)
+        if (this.state.stud_major.length)
+         stud_major = this.state.stud_major[0].education[0].major;
+        // let event_elig = this.state.event_elig;
+        let event_elig
+        if (eventData.length)
+        event_elig = eventData[0].eligibility;        
         let eligibility = false;
         let logincookie = null
         console.log(this.state.cmpy_id)
@@ -149,19 +155,28 @@ class EventDetails extends Component {
         console.log(stud_major)
         console.log(event_elig)
 
+        // if (stud_major && event_elig) {
+        //     if (event_elig.major == "all" || event_elig.major == "All") {
+        //         console.log(event_elig)
+        //         eligibility = true
+        //     }
+        //     else {
+        //         eligibility = event_elig.major.includes(stud_major)
+        //     }
+        // }
+
         if (stud_major && event_elig) {
-            if (event_elig.major == "all" || event_elig.major == "All") {
+            if (event_elig == "all" || event_elig == "All") {
                 console.log(event_elig)
                 eligibility = true
             }
             else {
-                eligibility = event_elig.major.includes(stud_major)
+                eligibility = event_elig.includes(stud_major)
+                console.log(eligibility)
             }
         }
 
-//////////////////////////////////////////////////////////hard coded
-        eligibility = true
-        /////////////////////////////////////////////////
+
         if (this.state.already_applied == false && eligibility == true) {
             console.log("inside")
             applied = <button onClick={this.ApplyEvent} class="btn btn-primary">Apply</button>
