@@ -8,7 +8,7 @@ var c_signin = require('./services/c_signin.js');
 var c_jobs = require('./services/c_jobs.js');
 var c_events = require('./services/c_events.js');
 var profile = require('./services/profile.js');
-
+var chat = require('./services/chat.js')
 
 var options = {
     useNewUrlParser: true,
@@ -79,5 +79,6 @@ handleTopicRequest("company-signin",c_signin)
 handleTopicRequest("company-jobs",c_jobs)
 handleTopicRequest("company-events",c_events)
 handleTopicRequest("profile",profile)
+handleTopicRequest("chat",chat)
 
 
