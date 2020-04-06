@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import {environment} from '../../Utils/constants';
+import TablePagination from '@material-ui/core/TablePagination';
 
 
 class Home extends Component {
@@ -30,7 +31,9 @@ class Home extends Component {
             jobData: [],
             editJob:"",
             view_applicants:false,
-            companyId:cmpny_id
+            companyId:cmpny_id,
+            page: 0,
+            rowsPerPage: 2
 
 
 
@@ -47,6 +50,17 @@ class Home extends Component {
             redirect: true
         })
     }
+
+
+    handleChangePage = (event, newPage) => {
+        this.setState({
+            page: newPage
+        })
+        console.log(this.state.page)
+    };
+
+
+
 
     viewApplicants = (e) => {
         this.setState({
@@ -106,7 +120,9 @@ class Home extends Component {
                             </div>
                            
                                 <div>
-                                    {jobData.map((data, index) => {
+                                {jobData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+
+                                    // {jobData.map((data, index) => {
                                         
                                         return (
                                             <div key={data._id}>
@@ -126,7 +142,22 @@ class Home extends Component {
                                             </div>
 
                                         )
-                                    })}
+                                    })
+                                    
+                                    }
+                     <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <TablePagination
+                            rowsPerPageOptions={[2]}
+                            count={this.state.jobData.length}
+                            page={this.state.page}
+                            rowsPerPage={this.state.rowsPerPage}
+                            onChangePage={this.handleChangePage}
+                        />
+                    </div>  <div class="col-md-4"></div>
+                </div>
+
                                 </div>
                           
                         </div>

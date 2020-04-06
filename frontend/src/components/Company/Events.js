@@ -10,6 +10,9 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import {environment} from '../../Utils/constants';
+import TablePagination from '@material-ui/core/TablePagination';
+
+
 
 class Events extends Component {
     constructor(props) {
@@ -25,7 +28,9 @@ class Events extends Component {
             redirect: false,
             eventData: [],
             editEvent: "",
-            view_applicants: false
+            view_applicants: false,
+            page: 0,
+            rowsPerPage: 2
 
         }
         this.postEvents = this.postEvents.bind(this);
@@ -41,6 +46,16 @@ class Events extends Component {
 
         })
     }
+
+
+    handleChangePage = (event, newPage) => {
+        this.setState({
+            page: newPage
+        })
+        console.log(this.state.page)
+    };
+
+
 
     viewApplicants = (e) => {
         this.setState({
@@ -93,7 +108,9 @@ class Events extends Component {
                 <div class="row">
                 <div class="col-md-1"> </div>
                     <div class="col-md-10"> 
-                    {eventData.map((data, index) => {
+                    {eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+
+                    // {eventData.map((data, index) => {
                         return (
                             <div key={data._id}>
                                 <br /><br />
@@ -103,12 +120,26 @@ class Events extends Component {
                                             <h3>{data.name}</h3></Typography>
                                         <p>{data.description}</p>
                                         <p><b>Time: </b>{data.date.substring(0, 10)} at {data.time}</p>
-                                        <p><b>Location:</b> {data.location}</p><br /><br />
+                                        <p><b>Location:</b> {data.location}</p><br />
                                         <button onClick={this.viewApplicants} class="btn btn-primary" value={data._id} style={{ backgroundColor: '#1569E0', marginLeft: '800px', borderRadius: '15px' }}>View Applicants</button>
                                     </CardContent></Card>
                             </div>
                         )
-                    })}</div>   
+                    })}
+                      <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <TablePagination
+                            rowsPerPageOptions={[2]}
+                            count={this.state.eventData.length}
+                            page={this.state.page}
+                            rowsPerPage={this.state.rowsPerPage}
+                            onChangePage={this.handleChangePage}
+                        />
+                    </div>  <div class="col-md-4"></div>
+                </div>
+                    
+                    </div>   
                     <div class="col-md-1"> </div>
                 </div>
                 </div>
