@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import StudentNavbar from './StudentNavbar'
-import {environment} from '../../Utils/constants';
+import { environment } from '../../Utils/constants';
 import TablePagination from '@material-ui/core/TablePagination';
 
 class CompanyEvents extends Component {
@@ -22,8 +22,8 @@ class CompanyEvents extends Component {
             view: false,
             eventindex: 0,
             namesearch: "",
-            page:1,
-            rowsPerPage:2
+            page: 0,
+            rowsPerPage: 2
         }
         this.viewRegisteredEvents = this.viewRegisteredEvents.bind(this);
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
@@ -64,7 +64,7 @@ class CompanyEvents extends Component {
 
 
     componentDidMount() {
-        axios.get(environment.baseUrl+'/student/all_events_retrieve')
+        axios.get(environment.baseUrl + '/student/all_events_retrieve')
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -108,7 +108,7 @@ class CompanyEvents extends Component {
                 {navbar}
                 {renderRedirect}
                 <div class="row">
-                <div class="col-md-1"></div>
+                    <div class="col-md-1"></div>
                     <div class="col-md-9">
                         <Card style={{ marginRight: '16px' }}>
                             <CardContent>
@@ -120,44 +120,50 @@ class CompanyEvents extends Component {
                     </div>
                 </div>
 
-               <br/>
-             
+                <br />
+
                 <div class="row">
-                <div class="col-md-1"></div>
+                    <div class="col-md-1"></div>
                     <div class="col-md-9">
 
-{eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
-                // {eventData.map((data, index) => {
-                    return (
-                        <div key={data._id}>
-                            <Card>
-                                <CardContent>
-                                    <Typography color="black" gutterBottom>
-                                        <Link to={`/eventdetails/${data._id}`} activeClassName="active">
-                                            <h5>{data.name}</h5>
-                                            
-                                        </Link>  
-                                        <p> {data.description} </p>
-                                            <p> <EventNoteIcon fontSize="medium"></EventNoteIcon> {data.date.substring(0,10)}
-                                            <LocationOnOutlinedIcon fontSize="medium"></LocationOnOutlinedIcon> {data.location}
-                                            
-                                            </p>
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                            <br /><br />
-                        </div>
-                    )
-                })}</div>
-                 <div class="col-md-2"></div>
-                 </div>
-                 <TablePagination
-                        rowsPerPageOptions={[2]}
-                        count={this.state.eventData.length}
-                        page={this.state.page}
-                        rowsPerPage={this.state.rowsPerPage}
-                        onChangePage={this.handleChangePage}
-                    />
+                        {eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+                            // {eventData.map((data, index) => {
+                            return (
+                                <div key={data._id}>
+                                    <Card>
+                                        <CardContent>
+                                            <Typography color="black" gutterBottom>
+                                                <Link to={`/eventdetails/${data._id}`} activeClassName="active">
+                                                    <h5>{data.name}</h5>
+
+                                                </Link>
+                                                <p> {data.description} </p>
+                                                <p> <EventNoteIcon fontSize="medium"></EventNoteIcon> {data.date.substring(0, 10)}
+                                                    <LocationOnOutlinedIcon fontSize="medium"></LocationOnOutlinedIcon> {data.location}
+
+                                                </p>
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                    <br /><br />
+                                </div>
+                            )
+                        })}</div>
+                    <div class="col-md-2"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <TablePagination
+                            rowsPerPageOptions={[2]}
+                            count={this.state.eventData.length}
+                            page={this.state.page}
+                            rowsPerPage={this.state.rowsPerPage}
+                            onChangePage={this.handleChangePage}
+                        />
+                    </div>  <div class="col-md-4"></div>
+                </div>
             </div>
 
         )

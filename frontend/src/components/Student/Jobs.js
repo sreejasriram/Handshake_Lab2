@@ -11,6 +11,8 @@ import { Card, CardContent, Button } from '@material-ui/core/';
 import Typography from '@material-ui/core/Typography';
 import StudentNavbar from './StudentNavbar';
 import {environment} from '../../Utils/constants';
+import TablePagination from '@material-ui/core/TablePagination';
+
 
 class Jobs extends Component {
     constructor(props) {
@@ -22,7 +24,9 @@ class Jobs extends Component {
             locsearch: "",
             jobfilter: [],
             jobindex: 0,
-            jobid: ""
+            jobid: "",
+            page: 0,
+            rowsPerPage: 2
         }
 
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
@@ -38,6 +42,13 @@ class Jobs extends Component {
         })
         console.log(this.state.namesearch)
     }
+
+    handleChangePage = (event, newPage) => {
+        this.setState({
+            page: newPage
+        })
+        console.log(this.state.page)
+    };
 
     showJob = (e) => {
         console.log(e)
@@ -169,7 +180,9 @@ class Jobs extends Component {
                     <div class="col-md-3">
                         <Card>
                             <CardContent>
-                                {jobData.map((data, index) => {
+                            {jobData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+
+                                // {jobData.map((data, index) => {
                                     return (
                                         <div key={data._id}>
                                             <Typography color="textSecondary" gutterBottom>
@@ -177,10 +190,29 @@ class Jobs extends Component {
                                                     <h5>{data.title}</h5>
                                                     <p> {data.companydetails[0].name},{data.location}</p>
                                                 </Link> </Typography>
+                                                <hr/>
                                         </div>
                                     )
                                 })}
-                        </CardContent> </Card></div>
+
+                <div class="row">
+                        {/* <div class="col-md-4"></div> */}
+                        {/* <div class="col-md-4"> */}
+                            <TablePagination
+                                rowsPerPageOptions={[2]}
+                                count={this.state.jobData.length}
+                                page={this.state.page}
+                                rowsPerPage={this.state.rowsPerPage}
+                                onChangePage={this.handleChangePage}
+                            />
+                        {/* </div>   */}
+                        {/* <div class="col-md-4"></div> */}
+                    </div>
+                        </CardContent> </Card>
+                        
+                       
+
+                        </div>
                         <div class="col-md-7">
                         <Card>
                             <CardContent>
