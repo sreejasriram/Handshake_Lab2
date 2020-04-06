@@ -11,6 +11,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {environment} from '../../Utils/constants';
+import TablePagination from '@material-ui/core/TablePagination';
 
 
 
@@ -26,7 +27,10 @@ class Students extends Component {
             namesearch:"",
             clgsearch:"",
             view_profile:false,
-            studId:""
+            studId:"",
+            page: 0,
+            rowsPerPage: 2,
+            
            
         }
         this.statusFilter=this.statusFilter.bind(this);
@@ -35,6 +39,14 @@ class Students extends Component {
 
     }
  
+    handleChangePage = (event, newPage) => {
+        this.setState({
+            page: newPage
+        })
+        console.log(this.state.page)
+    };
+
+
     inputChangeHandler = (e) => {
         const value = e.target.value
         this.setState({
@@ -136,7 +148,9 @@ class Students extends Component {
                 <div class="row">
                 <div class="col-md-2"></div>
                     <div class="col-md-7">
-                {stuData.map((data, index) => {
+                {stuData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+
+                // {stuData.map((data, index) => {
                     return (
                         <div key={data._id}>
                             <Card>
@@ -153,7 +167,18 @@ class Students extends Component {
                         </div>
                     )
                 })}
-
+  <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <TablePagination
+                            rowsPerPageOptions={[2]}
+                            count={this.state.stuData.length}
+                            page={this.state.page}
+                            rowsPerPage={this.state.rowsPerPage}
+                            onChangePage={this.handleChangePage}
+                        />
+                    </div>  <div class="col-md-4"></div>
+                </div>
 
                 </div>
                 <div class="col-md-3"></div>
