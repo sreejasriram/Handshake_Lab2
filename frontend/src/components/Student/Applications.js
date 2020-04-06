@@ -15,6 +15,8 @@ import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
 import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
 import StudentNavbar from './StudentNavbar'
 import {environment} from '../../Utils/constants';
+import TablePagination from '@material-ui/core/TablePagination';
+
 
 
 class Applications extends Component {
@@ -30,12 +32,19 @@ class Applications extends Component {
             // cat: "",
             dataRetrieved: false,
             jobData: [],
-            status:""
+            status:"",
+            page: 0,
+            rowsPerPage: 2
            
         }
         this.statusFilter=this.statusFilter.bind(this);
     }
- 
+    handleChangePage = (event, newPage) => {
+        this.setState({
+            page: newPage
+        })
+        console.log(this.state.page)
+    };
     statusFilter(e){
         console.log(e)
         this.setState({
@@ -111,7 +120,9 @@ class Applications extends Component {
                 <div class="row">
                 <div class="col-md-2"></div>
                     <div class="col-md-8">
-                {jobData.map((data, index) => {
+                {jobData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+
+                // {jobData.map((data, index) => {
                     return (
                         <div key={data._id}>
                            <Card>
@@ -126,8 +137,20 @@ class Applications extends Component {
                         </div>
                     )
                 })}</div>
-                
+              
                 <div class="col-md-2"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <TablePagination
+                            rowsPerPageOptions={[2]}
+                            count={this.state.jobData.length}
+                            page={this.state.page}
+                            rowsPerPage={this.state.rowsPerPage}
+                            onChangePage={this.handleChangePage}
+                        />
+                    </div>  <div class="col-md-4"></div>
                 </div>
             </div>
 

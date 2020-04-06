@@ -12,6 +12,7 @@ import EventNoteIcon from '@material-ui/icons/EventNote';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import {environment} from '../../Utils/constants';
+import TablePagination from '@material-ui/core/TablePagination';
 
 
 
@@ -27,11 +28,21 @@ class ViewRegisteredEvents extends Component {
             description: "",
             cat: "",
             dataRetrieved: false,
-            eventData: []
+            eventData: [],
+            page: 0,
+            rowsPerPage: 2
            
         }
     }
  
+    
+    handleChangePage = (event, newPage) => {
+        this.setState({
+            page: newPage
+        })
+        console.log(this.state.page)
+    };
+
     componentDidMount() {
         const data = {
 
@@ -55,6 +66,7 @@ class ViewRegisteredEvents extends Component {
     }
 
 
+
     render() {
         let navbar =  <StudentNavbar comp="eventregistrations" />
         let logincookie= null
@@ -71,8 +83,8 @@ class ViewRegisteredEvents extends Component {
                 <div class="row">
                 <div class="col-md-2"></div>
                     <div class="col-md-8">
-
-                {eventData.map((data, index) => {
+                {eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+                // {eventData.map((data, index) => {
                     return (
                         <div key={data.event_id}>
                            <Card>
@@ -85,8 +97,24 @@ class ViewRegisteredEvents extends Component {
                             </Card>
                             <br /><br />
                         </div>
+
                     )
-                })}</div>
+                })}
+                
+                
+                </div>
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <TablePagination
+                            rowsPerPageOptions={[2]}
+                            count={this.state.eventData.length}
+                            page={this.state.page}
+                            rowsPerPage={this.state.rowsPerPage}
+                            onChangePage={this.handleChangePage}
+                        />
+                    </div>  <div class="col-md-4"></div>
+                </div>
                   <div class="col-md-2"></div>
                   </div>
             </div>
