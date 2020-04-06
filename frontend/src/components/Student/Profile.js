@@ -33,7 +33,6 @@ class Profile extends Component {
             skills: "",
             education: [
                 {
-                    // id: "",
                     college_name: "",
                     location:"",
                     degree: "",
@@ -47,7 +46,6 @@ class Profile extends Component {
             ],
             experience: [
                 {
-                    id: "",
                     company: "",
                     title: "",
                     location: "",
@@ -89,8 +87,8 @@ class Profile extends Component {
                             mobile: response.data.rows.mobile,
                             skills: response.data.rows.skills,
                             
-                            education: response.data.rows.education
-                        //     experience:
+                            education: response.data.rows.education,
+                            experience: response.data.rows.experience
                         });
                         if (response.data.rows.dob){
                             this.setState({
@@ -137,6 +135,10 @@ class Profile extends Component {
         let education_props={
             education: this.state.education
     }
+    let experience_props={
+        experience: this.state.experience
+}
+    
       
         return (
             <div style={{ backgroundColor: "#F7F7F7" }}>
@@ -150,8 +152,8 @@ class Profile extends Component {
                     </div>
                     <div class="col-md-7">
                         <Journey {...journey_props}/>
-                         <Education {...education_props}/>
-                        {/* <Experience />  */}
+                        <Education {...education_props}/>
+                        <Experience {...experience_props}/> 
                         <Contact {...contact_props}/>
                     </div>
                     <div class="col-md-1"> </div>

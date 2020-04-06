@@ -371,6 +371,38 @@ router.get('/list_all_students',(req,res)=>{
 })
 
 
+router.post('/send_message',(req,res)=>{
+    console.log("In company send_message request");
+    console.log(req.body);
+    req.body.type = "send_message";
+    kafka.make_request('chat',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})
+        }
+    }) 
+})
+router.get('/fetch_convos/:id',(req,res)=>{
+    console.log("In company fetch_convos request");
+    console.log(req.params);
+    req.body.id = req.params.id;
+    req.body.type = "fetch_convos";
+    kafka.make_request('chat',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})
+        }
+    }) 
+})
+
 
 
 

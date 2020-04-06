@@ -23,8 +23,7 @@ class Education extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // education: [
-            //     {
+           
                     b_id: "",
                     college_name: "",
                     location: "",
@@ -35,14 +34,12 @@ class Education extends Component {
                     month_of_starting: "",
                     year_of_passing: "",
                     month_of_passing: "",
-            //     }
-            // ],
+            
             education:[],
             redirect: true,
             rerender: false,
             addEdu:false,
             existingEdit:false,
-            // rerenderforExistingEdit:false
         }
         this.editProfile = this.editProfile.bind(this);
         this.saveProfile = this.saveProfile.bind(this);
@@ -95,7 +92,6 @@ class Education extends Component {
             redirect: false,
             addEdu:false,
             existingEdit:false,
-            // rerenderforExistingEdit:true,
             b_id:""
 
         })
@@ -191,9 +187,6 @@ console.log(this.state.redirect)
 console.log("rerender")
 
 console.log(this.state.rerender)
-// console.log("rerenderforExistingEdit")
-
-// console.log(this.state.rerenderforExistingEdit)
 
 
         if(this.state.addEdu===true){
@@ -201,7 +194,6 @@ console.log(this.state.rerender)
         <div>
             <Card>
                 <CardContent>
-                {/* <Typography color="black" gutterBottom><b><p style={{ fontSize: '24px' }}>Education Details</p></b></Typography> */}
                     <div style={{ width: '70%' }} class="form-group">
                         <input onChange={this.inputChangeHandler} type="text" class="form-control" name="college_name" value={this.state.college_name} placeholder="School/College Name" /><br/>
                         <input onChange={this.inputChangeHandler} type="text" class="form-control" name="location" value={this.state.location} placeholder="Location" /><br/>
@@ -315,7 +307,6 @@ else
                                                 <div>
                                                     <Card>
                                                         <CardContent>
-                                                        {/* <Typography color="black" gutterBottom><b><p style={{ fontSize: '24px' }}>Education Details</p></b></Typography> */}
                                                             <div style={{ width: '70%' }} class="form-group">
                                                                 <input onChange={this.inputChangeHandler} type="text" class="form-control" name="college_name" value={this.state.college_name} placeholder="School/College Name" /><br/>
                                                                 <input onChange={this.inputChangeHandler} type="text" class="form-control" name="location" value={this.state.location} placeholder="Location" /><br/>

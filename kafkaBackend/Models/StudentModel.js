@@ -45,7 +45,7 @@ const studentSchema = new Schema({
             year_of_starting: Number,
             month_of_starting: Number,
             year_of_ending: Number,
-            month_of_ending: Number,
+            month_of_ending: Number
         }
     ]
 }, { _id: false }, { collection: 'students' });

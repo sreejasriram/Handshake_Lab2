@@ -115,11 +115,14 @@ handle_request=(profile, callback)=>{
            callback(e,null)
         }
     }
-
+///////////////////////////////////////////////////////////////////////
     else  if (profile.type === "add_education") {
         console.log(profile)
-        const update_data = { $push:{education:[{
-           
+        const update_data = { 
+            
+            $push:{education:[
+                
+            {
             college_name: profile.college_name,
             location: profile.location,
             degree: profile.degree,
@@ -167,6 +170,75 @@ handle_request=(profile, callback)=>{
            callback(e,null)
         }
     }
+
+//////////////////////////////////////////////////////////////
+
+else  if (profile.type === "add_experience") {
+    console.log(profile)
+    const update_data = { 
+        
+        $push:{experience:[
+            
+        {
+        company: profile.company,
+        title: profile.title,
+        location: profile.location,
+        description: profile.description,
+        year_of_starting: profile.year_of_starting,
+        month_of_starting: profile.month_of_starting,
+        year_of_ending: profile.year_of_ending,
+        month_of_ending: profile.month_of_ending
+
+    }]
+}}
+
+    console.log(profile.id)
+    console.log(profile.exp_id)
+
+    try{
+        if (!profile.exp_id){
+            console.log("to add new experience data")
+            console.log(update_data)
+        query.updateField(Students.createModel(),{_id:ObjectId(profile.id)},update_data, (err,rows) => {
+                    callback(err,rows)
+                });
+            }else
+            {
+                console.log("edit experience data")
+                console.log(profile.exp_id)
+                query.editObj(Students.createModel(),{_id:ObjectId(profile.id),'experience._id':ObjectId(profile.exp_id)},
+                {'experience.$.company': profile.company,
+                'experience.$.title': profile.title,
+                'experience.$.location': profile.location,
+                'experience.$.description': profile.description,
+                'experience.$.year_of_starting': profile.year_of_starting,
+                'experience.$.month_of_starting': profile.month_of_starting,
+                'experience.$.year_of_ending': profile.year_of_ending,
+                'experience.$.month_of_ending': profile.month_of_ending
+            
+            }, (err,rows) => {
+                    callback(err,rows)
+                });
+            }
+    }
+    catch(e)
+    {
+       callback(e,null)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////
 
     
     else  if (profile.type === "list_all_students_company") {

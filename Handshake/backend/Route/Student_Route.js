@@ -142,6 +142,22 @@ router.post('/student_education_edited',(req,res)=>{
 })
 
 
+router.post('/student_experience_edited',(req,res)=>{
+    console.log("In student experience post request");
+    console.log(req.body);
+    req.body.type = "add_experience";
+    kafka.make_request('profile',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)  
+            res.json({"error":"failure"})
+        }
+        else if(rows){
+        console.log(rows)
+        res.json({"result":rows})
+        }
+    })  
+})
+
 router.post('/student_skill_edited',(req,res)=>{
     console.log("In student skills post request");
     console.log(req.body);
