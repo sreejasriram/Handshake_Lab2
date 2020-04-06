@@ -131,8 +131,7 @@ else  if (cmpny_details.type ===  "list_applied_jobs") {
     console.log(cmpny_details.studentId)
     console.log(typeof(cmpny_details.studentId))
     try{
-                query.findDocumentsByLookup(Jobs.createModel(),'companies',{'applications.studentId':ObjectId(cmpny_details.studentId)},(err,result)=>{
-
+            query.findDocumentsByLookup(Jobs.createModel(),'companies',{'applications.studentId':ObjectId(cmpny_details.studentId)},(err,result)=>{
             callback(err,result)
         });
     }
@@ -140,6 +139,20 @@ else  if (cmpny_details.type ===  "list_applied_jobs") {
         return callback(error,null)
     }
 }
+else  if (cmpny_details.type ===  "job_already_applied") {
+    console.log(cmpny_details.studentId)
+    console.log(cmpny_details.jobId)
+    console.log("already job applied")
+    try{
+        query.getProfile(Jobs.createModel(),{_id:ObjectId(cmpny_details.jobId),'applications.studentId':ObjectId(cmpny_details.studentId)},(err,rows)=>{
+            callback(err,rows)
+        });
+    }
+    catch(error){
+        return callback(error,null)
+    }
+}
+
 
 else  if (cmpny_details.type ===  "update_job_status") {
     console.log(cmpny_details.studentId)

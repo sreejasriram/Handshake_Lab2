@@ -413,10 +413,15 @@ router.get('/fetch_convos/:id',(req,res)=>{
 
 
 
-router.post('/job_already_applied',(req,res)=>{
-    console.log("In company jobs post request");
+router.get('/job_already_applied/:jobId/:studentId',(req,res)=>{
+    console.log("In company job_already_applied get request");
+    req.body.type="job_already_applied"
+    req.body.jobId = req.params.jobId;
+    req.body.studentId = req.params.studentId;
     console.log(req.body);
-    CmpnyRepo.job_already_applied(req.body,(err,rows)=>{
+    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+        console.log("already job applied result");
+
         console.log(rows);
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
@@ -432,10 +437,14 @@ router.post('/job_already_applied',(req,res)=>{
         }
     }) 
 })
-router.post('/event_already_applied',(req,res)=>{
-    console.log("In company events already applied post request");
+
+router.get('/event_already_applied/:eventId/:studentId',(req,res)=>{
+    console.log("In company events already applied get request");
+    req.body.type="event_already_applied"
+    req.body.eventId = req.params.eventId;
+    req.body.studentId = req.params.studentId;
     console.log(req.body);
-    CmpnyRepo.event_already_applied(req.body,(err,rows)=>{
+    kafka.make_request('company-events',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -451,7 +460,24 @@ router.post('/event_already_applied',(req,res)=>{
     }) 
 })
 
-
+router.get('/get_student_eligibility/:eventId/:studentId',(req,res)=>{
+    console.log("In get_student_eligibility get request");
+    req.body.type="check_student_eligibility"
+    req.body.eventId = req.params.eventId;
+    req.body.studentId = req.params.studentId;
+    console.log(req.body);
+    kafka.make_request('company-events',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})
+    }
+        
+    }) 
+})
 
 
 

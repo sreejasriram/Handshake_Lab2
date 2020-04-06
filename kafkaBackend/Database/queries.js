@@ -73,30 +73,6 @@ const getProfile = (modelObject, query, callback) => {
     }
 }
 
-// const findDocumentsByPopulate = (modelObject, query, options,callback) => {
-//     try {
-//         modelObject.find(query, options,'_id',(err, data)=>{
-//             if (data){
-//                 console.log(data)
-//                 callback(err,data)
-//             }
-//             else if(err){
-//                 callback(err,data)
-//             }
-//         }).lean();
-//     } catch (error) {
-//         console.log("Error while saving data:" + error)
-//         callback(err,null)
-//     }
-// }
-
-
-// function getUserWithPosts(username){
-//     return User.findOne({ username: username })
-//       .populate('posts').exec((err, posts) => {
-//         console.log("Populated User " + posts);
-//       })
-//   }
 
 const findDocumentsByLookup = (modelObject,lookupObject, query, callback) => {
     try {
@@ -171,6 +147,89 @@ const getApplicantsforJob = (modelObject,lookupObject, query, callback) => {
 
 
 
+const saveDocuments = (modelObject, data, options, callback) => {
+    try {
+        let model = new modelObject(data, options);
+        console.log(model)
+        model.save(options, (err, data) => {
+            if (data) {
+                callback(err, data)
+            }
+            else if (err) {
+                callback(err, data)
+            }
+        });
+
+    } catch (error) {
+        console.log("Error while saving data:" + error)
+        callback(err, null)
+    }
+}
+
+
+
+
+
+
+const checkEligibility = (modelObject,lookupObject, query, callback) => {
+    try {
+        console.log(query)
+
+        const agg = [
+            { $match: query },
+            {
+                $lookup:
+                {
+                    from: lookupObject,
+                    localField: '_id',
+                    foreignField: 'applications.jobId',
+                    as: 'listApplicants'
+                },
+            },
+
+        ];
+        modelObject.aggregate(agg).exec((err, data) => {
+            if (data) {
+                console.log(data)
+                callback(err, data)
+            }
+            else if (err) {
+                callback(err, data)
+            }
+        });
+
+
+    } catch (error) {
+        console.log("Error while saving data:" + error)
+        callback(err, null)
+    }
+}
+
+// const findDocumentsByPopulate = (modelObject, query, options,callback) => {
+//     try {
+//         modelObject.find(query, options,'_id',(err, data)=>{
+//             if (data){
+//                 console.log(data)
+//                 callback(err,data)
+//             }
+//             else if(err){
+//                 callback(err,data)
+//             }
+//         }).lean();
+//     } catch (error) {
+//         console.log("Error while saving data:" + error)
+//         callback(err,null)
+//     }
+// }
+
+
+// function getUserWithPosts(username){
+//     return User.findOne({ username: username })
+//       .populate('posts').exec((err, posts) => {
+//         console.log("Populated User " + posts);
+//       })
+//   }
+
 
 // const listApplicants = (modelObject,lookupObject, query, callback) => {
 //     try {
@@ -210,25 +269,6 @@ const getApplicantsforJob = (modelObject,lookupObject, query, callback) => {
 
 
 
-const saveDocuments = (modelObject, data, options, callback) => {
-    try {
-        let model = new modelObject(data, options);
-        console.log(model)
-        model.save(options, (err, data) => {
-            if (data) {
-                callback(err, data)
-            }
-            else if (err) {
-                callback(err, data)
-            }
-        });
-
-    } catch (error) {
-        console.log("Error while saving data:" + error)
-        callback(err, null)
-    }
-}
-
 
 
 
@@ -238,5 +278,5 @@ module.exports.updateField = updateField;
 module.exports.findDocumentsByLookup = findDocumentsByLookup;
 module.exports.editObj = editObj;
 module.exports.getApplicantsforJob = getApplicantsforJob;
-
+module.exports.checkEligibility = checkEligibility;
 module.exports.getProfile = getProfile;

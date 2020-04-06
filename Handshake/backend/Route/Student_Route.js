@@ -313,21 +313,7 @@ router.post('/get_student_education',(req,res)=>{
         
     }) 
 })
-router.post('/get_student_eligibility',(req,res)=>{
-    console.log("In get_student_eligibility get request");
-    console.log(req.body);
-    StudRepo.get_student_eligibility(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
-        
-    }) 
-})
+
 
 router.post('/get_student_experience',(req,res)=>{
     console.log("In student experience retrieve post request");

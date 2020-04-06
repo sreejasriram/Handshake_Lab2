@@ -121,6 +121,37 @@ handle_request=(eventDetails, callback)=>{
         }
     }
     
+
+    else  if (eventDetails.type ===  "event_already_applied") {
+        console.log(eventDetails.studentId)
+        console.log(eventDetails.eventId)
+        console.log("already event applied")
+        try{
+            query.getProfile(Events.createModel(),{_id:ObjectId(eventDetails.eventId),'registrations.studentId':ObjectId(eventDetails.studentId)},(err,rows)=>{
+                callback(err,rows)
+            });
+        }
+        catch(error){
+            return callback(error,null)
+        }
+    }
+
+    else  if (eventDetails.type ===  "check_student_eligibility") {
+        console.log(eventDetails.studentId)
+        console.log(eventDetails.eventId)
+        console.log("check_student_eligibility")
+        try{
+            query.getProfile(Students.createModel(),{_id:ObjectId(eventDetails.studentId)},(err,rows)=>{
+            // query.getProfile(Events.createModel(),{_id:ObjectId(eventDetails.eventId),'registrations.studentId':ObjectId(eventDetails.studentId)},(err,rows)=>{
+                callback(err,rows)
+            });
+        }
+        catch(error){
+            return callback(error,null)
+        }
+    }
+
+    
     
     
 }
