@@ -289,11 +289,11 @@ else
                                                 <div class="row">
                                                 <div class="col-md-10">
                                                 <div key={data._id}>
-                                            <p><SchoolRoundedIcon></SchoolRoundedIcon><b> {data.college_name}</b></p>
-                                            <p><GradeOutlinedIcon></GradeOutlinedIcon> {data.degree}</p>
-                                            <p> {data.year_of_starting}/{data.month_of_starting}-{data.year_of_passing}/{data.month_of_passing}</p>
-                                            <p><b>Major in</b> {data.major} </p>
-                                            <p><b>Cummulative GPA</b> {data.cgpa} </p> 
+                                                {data.college_name?(<div><b><SchoolRoundedIcon></SchoolRoundedIcon> {data.college_name}</b></div>):<div></div>} 
+                                                {data.degree?(<div><GradeOutlinedIcon></GradeOutlinedIcon> {data.degree}</div>):<div></div>} 
+                                                <div> {data.year_of_starting?data.year_of_starting:""}/{data.month_of_starting?data.month_of_starting:""}-{data.year_of_passing?data.year_of_passing:""}/{data.month_of_passing?data.month_of_passing:""}</div>
+                                                {data.major?(<div><b>Major in</b> {data.major}</div>):<div></div>} 
+                                                {data.cgpa?(<div><b>Cummulative GPA</b> {data.cgpa}</div>):<div></div>}
                                             <hr/>
                                                  </div></div>
                                         <div class="col-md-2">

@@ -3,16 +3,14 @@ import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import Jobs from './Jobs';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import MailOutlineOutlinedIcon from '@material-ui/icons/MailOutlineOutlined';
 import PhoneOutlinedIcon from '@material-ui/icons/PhoneOutlined';
 import {environment} from '../../Utils/constants';
+import emptyPic from '../../images/empty-profile-picture.png';
+import { Avatar } from '@material-ui/core';
 
 
 
@@ -28,7 +26,8 @@ class ViewEventApplicants extends Component {
             redirect: false,
             stuData: [],
             view_profile:false,
-            studId:""
+            studId:"",
+            emptyprofilepic: emptyPic
         }
         this.viewProfile = this.viewProfile.bind(this);
     }
@@ -99,10 +98,24 @@ class ViewEventApplicants extends Component {
                                             <div key={data.stud_id}>
                                                   <Card>
                                                     <CardContent>
-                                                    < Typography color="black" gutterBottom>
-                                                    <b><p style={{ fontSize: '24px' }}>{data.name}</p></b></ Typography>
-                                                <p><MailOutlineOutlinedIcon></MailOutlineOutlinedIcon> {data.email}</p>
-                                                <p><PhoneOutlinedIcon></PhoneOutlinedIcon> {data.mobile}</p><br /><br />
+                                                    {/* < Typography color="black" gutterBottom>
+                                                    <b><p style={{ fontSize: '24px' }}>{data.name}</p></b></ Typography> */}
+                                                    <div class="row">
+                                                        <div class="col-md-1" style={{ paddingRight: '0px' }}>
+                                                            <center>
+                                                                <Avatar src={data.image ? data.image : this.state.emptyprofilepic} style={{ width: '36px', height: '36px', borderRadius: '50%', textAlign: 'center' }}></Avatar>
+                                                            </center>
+                                                        </div>
+                                                        <div class="col-md-5" style={{ padding: '0px' }}>
+                                                        < Typography color="black" gutterBottom>
+
+                                                            <b><div style={{ fontSize: '24px' }}>{data.name?data.name:""}</div></b>
+                                                        </ Typography>                                               
+                                                            </div>
+                                                    </div><br/>
+                                                    {data.email?(<div><MailOutlineOutlinedIcon style={{ color: "#1569E0" }}></MailOutlineOutlinedIcon> {data.email}</div>):<div></div>}<br/>
+                                                    {data.mobile?(<div><PhoneOutlinedIcon style={{ color: "#1569E0" }}></PhoneOutlinedIcon> {data.mobile}</div>):<div></div>}
+                                                     <br />
                                                
                                                 <button onClick={this.viewProfile} class="btn btn-primary"  value={data._id}>View Profile</button>  
                                                 </CardContent></Card>

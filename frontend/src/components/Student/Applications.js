@@ -2,13 +2,8 @@ import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import {Link} from 'react-router-dom';
 import cookie from 'react-cookies';
-import { Card, CardContent, Button, IconButton, InputBase } from '@material-ui/core/';
-import { makeStyles } from '@material-ui/core/styles';
-import LocationOnRoundedIcon from '@material-ui/icons/LocationOnRounded';
-import Typography from '@material-ui/core/Typography';
-import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
+import { Card, CardContent} from '@material-ui/core/';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutlined';
 import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
@@ -16,25 +11,21 @@ import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
 import StudentNavbar from './StudentNavbar'
 import {environment} from '../../Utils/constants';
 import TablePagination from '@material-ui/core/TablePagination';
-
+import emptyPic from '../../images/empty-profile-picture.png';
+import {Avatar} from '@material-ui/core';
 
 
 class Applications extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // title: "",
-            // postingDate: "",
-            // deadline: "",
-            // loc: "",
-            // salary: "",
-            // desc: "",
-            // cat: "",
             dataRetrieved: false,
             jobData: [],
             status:"",
             page: 0,
-            rowsPerPage: 2
+            rowsPerPage: 2,
+            emptyprofilepic:emptyPic
+
            
         }
         this.statusFilter=this.statusFilter.bind(this);
@@ -127,11 +118,31 @@ class Applications extends Component {
                         <div key={data._id}>
                            <Card>
                             <CardContent>
-                            <h5>{data.title}</h5>
-                            <p><BusinessOutlinedIcon fontSize="small"></BusinessOutlinedIcon> {data.companydetails[0].name}</p>
+                            <div class="row">
+                                <div class="col-md-1"  style={{paddingRight:'0px'}}>
+                                <Avatar src={data.companydetails[0].image?data.companydetails[0].image:this.state.emptyprofilepic} style={{ width: '36px', height: '36px', borderRadius: '50%', textAlign: 'center' }}></Avatar>
+                                </div>
+                                <div class="col-md-5"  style={{padding:'0px'}}>
+
+                                <h5>{data.title?data.title:""}</h5>
+                                
+
+                                </div>
+                            </div><br/>
+                            <div class="row">
+                                <div class="col-md-2" >
+                            {data.companydetails[0].name?(<div><BusinessOutlinedIcon fontSize="small" style={{ color: "#1569E0" }}></BusinessOutlinedIcon> {data.companydetails[0].name}</div>):<div></div>} 
+                            </div> <div class="col-md-2" >
+                            {data.companydetails[0].location?(<div><LocationOnOutlinedIcon fontSize="small" style={{ color: "#1569E0" }}></LocationOnOutlinedIcon> {data.companydetails[0].location}</div>):<div></div>} 
+                            </div> <div class="col-md-2" >
+                            {data.applications[0].appliedDate.substring(0,10)?(<div><EventAvailableOutlinedIcon fontSize="small" style={{ color: "#1569E0" }}></EventAvailableOutlinedIcon> {data.applications[0].appliedDate.substring(0,10)}</div>):<div></div>} 
+                            </div> <div class="col-md-2" >
+                            {data.applications[0].status?(<div><FlagOutlinedIcon fontSize="small" style={{ color: "#1569E0" }}></FlagOutlinedIcon> {data.applications[0].status}</div>):<div></div>} 
+                            </div> </div>
+                            {/* <p><BusinessOutlinedIcon fontSize="small"></BusinessOutlinedIcon> {data.companydetails[0].name}</p>
                             <p><LocationOnOutlinedIcon fontSize="small"></LocationOnOutlinedIcon> {data.companydetails[0].location}</p>
                             <p><EventAvailableOutlinedIcon fontSize="small"></EventAvailableOutlinedIcon> {data.applications[0].appliedDate.substring(0,10)}</p>
-                            <p> <FlagOutlinedIcon fontSize="small"></FlagOutlinedIcon> {data.applications[0].status}</p>
+                            <p> <FlagOutlinedIcon fontSize="small"></FlagOutlinedIcon> {data.applications[0].status}</p> */}
                             </CardContent></Card>
                             <br /><br />
                         </div>

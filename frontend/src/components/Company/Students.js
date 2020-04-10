@@ -2,15 +2,13 @@ import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {environment} from '../../Utils/constants';
 import TablePagination from '@material-ui/core/TablePagination';
+import emptyPic from '../../images/empty-profile-picture.png';
+import { Avatar } from '@material-ui/core';
 
 
 
@@ -27,7 +25,9 @@ class Students extends Component {
             view_profile: false,
             studId: "",
             page: 0,
-            rowsPerPage: 2
+            rowsPerPage: 2,
+            emptyprofilepic: emptyPic
+
 
         }
         this.statusFilter = this.statusFilter.bind(this);
@@ -148,11 +148,22 @@ class Students extends Component {
                         <div key={data._id}>
                             <Card>
                                 <CardContent>
+                                <div class="row">
+                                    <div class="col-md-1" style={{ paddingRight: '0px' }}>
+                                        <Avatar src={data.image ? data.image : this.state.emptyprofilepic} style={{ width: '36px', height: '36px', borderRadius: '50%', textAlign: 'center' }}></Avatar>
+                                    </div>
+                                    <div class="col-md-5" style={{ padding: '0px' }}>
+                                    < Typography color="black" gutterBottom>
 
-                                    <h3>{data.name}</h3>
-                                    <p> {data.college}</p>
-                                    <p> {data.email} </p>
-                                    <p> {data.mobile} </p>
+                                        <b><p style={{ fontSize: '24px' }}>{data.name?data.name:""}</p></b>
+                                    </ Typography>                                               
+                                        </div>
+                                </div>
+
+                                    {/* <h3>{data.name?data.name:""}</h3> */}
+                                    <p> {data.college?data.college:""}</p>
+                                    <p> {data.email?data.email:""}</p>
+                                    <p> {data.mobile?data.mobile:""}</p>
                                     <button onClick={this.viewProfile} class="btn btn-primary" value={data._id}>View Profile</button>
                                 </CardContent>
                             </Card>

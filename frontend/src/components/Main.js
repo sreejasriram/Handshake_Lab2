@@ -14,6 +14,8 @@ import ViewEventApplicants from './Company/ViewEventApplicants'
 import ViewProfile from './Company/ViewProfile'
 import CmpyProfile from './Company/Profile';
 import Students from './Company/Students'
+import CmpyMessages from './Company/Messages';
+
 
 import StudLogin from './Student/Login';
 import StudSignup from './Student/Signup';
@@ -31,6 +33,8 @@ import ViewRegisteredEvents from './Student/ViewRegisteredEvents';
 import HandshakeStudents from './Student/Students'
 import StudApplications from './Student/Applications';
 import CompanyEvents from './Student/CompanyEvents';
+import Messages from './Student/Messages';
+
 
 
 
@@ -63,6 +67,9 @@ class Main extends Component {
                <Route path="/editJobs/:jobId" component={EditJobs}/>
                <Route path="/ViewApplicants/:jobId" component={ViewApplicants}/>
                <Route path="/ViewEventApplicants/:eventId" component={ViewEventApplicants}/>
+               <Route path="/companyMessages" component={CmpyMessages}/>
+
+               
 
                
                <Route path="/ViewProfile/:stud_id" component={ViewProfile}/>
@@ -74,6 +81,7 @@ class Main extends Component {
                 <Route path="/education" component={StudEducation}/>
                 <Route path="/experience" component={StudExperience}/>
                 <Route path="/companyevents" component={CompanyEvents}/>
+                <Route path="/messages" component={Messages}/>
 
                 
 

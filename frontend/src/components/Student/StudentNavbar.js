@@ -47,6 +47,7 @@ class StudentNavbar extends Component {
                     </div>
                 );
             }
+          
             else if(this.props.comp === "events"){
                 navUpdate = (
                     <div>

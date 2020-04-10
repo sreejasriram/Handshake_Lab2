@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import StudentNavbar from './StudentNavbar'
 import cookie from 'react-cookies';
 import { Card, CardContent, Button, IconButton, InputBase } from '@material-ui/core/';
@@ -11,9 +11,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
-import {environment} from '../../Utils/constants';
+import { environment } from '../../Utils/constants';
 import TablePagination from '@material-ui/core/TablePagination';
-
+import emptyPic from '../../images/empty-profile-picture.png';
+import { Avatar } from '@material-ui/core';
 
 
 class ViewRegisteredEvents extends Component {
@@ -30,12 +31,14 @@ class ViewRegisteredEvents extends Component {
             dataRetrieved: false,
             eventData: [],
             page: 0,
-            rowsPerPage: 2
-           
+            rowsPerPage: 2,
+            emptyprofilepic: emptyPic
+
+
         }
     }
- 
-    
+
+
     handleChangePage = (event, newPage) => {
         this.setState({
             page: newPage
@@ -50,7 +53,7 @@ class ViewRegisteredEvents extends Component {
 
         }
 
-        axios.get(environment.baseUrl+'/student/list_applied_events/'+data.studentId)
+        axios.get(environment.baseUrl + '/student/list_applied_events/' + data.studentId)
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -68,10 +71,10 @@ class ViewRegisteredEvents extends Component {
 
 
     render() {
-        let navbar =  <StudentNavbar comp="eventregistrations" />
-        let logincookie= null
-        if(!cookie.load('student')){
-            logincookie = <Redirect to= "/"/>
+        let navbar = <StudentNavbar comp="eventregistrations" />
+        let logincookie = null
+        if (!cookie.load('student')) {
+            logincookie = <Redirect to="/" />
         }
         let eventData = this.state.eventData;
         console.log(eventData)
@@ -81,42 +84,56 @@ class ViewRegisteredEvents extends Component {
 
                 {navbar}
                 <div class="row">
-                <div class="col-md-2"></div>
+                    <div class="col-md-2"></div>
                     <div class="col-md-8">
-                {eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
-                // {eventData.map((data, index) => {
-                    return (
-                        <div key={data.event_id}>
-                           <Card>
-                                <CardContent>
-                                <Typography color="black" gutterBottom> <h5>{data.name}</h5></Typography>
-                            <p> {data.description}</p>
-                            <p> <EventNoteIcon></EventNoteIcon> {data.date.substring(0,10)}</p>
-                            <p><LocationOnOutlinedIcon></LocationOnOutlinedIcon>{data.location} </p>
-                            </CardContent>
-                            </Card>
-                            <br /><br />
-                        </div>
+                        {eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+                            // {eventData.map((data, index) => {
+                            return (
+                                <div key={data.event_id}>
+                                    <Card>
+                                        <CardContent>
+                                            <div class="row">
+                                                <div class="col-md-1" style={{ paddingRight: '0px' }}>
+                                                    <Avatar src={data.image ? data.image : this.state.emptyprofilepic} style={{ width: '36px', height: '36px', borderRadius: '50%', textAlign: 'center' }}></Avatar>
+                                                </div>
+                                                <div class="col-md-4" style={{ padding: '0px' }}>
+                                                <Typography color="black" gutterBottom> <h5>{data.name?data.name:""}</h5></Typography>
+                                                </div>
+                                            </div>
+                                            <p> {data.description?data.description:""}</p>
+                                            <div class="row">
+                                                <div class="col-md-2" >
+                                                {data.location?(<div><LocationOnOutlinedIcon style={{ color: "#1569E0" }}></LocationOnOutlinedIcon> {data.location}</div>):<div></div>} 
+                                                </div> <div class="col-md-2" >
+                                                {data.date.substring(0,10)?(<div><EventNoteIcon style={{ color: "#1569E0" }}></EventNoteIcon> {data.date.substring(0, 10)}</div>):<div></div>} 
+                                                </div> 
+                                            </div>
+                                            {/* <p> <EventNoteIcon></EventNoteIcon> {data.date.substring(0, 10)}</p>
+                                            <p><LocationOnOutlinedIcon></LocationOnOutlinedIcon>{data.location} </p> */}
+                                        </CardContent>
+                                    </Card>
+                                    <br /><br />
+                                </div>
 
-                    )
-                })}
-                
-                
+                            )
+                        })}
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <TablePagination
+                                rowsPerPageOptions={[2]}
+                                count={this.state.eventData.length}
+                                page={this.state.page}
+                                rowsPerPage={this.state.rowsPerPage}
+                                onChangePage={this.handleChangePage}
+                            />
+                        </div>  <div class="col-md-4"></div>
+                    </div>
+                    <div class="col-md-2"></div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4">
-                        <TablePagination
-                            rowsPerPageOptions={[2]}
-                            count={this.state.eventData.length}
-                            page={this.state.page}
-                            rowsPerPage={this.state.rowsPerPage}
-                            onChangePage={this.handleChangePage}
-                        />
-                    </div>  <div class="col-md-4"></div>
-                </div>
-                  <div class="col-md-2"></div>
-                  </div>
             </div>
 
         )

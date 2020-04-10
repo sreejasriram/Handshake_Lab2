@@ -69,6 +69,46 @@ function handleTopicRequest(topic_name,fname){
     });
 
 }
+
+
+
+async function handleTopicRequestAsync(topic_name,fname){
+    var consumer = connection.getConsumer(topic_name);
+    var producer = connection.getProducer();
+    console.log('server is running ');
+    await consumer.on('message',async function (message) {
+        console.log('message received for ' + topic_name +" ", fname);
+        console.log(JSON.stringify(message.value));
+        var data = JSON.parse(message.value);
+        
+        let res = await fname.handle_request(data.data)
+        // fname.handle_request(data.data, (err,res) => {
+            // console.log(res)
+            // console.log(err)
+            // if (res){
+            //     result = res
+            // }else{
+            //     result = err
+            // }
+            // console.log(`after handle :`);
+            // console.log(result)
+            var payloads = [
+                { topic: data.replyTo,
+                    messages:JSON.stringify({
+                        correlationId:data.correlationId,
+                        data : res
+                    }),
+                    partition : 0
+                }
+            ];
+            await producer.send(payloads, async function(err, data){
+                console.log(data);
+            });
+            return;
+        });
+        
+    // });
+}
 // Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
@@ -79,6 +119,7 @@ handleTopicRequest("company-signin",c_signin)
 handleTopicRequest("company-jobs",c_jobs)
 handleTopicRequest("company-events",c_events)
 handleTopicRequest("profile",profile)
-handleTopicRequest("chat",chat)
+// //handleTopicRequest("chat",chat)
+handleTopicRequestAsync("chat",chat)
 
 

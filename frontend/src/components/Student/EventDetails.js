@@ -12,6 +12,8 @@ import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import StudentNavbar from './StudentNavbar'
 import { environment } from '../../Utils/constants';
+import emptyPic from '../../images/empty-profile-picture.png';
+import { Avatar } from '@material-ui/core';
 
 
 class EventDetails extends Component {
@@ -26,7 +28,9 @@ class EventDetails extends Component {
             already_applied: false,
             submitted: false,
             stud_major: "",
-            event_elig: ""
+            event_elig: "",
+            emptyprofilepic: emptyPic
+
 
         }
         this.ApplyEvent = this.ApplyEvent.bind(this);
@@ -62,7 +66,7 @@ class EventDetails extends Component {
             eventId: this.state.eventId.eventId,
         }
         console.log(data)
-        axios.get(environment.baseUrl+'/student/events_details/'+data.eventId)
+        axios.get(environment.baseUrl + '/student/events_details/' + data.eventId)
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -85,7 +89,7 @@ class EventDetails extends Component {
                     studentId: sessionStorage.getItem('id')
                 }
                 console.log(data)
-                axios.get(environment.baseUrl + '/company/event_already_applied/'+data.eventId + "/" + data.studentId)
+                axios.get(environment.baseUrl + '/company/event_already_applied/' + data.eventId + "/" + data.studentId)
                     .then(response => {
                         console.log("in frontend after response");
                         console.log(response.data.result)
@@ -107,7 +111,7 @@ class EventDetails extends Component {
                     studentId: sessionStorage.getItem('id')
                 }
                 console.log(data)
-                axios.get(environment.baseUrl + '/company/get_student_eligibility/'+data.eventId + "/" + data.studentId)
+                axios.get(environment.baseUrl + '/company/get_student_eligibility/' + data.eventId + "/" + data.studentId)
                     .then(response => {
                         console.log("in frontend after response");
                         console.log(response.data.rows)
@@ -132,11 +136,11 @@ class EventDetails extends Component {
         let stud_major
         console.log(this.state.stud_major)
         if (this.state.stud_major.length)
-         stud_major = this.state.stud_major[0].education[0].major;
+            stud_major = this.state.stud_major[0].education[0].major;
         // let event_elig = this.state.event_elig;
         let event_elig
         if (eventData.length)
-        event_elig = eventData[0].eligibility;        
+            event_elig = eventData[0].eligibility;
         let eligibility = false;
         let logincookie = null
         console.log(this.state.cmpy_id)
@@ -194,12 +198,25 @@ class EventDetails extends Component {
                                 {eventData.map((data, index) => {
                                     return (
                                         <div key={data._id}>
-                                            <Typography color="black" gutterBottom>  <h5>{data.name}</h5></Typography>
-                                            <p>{data.description}</p>
-                                            <p> <EventNoteIcon></EventNoteIcon>{data.date.substring(0, 10)} at {data.time}</p>
-                                            <p><LocationOnOutlinedIcon></LocationOnOutlinedIcon>{data.location} </p>
-                                            <p> <CheckCircleOutlineOutlinedIcon></CheckCircleOutlineOutlinedIcon>{data.eligibility}</p>
-                                            <br /><br />
+                                            <div class="row">
+                                                <div class="col-md-1" style={{paddingRight:'0px'}}>
+                                                    <Avatar src={data.companydetails[0].image ? data.companydetails[0].image : this.state.emptyprofilepic} style={{ width: '36px', height: '36px', borderRadius: '50%', textAlign: 'center'}}></Avatar>
+                                                </div>
+                                                <div class="col-md-4" style={{padding:'0px'}}>
+                                                <Typography color="black" gutterBottom>  <h5>{data.name?data.name:""}</h5></Typography>
+                                                </div>
+                                            </div>
+                                            <p>{data.description?data.description:""}</p>
+                                            {data.date?(<div><EventNoteIcon style={{ color: "#1569E0" }}></EventNoteIcon> {data.date.substring(0, 10)} at {data.time}</div>):<div></div>} 
+
+                                            {/* <p> <EventNoteIcon></EventNoteIcon>{data.date.substring(0, 10)} at {data.time}</p> */}
+                                            {data.location?(<div><LocationOnOutlinedIcon style={{ color: "#1569E0" }}></LocationOnOutlinedIcon> {data.location}</div>):<div></div>} 
+
+                                            {/* <p><LocationOnOutlinedIcon></LocationOnOutlinedIcon>{data.location} </p> */}
+                                            {data.eligibility?(<div><CheckCircleOutlineOutlinedIcon style={{ color: "#1569E0" }}></CheckCircleOutlineOutlinedIcon> {data.eligibility}</div>):<div></div>} 
+
+                                            {/* <p> <CheckCircleOutlineOutlinedIcon></CheckCircleOutlineOutlinedIcon>{data.eligibility}</p> */}
+                                            <br />
                                             {applied}
                                         </div>
                                     )

@@ -16,6 +16,46 @@ handle_request=(profile, callback)=>{
             return callback(error,null)
         }
     }
+else   if (profile.type === "retrieve_company_profile") {
+
+    console.log(profile.companyId)
+    try{
+        query.getProfile(Company.createModel(),{_id:ObjectId(profile.companyId)},(err,result)=>{
+            callback(err,result)
+        });
+    }
+    catch(error){
+        return callback(error,null)
+    }
+}
+    
+
+
+else  if (profile.type === "profile_company_update") {
+    console.log(profile)
+    const update_data = {
+        name: profile.name,
+        location: profile.location,
+        email: profile.email,
+        contact: profile.phone,
+        description: profile.company_description,
+    }
+    console.log(update_data)
+    console.log(profile.company_id)
+
+    try{
+        query.updateField(Company.createModel(),{_id:ObjectId(profile.company_id)},update_data, (err,rows) => {
+                    callback(err,rows)
+                });
+    }
+    catch(e)
+    {
+       callback(e,null)
+    }
+}
+
+
+
     else  if (profile.type === "add_basic") {
         console.log(profile)
         const update_data = {
@@ -255,6 +295,51 @@ else  if (profile.type === "add_experience") {
         }
     }
 
+
+    else  if (profile.type === "studentprofilepic") {
+       
+        updateStudent = {
+            image:profile.image
+        }
+        try{
+            query.updateField(Students.createModel(),{_id:ObjectId(profile.studentId)},updateStudent,(err,result)=>{
+                console.log("post insert")
+                console.log(result)
+                callback(err,result)
+            });
+        }
+        catch(err)
+        {
+            callback(err,null)
+        }
+
+
+
+    }
+    
+
+
+    else  if (profile.type === "companyprofilepic") {
+       
+        updateStudent = {
+            image:profile.image
+        }
+        try{
+            query.updateField(Company.createModel(),{_id:ObjectId(profile.companyId)},updateStudent,(err,result)=>{
+                console.log("post insert")
+                console.log(result)
+                callback(err,result)
+            });
+        }
+        catch(err)
+        {
+            callback(err,null)
+        }
+
+
+
+    }
+    
     
 }
 

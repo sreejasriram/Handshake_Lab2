@@ -46,6 +46,7 @@ navUpdate = (
             <li class = 'navli'><Link to="/Home">Jobs</Link></li>
             <li class='navli'><Link to="/events">Events</Link></li>
             <li class='navli'><Link to="/students">Students</Link></li>
+            <li class='navli'><Link to="/companyMessages">Messages</Link></li>          
             <li class='navli'><Link to="/profile">Profile</Link></li>
             <li class='navli'><Link to="/" onClick = {this.handleLogout}><span class="glyphicon glyphicon-user"></span>Logout</Link></li> 
         </ul>
@@ -86,6 +87,7 @@ navUpdate = (
             <li class='navli'><Link to="/companyevents">Events</Link></li>
             {/* <li class='navli'><Link to="/applications">Applications</Link></li> */}
             <li class='navli'><Link to="/HandshakeStudents">Students</Link></li>
+            <li class='navli'><Link to="/messages">Messages</Link></li>
             <li class='navli'><Link to="/studprofile">Profile</Link></li>
             <li class='navli'><Link to="/" onClick = {this.handleLogout}><span class="glyphicon glyphicon-user"></span>Logout</Link></li>
     </navitem>

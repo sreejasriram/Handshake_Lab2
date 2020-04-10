@@ -3,22 +3,17 @@ import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import Jobs from './Jobs';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import MailOutlineOutlinedIcon from '@material-ui/icons/MailOutlineOutlined';
 import PhoneOutlinedIcon from '@material-ui/icons/PhoneOutlined';
 import {environment} from '../../Utils/constants';
-
+import emptyPic from '../../images/empty-profile-picture.png';
+import { Avatar } from '@material-ui/core';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
 
 class ViewApplicants extends Component {
     constructor(props) {
@@ -36,7 +31,8 @@ class ViewApplicants extends Component {
             studId:"",
             showStatus : "",
             statusUpdated:"",
-            previewresume:false
+            previewresume:false,
+            emptyprofilepic: emptyPic
         }
         this.viewProfile = this.viewProfile.bind(this);
         this.previewResume = this.previewResume.bind(this);
@@ -157,17 +153,33 @@ class ViewApplicants extends Component {
                                             <div key={data._id}>
                                                 <Card>
                                                     <CardContent>
-                                                    < Typography color="black" gutterBottom>
-                                                    <b><p style={{ fontSize: '24px' }}>{data.name}</p></b></ Typography>
-                                                <p><MailOutlineOutlinedIcon></MailOutlineOutlinedIcon> {data.email}</p>
-                                                <p><PhoneOutlinedIcon></PhoneOutlinedIcon> {data.mobile}</p>
+                                                    <div class="row">
+                                                        <div class="col-md-1" style={{ paddingRight: '0px' }}>
+                                                            <center>
+                                                                <Avatar src={data.image ? data.image : this.state.emptyprofilepic} style={{ width: '36px', height: '36px', borderRadius: '50%', textAlign: 'center' }}></Avatar>
+                                                            </center>
+                                                        </div>
+                                                        <div class="col-md-5" style={{ padding: '0px' }}>
+                                                        < Typography color="black" gutterBottom>
+
+                                                            <b><div style={{ fontSize: '24px' }}>{data.name?data.name:""}</div></b>
+                                                        </ Typography>                                               
+                                                            </div>
+                                                    </div><br/>
+                                                    {/* < Typography color="black" gutterBottom> */}
+                                                    {/* <b><p style={{ fontSize: '24px' }}>{data.name}</p></b></ Typography> */}
+                                                    {/* <img src = {data.image} alt = 'Logo' height='70' width='70'/> */}
+                                                    {data.email?(<div><MailOutlineOutlinedIcon style={{ color: "#1569E0" }}></MailOutlineOutlinedIcon> {data.email}</div>):<div></div>}<br/>
+                                                    {data.mobile?(<div><PhoneOutlinedIcon style={{ color: "#1569E0" }}></PhoneOutlinedIcon> {data.mobile}</div>):<div></div>}<br/>
+
+                                                {/* <p><PhoneOutlinedIcon></PhoneOutlinedIcon> {data.mobile}</p> */}
                                                 {applications.map((app, index) => {
                                                    console.log(app)
                                                        if (app.studentId===data._id){
                                                         res=app.resume
                                                     return(
                                                     <div>
-                                                <p>Status: {app.status}</p>
+                                                {app.status?(<div><EqualizerIcon  style={{ color: "#1569E0" }}></EqualizerIcon> {app.status}</div>):<div></div>}
                                                
                                                
                                                 <button class="btn btn-primary" onClick={()=>this.previewResume()} style={{background:"none",textDecoration:"underline",color:"blue",border:"none"}}>View Resume</button><br/>

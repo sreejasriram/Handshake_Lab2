@@ -134,8 +134,8 @@ class Contact extends Component {
                                             <CreateOutlinedIcon onClick={this.editProfile} style={{ alignContent: 'right',height:"15px",width:"15px" }}></CreateOutlinedIcon>
                                             </div>
                                             </div>
-                                            <p><PhoneOutlinedIcon></PhoneOutlinedIcon> {this.state.mobile}</p>
-                                    <p><EmailOutlinedIcon></EmailOutlinedIcon> {this.state.email}</p>
+                                            {this.state.mobile?(<div><PhoneOutlinedIcon></PhoneOutlinedIcon> {this.state.mobile}</div>):<div></div>}
+                                            {this.state.email?(<div><EmailOutlinedIcon></EmailOutlinedIcon> {this.state.email}</div>):<div></div>}
                                         </CardContent>
                                     </Card>
                                     <br /><br />

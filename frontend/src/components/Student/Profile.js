@@ -86,6 +86,7 @@ class Profile extends Component {
                             career_objective: response.data.rows.career_objective,
                             mobile: response.data.rows.mobile,
                             skills: response.data.rows.skills,
+                            image: response.data.rows.image,
                             
                             education: response.data.rows.education,
                             experience: response.data.rows.experience
@@ -129,7 +130,8 @@ class Profile extends Component {
                 name: this.state.name,
                 college: this.state.college,
                 degree: this.state.degree,
-                major:this.state.major
+                major:this.state.major,
+                image:this.state.image
         }
 
         let education_props={
@@ -149,12 +151,13 @@ class Profile extends Component {
                         <Profilepic {...profilepic_props}/>
                         <Basic {...basic_props}/>   
                         <Skill {...skill_props}/>
+                        <Contact {...contact_props}/>
                     </div>
                     <div class="col-md-7">
                         <Journey {...journey_props}/>
                         <Education {...education_props}/>
                         <Experience {...experience_props}/> 
-                        <Contact {...contact_props}/>
+                      
                     </div>
                     <div class="col-md-1"> </div>
                 </div>

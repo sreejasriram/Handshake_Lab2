@@ -6,6 +6,10 @@ import { Link } from 'react-router-dom';
 import JobApply from './JobApply';
 import cookie from 'react-cookies';
 import { environment } from '../../Utils/constants';
+import emptyPic from '../../images/empty-profile-picture.png';
+import {Avatar} from '@material-ui/core';
+import CategoryIcon from '@material-ui/icons/Category';
+
 
 class JobDetails extends Component {
     constructor(props) {
@@ -16,7 +20,8 @@ class JobDetails extends Component {
             jobData: [],
             jobId: this.props.jobId,
             applied: false,
-            already_applied: false
+            already_applied: false,
+            emptyprofilepic:emptyPic
         }
         this.ApplyJob = this.ApplyJob.bind(this);
         console.log(this.state.jobId)
@@ -126,10 +131,10 @@ class JobDetails extends Component {
 
                             }
                         })
-                        
-                    }
+
+                }
             })
-            
+
     }
 
 
@@ -166,22 +171,42 @@ class JobDetails extends Component {
                 {jobData.map((data, index) => {
                     return (
                         <div key={data._id}>
-                            <Link to={`/companydetails/${data._id}`} activeClassName="active">
-                                <h2>{data.companydetails[0].name}</h2>
+                            <div class="row">
+                                <div class="col-md-1">
+                                <Avatar src={data.companydetails[0].image?data.companydetails[0].image:this.state.emptyprofilepic} style={{ width: '36px', height: '36px', borderRadius: '50%', textAlign: 'center',marginTop:'20px',marginBottom:'10px' }}></Avatar>
+                                </div>
+                                <div class="col-md-2">
+                                    <Link to={`/companydetails/${data._id}`} activeClassName="active">
+                                        <h2>{data.companydetails[0].name?data.companydetails[0].name:""}</h2>
 
-                            </Link>
+                                    </Link>
+                                </div>
+                            </div>
+
 
                             <h3>{data.title}</h3>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-map-marker" style={{ color: "#1569E0" }}></span> {data.location}</div>
-                                </div> <div class="col-md-3">
-                                    <div style={{ fontSize: "13px" }}><span style={{ color: "#1569E0" }}></span> {data.category}</div>
+                                {data.location?( <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-map-marker" style={{ color: "#1569E0" }}></span> {data.location}</div>):<div></div>} 
 
-                                </div> <div class="col-md-3">
-                                    <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-usd" style={{ color: "#1569E0" }}></span> {data.salary + " per hour"}</div>
-                                </div></div><br />
-                            <div style={{ fontSize: "13px", height: "40px", width: "70%" }}><span class="glyphicon glyphicon-calendar" style={{ color: "#1569E0" }}></span> Applications close on {data.deadline.substring(0, 10)}</div>
+                                    {/* <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-map-marker" style={{ color: "#1569E0" }}></span> {data.location}</div> */}
+                                </div> 
+                                <div class="col-md-3">
+                                {data.category?( <div style={{ fontSize: "13px" }}><span style={{ color: "#1569E0" }}></span><CategoryIcon style={{ color: "#1569E0" }}></CategoryIcon> {data.category}</div>):<div></div>} 
+
+                                    {/* <div style={{ fontSize: "13px" }}><span style={{ color: "#1569E0" }}></span> {data.category}</div> */}
+
+                                </div> 
+                                <div class="col-md-3">
+                                {data.salary?( <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-usd" style={{ color: "#1569E0" }}></span> {data.salary} per hour</div>):<div></div>} 
+
+                                    {/* <div style={{ fontSize: "13px" }}><span class="glyphicon glyphicon-usd" style={{ color: "#1569E0" }}></span> {data.salary + " per hour"}</div> */}
+                                </div>
+                                </div><br />
+
+                                {data.deadline.substring(0, 10)?( <div style={{ fontSize: "13px", height: "40px", width: "70%" }}><span class="glyphicon glyphicon-calendar" style={{ color: "#1569E0" }}></span> Applications close on {data.deadline.substring(0, 10)}</div>):<div></div>} 
+
+                            {/* <div style={{ fontSize: "13px", height: "40px", width: "70%" }}><span class="glyphicon glyphicon-calendar" style={{ color: "#1569E0" }}></span> Applications close on {data.deadline.substring(0, 10)}</div> */}
 
 
                             {data.description}

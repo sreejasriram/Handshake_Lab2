@@ -6,6 +6,10 @@ import Jobs from './Jobs';
 import StudentNavbar from './StudentNavbar';
 import cookie from 'react-cookies';
 import {environment} from '../../Utils/constants';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 
 
 class ShowCompany extends Component {
@@ -63,15 +67,31 @@ class ShowCompany extends Component {
                     profileData.map((data, index) => {
                         return (
                             <div>
-                                
-                            <div key={data.companydetails[0]._id}>
-                                <h3>{data.title}</h3>
-                                <h3>{data.companydetails[0].name}</h3>
-                                <p>{data.companydetails[0].description}</p>
-                                <p>{data.companydetails[0].contact}</p>
-                                <p>{data.companydetails[0].location}</p><br /><br />
+                               
+                                    <div class="row">
+                                        <div class="col-md-2"> </div>
+                                       
+                                        <div class="col-md-8">  
+                                        <Card>
+                                    <CardContent>                                               
+                                            <div key={data.companydetails[0]._id}>
+                                            <Typography color="black" gutterBottom>
+                                                <b><p style={{ fontSize: '24px' }}>{data.title}</p></b>
+                                            </Typography>
+                                                <h3>{data.companydetails[0].name}</h3>
+                                                <p>{data.companydetails[0].description}</p>
+                                                <p>{data.companydetails[0].contact}</p>
+                                                <p>{data.companydetails[0].location}</p>
+                                            </div>
+                                            </CardContent>
+                                    </Card>
+                                        </div>
+                                       <br /><br />
+                                        <div class="col-md-2"> </div>
+                                     </div>
+                                   
                             </div>
-                            </div>
+
                    
                 )
                     }))

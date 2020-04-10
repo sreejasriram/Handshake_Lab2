@@ -35,7 +35,7 @@ const fs = require('fs');
 	        } else {
 	
 
-	            cb(null,  req.body.stud_id + path.extname(file.originalname))
+	            cb(null,  req.body.companyId + path.extname(file.originalname))
 	        }
 	    }
 	});
@@ -83,7 +83,65 @@ router.post('/apply_job',upload.single('file'),(req,res)=>{
 }
 })
 
+/////////////////////////////
 
+router.post('/uploadpic', upload.single('profilepic'), async (req, response) => {
+    try {
+      if (req.file) {
+        const fileContent = fs.readFileSync(`./public/images/${req.body.companyId}${path.extname(req.file.originalname)}`);
+        console.log(fileContent)
+        console.log(req.body)
+        console.log(req.body.companyId);
+        const params = {
+            Bucket: 'handshakesreeja',
+            Key: req.body.companyId + path.extname(req.file.originalname),
+            Body: fileContent,
+            ContentType: req.file.mimetype
+        };
+
+      
+        s3.upload(params, function (err, data) {
+            if (err) {
+                console.log(err.message)
+                return response.status(500).json({ "error": err.message })
+            }
+            console.log(data);
+            let profilepic = {
+                ...req.body,
+                image: data.Location
+            }
+            profilepic.type = 'companyprofilepic'
+            console.log(profilepic)
+            kafka.make_request('profile',profilepic, (err,result) => {
+                console.log('in result');
+                console.log(result);
+                if (err){
+                    console.log("Inside err");
+                    response.json({'error':err})
+                }else if(result.error){
+                    response.json({'error':result.error})
+                }else{
+                    console.log("Inside result");
+                        console.log(result)
+                        response.json(result);
+                    }
+            });
+       
+    });
+      }
+    } catch (ex) {
+      const message = ex.message ? ex.message : 'Error while uploading image';
+      console.log(ex)
+      const code = ex.statusCode ? ex.statusCode : 500;
+      return response.status(code).json({ message });
+    }
+  });
+
+
+
+
+
+//////////////////////////
 
 
 // router.post('/company_signup',(req,res)=>{
@@ -576,6 +634,39 @@ router.post('/save_company_profile',(req,res)=>{
 
 
 
+router.get('/profile/:id',(req,res)=>{
+    console.log("In company get complete profile request");
+    console.log(req.params);
+        req.body.type = "retrieve_company_profile";
+        req.body.companyId = req.params.id;
+        kafka.make_request('profile',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)  
+            res.json({"error":"failure"})
+        }
+        else if(rows){
+            console.log("in route")
+        console.log(rows)
+        res.json({"rows":rows})
+        } 
+    })  
+})
+
+router.put('/updateprofile',(req,res)=>{
+    console.log("In company profile post request");
+    console.log(req.body);
+    req.body.type = "profile_company_update";
+    kafka.make_request('profile',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)  
+            res.json({"error":"failure"})
+        }
+        else if(rows){
+        console.log(rows)
+        res.json({"result":rows})
+        }
+    })  
+})
 
 
 

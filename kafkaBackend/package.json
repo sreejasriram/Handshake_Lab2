@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "kafka-node": "^5.0.0",
+    "kafka-node": "^2.5.0",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.6",
     "mongoose-auto-increment": "^5.0.1",

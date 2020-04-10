@@ -265,10 +265,33 @@ const checkEligibility = (modelObject,lookupObject, query, callback) => {
 //     }
 // }
 
+const findDocumentsByQueryAsync = async (modelObject, query, projection, options) => {
+    try {
+        return await modelObject.find(query, projection, options).lean();
+    } catch (error) {
+        throw new Error(error);
+    }
+}
 
-
-
-
+const findDocumentsByLookupAsync = async (modelObject,lookupObject, query, local, foreign, aggName) => {
+    try { const agg = [
+            { $match: query },
+            {
+                $lookup:
+                {
+                    from: lookupObject,
+                    localField: local,
+                    foreignField: foreign,
+                    as: aggName
+                },
+            },
+        ];
+        return await modelObject.aggregate(agg).exec();
+    } catch (error) {
+        console.log("Error while saving data:" + error)
+        throw new Error(error);
+    }
+}
 
 
 
@@ -280,3 +303,5 @@ module.exports.editObj = editObj;
 module.exports.getApplicantsforJob = getApplicantsforJob;
 module.exports.checkEligibility = checkEligibility;
 module.exports.getProfile = getProfile;
+module.exports.findDocumentsByLookupAsync = findDocumentsByLookupAsync;
+module.exports.findDocumentsByQueryAsync = findDocumentsByQueryAsync;

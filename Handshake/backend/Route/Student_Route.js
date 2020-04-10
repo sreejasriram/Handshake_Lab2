@@ -3,7 +3,43 @@ var router = express.Router();
 var app = express();
 var StudRepo = require('../Repository/Student_Repository');
 var kafka = require('../kafka/client');
+var multer  = require('multer')
+var path = require('path');
+///////////////////////
+const fs = require('fs');
+	const AWS = require('aws-sdk');
+	const s3 = new AWS.S3({
+	    accessKeyId:
+	        "AKIAIIQC7PV4X6Z66WNA",
+	    secretAccessKey:
+	        "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"
+	})
+	var storage = multer.diskStorage({
+	    destination: (req, file, cb) => {
+	        if (file.mimetype === "application/pdf") {
+	            cb(null, './public/applications')
+	        } else {
+	            cb(null, './public/images')
+	        }
+	    },
+	    filename: (req, file, cb) => {
+	        if (file.mimetype === "application/pdf") {
+	           
+	            cb(null, req.body.job_id + req.body.studentId + path.extname(file.originalname))
+	        } else {
+	
 
+	            cb(null,  req.body.studentId + path.extname(file.originalname))
+	        }
+	    }
+	});
+	const upload = multer({
+	    storage
+	})
+
+
+
+///////////////////////////
 
 // router.post('/student_signup',(req,res)=>{
 //     console.log("In student signup post request");
@@ -62,12 +98,13 @@ router.get('/student_signin/:email/:password',(req,res)=>{
     console.log("In student signin get request");
     console.log(req.params.email);
     console.log(req.params.password);
-    kafka.make_request('signup-login',req.params,(err,rows)=>{
+    let msg=req.params;
+    kafka.make_request('signup-login',msg,function(err,rows){
     // StudRepo.student_signin(req.params,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
            res.status(500).send(err.code+" : "+err.sqlMessage)
-
+ 
         }
         else if(rows.length)
             {     
@@ -545,5 +582,70 @@ router.get('/list_applied_jobs/:studentId',(req,res)=>{
     }
     }) 
 })
+
+
+
+
+
+
+router.post('/uploadpic', upload.single('image'), async (req, response) => {
+    try {
+      if (req.file) {
+        const fileContent = fs.readFileSync(`./public/images/${req.body.studentId}${path.extname(req.file.originalname)}`);
+        console.log(fileContent)
+        console.log(req.body)
+        console.log(req.body.studentId);
+        const params = {
+            Bucket: 'handshakesreeja',
+            Key: req.body.studentId + path.extname(req.file.originalname),
+            Body: fileContent,
+            ContentType: req.file.mimetype
+        };
+
+      
+        s3.upload(params, function (err, data) {
+            if (err) {
+                console.log(err.message)
+                return response.status(500).json({ "error": err.message })
+            }
+            console.log(data);
+            let profilepic = {
+                ...req.body,
+                image: data.Location
+            }
+            profilepic.type = 'studentprofilepic'
+            console.log(profilepic)
+            kafka.make_request('profile',profilepic, (err,result) => {
+                console.log('in result');
+                console.log(result);
+                if (err){
+                    console.log("Inside err");
+                    response.json({'error':err})
+                }else if(result.error){
+                    response.json({'error':result.error})
+                }else{
+                    console.log("Inside result");
+                        console.log(result)
+                        response.json(result);
+                    }
+            });
+       
+    });
+      }
+    } catch (ex) {
+      const message = ex.message ? ex.message : 'Error while uploading image';
+      console.log(ex)
+      const code = ex.statusCode ? ex.statusCode : 500;
+      return response.status(code).json({ message });
+    }
+  });
+
+
+  
+
+
+
+
+
 
 module.exports = router

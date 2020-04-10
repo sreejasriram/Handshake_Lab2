@@ -134,14 +134,17 @@ class CompanyEvents extends Component {
                                         <CardContent>
                                             <Typography color="black" gutterBottom>
                                                 <Link to={`/eventdetails/${data._id}`} activeClassName="active">
-                                                    <h5>{data.name}</h5>
+                                                    <h5>{data.name?data.name:""}</h5>
 
                                                 </Link>
-                                                <p> {data.description} </p>
-                                                <p> <EventNoteIcon fontSize="medium"></EventNoteIcon> {data.date.substring(0, 10)}
-                                                    <LocationOnOutlinedIcon fontSize="medium"></LocationOnOutlinedIcon> {data.location}
+                                                <p> {data.description?data.description:""} </p>
+                                                {/* <p> <EventNoteIcon fontSize="medium" style={{ color: "#1569E0" }}></EventNoteIcon> {data.date.substring(0, 10)} */}
+                                                {data.date.substring(0, 10)?(<div><EventNoteIcon fontSize="medium" style={{ color: "#1569E0" }}></EventNoteIcon>{data.date.substring(0, 10)}</div>):<div></div>} 
+                                                {data.location?(<div><LocationOnOutlinedIcon fontSize="medium" style={{ color: "#1569E0" }}></LocationOnOutlinedIcon> {data.location}</div>):<div></div>} 
 
-                                                </p>
+                                                    {/* <LocationOnOutlinedIcon fontSize="medium"></LocationOnOutlinedIcon> {data.location} */}
+
+                                                {/* </p> */}
                                             </Typography>
                                         </CardContent>
                                     </Card>

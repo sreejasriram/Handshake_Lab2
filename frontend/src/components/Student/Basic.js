@@ -142,8 +142,8 @@ class Basic extends Component {
                                             <CreateOutlinedIcon onClick={this.editProfile} style={{ alignContent: 'right',height:"15px",width:"15px" }}></CreateOutlinedIcon>
                                             </div>
                                             </div>
-                                            <p><CakeOutlinedIcon></CakeOutlinedIcon> {this.state.dob}</p>
-                                            <p><LocationOnOutlinedIcon></LocationOnOutlinedIcon> {this.state.city}, {this.state.state}, {this.state.country} </p>
+                                            {this.state.dob?(<div><CakeOutlinedIcon></CakeOutlinedIcon> {this.state.dob}</div>):<div></div>}
+                                            {this.state.country || this.state.city ||  this.state.state?(<div><LocationOnOutlinedIcon></LocationOnOutlinedIcon> {this.state.city}, {this.state.state}, {this.state.country} </div>):<div></div>}
 
                                         </CardContent>
                                     </Card>

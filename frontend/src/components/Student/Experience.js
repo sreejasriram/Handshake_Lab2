@@ -280,10 +280,11 @@ else
                                                 <div class="row">
                                                 <div class="col-md-10">
                                                 <div key={data._id}>
-                                              <h4><WorkOutlineOutlinedIcon></WorkOutlineOutlinedIcon><b> {data.company}</b></h4>
-                                             <p><PersonOutlinedIcon></PersonOutlinedIcon> {data.title}</p>
-                                             <p><LocationOnOutlinedIcon></LocationOnOutlinedIcon>{data.location}</p>
-                                             <p><DateRangeOutlinedIcon></DateRangeOutlinedIcon> {data.year_of_starting}/{data.month_of_starting} - {data.year_of_ending}/{data.month_of_ending}</p>
+                                                {data.company?(<div> <h4><b><WorkOutlineOutlinedIcon></WorkOutlineOutlinedIcon> {data.company}</b></h4></div>):<div></div>} 
+                                        {data.title?(<div><PersonOutlinedIcon></PersonOutlinedIcon> {data.title}</div>):<div></div>} 
+                                        {data.location?(<div><LocationOnOutlinedIcon></LocationOnOutlinedIcon> {data.location}</div>):<div></div>} 
+                                        {data.year_of_starting?(<div><DateRangeOutlinedIcon></DateRangeOutlinedIcon> {data.year_of_starting?data.year_of_starting:""}/{data.month_of_starting?data.month_of_starting:""} - {data.year_of_ending?data.year_of_ending:""}/{data.month_of_ending?data.month_of_ending:""}</div>):<div></div>} 
+
                                             <hr/>
                                                  </div></div>
                                         <div class="col-md-2">
