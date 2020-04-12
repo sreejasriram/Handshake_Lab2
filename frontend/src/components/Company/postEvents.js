@@ -57,6 +57,8 @@ class postEvents extends Component{
         axios.defaults.withCredentials = true;
         console.log("in frontend before axios");
         // axios.post(environment.baseUrl+'/company/company_events',data)
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.post(environment.baseUrl+'/company/post_events',data)
             .then(response => {
               console.log("in frontend after response");

@@ -44,6 +44,8 @@ class EventDetails extends Component {
             event_id: this.state.eventId.eventId,
         }
         console.log(edit_data)
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.post(environment.baseUrl + '/student/apply_event', edit_data)
             .then(response => {
                 console.log("in frontend after response");
@@ -66,6 +68,8 @@ class EventDetails extends Component {
             eventId: this.state.eventId.eventId,
         }
         console.log(data)
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.get(environment.baseUrl + '/student/events_details/' + data.eventId)
             .then(response => {
                 console.log("in frontend after response");
@@ -89,6 +93,8 @@ class EventDetails extends Component {
                     studentId: sessionStorage.getItem('id')
                 }
                 console.log(data)
+                axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
                 axios.get(environment.baseUrl + '/company/event_already_applied/' + data.eventId + "/" + data.studentId)
                     .then(response => {
                         console.log("in frontend after response");
@@ -111,6 +117,8 @@ class EventDetails extends Component {
                     studentId: sessionStorage.getItem('id')
                 }
                 console.log(data)
+                axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
                 axios.get(environment.baseUrl + '/company/get_student_eligibility/' + data.eventId + "/" + data.studentId)
                     .then(response => {
                         console.log("in frontend after response");

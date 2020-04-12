@@ -8,6 +8,8 @@ var session = require('express-session');
 var cors = require('cors');
 var port = 3001;
 var app = express();
+const { mongoDB } = require('./backend/Database/config');
+const mongoose = require('mongoose');
 
 //use cors to allow cross origin resource sharing
 //app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -31,6 +33,23 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}));
 app.use('/student', student);
 app.use('/company', company);
+
+var options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  poolSize: 500,
+  bufferMaxEntries: 0
+};
+
+mongoose.connect(mongoDB, options, (err, res) => {
+  if (err) {
+      console.log(err);
+      console.log(`MongoDB Connection Failed`);
+  } else {
+      console.log(`MongoDB Connected`);
+  }
+});
+
 app.listen(port);
 console.log("Server Listening on port 3001");
 module.exports = app;

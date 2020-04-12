@@ -77,6 +77,8 @@ class Messages extends Component {
                 }
            
             console.log(data)
+            axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
             axios.post(environment.baseUrl+'/company/send_message', data)
                 .then(response => {
                     console.log("in frontend after response");
@@ -99,6 +101,8 @@ class Messages extends Component {
 
     fetchmessages = () =>{
         console.log(sessionStorage.getItem('id'))
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.get(environment.baseUrl+'/company/fetch_convos/' + sessionStorage.getItem('id'))
             .then((response) => {
                 console.log(response.data)

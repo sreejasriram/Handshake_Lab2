@@ -65,6 +65,8 @@ class Profile extends Component {
         let stud_id = sessionStorage.getItem('id');
         console.log("inside did mount")
         console.log(stud_id)
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.get(environment.baseUrl+'/student/student_profile_info/'+stud_id)
             .then(response => {
                 console.log("in frontend after response");

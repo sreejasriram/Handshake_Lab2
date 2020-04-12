@@ -76,6 +76,8 @@ class JobApply extends Component {
         };
     console.log(this.state.resume)
     await console.log(fdata)
+    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         var rest = await axios.post(environment.baseUrl+'/company/apply_job', fdata , config)
             .then(response => {
                 console.log("in frontend after response");

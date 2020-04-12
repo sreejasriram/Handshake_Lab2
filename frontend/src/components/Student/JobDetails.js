@@ -43,6 +43,8 @@ class JobDetails extends Component {
         }
         console.log(this.props.jobId)
         console.log(data.jobId)
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.get(environment.baseUrl + '/student/jobs_details/' + data.jobId)
             .then(response => {
                 console.log("in frontend after response");
@@ -68,6 +70,8 @@ class JobDetails extends Component {
                     }
                     console.log(data)
                     console.log(this.state.already_applied)
+                    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
                     axios.get(environment.baseUrl + '/company/job_already_applied/' + data.jobId + "/" + data.studentId)
                         .then(response => {
                             console.log("in frontend after response");
@@ -94,6 +98,8 @@ class JobDetails extends Component {
             jobId: this.props.jobId
         }
         console.log(data.id)
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.get(environment.baseUrl + '/student/jobs_details/' + data.jobId)
             .then(response => {
                 console.log("in frontend after response");
@@ -118,6 +124,8 @@ class JobDetails extends Component {
                         studentId: sessionStorage.getItem('id')
                     }
                     console.log(data)
+                    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
                     axios.get(environment.baseUrl + '/company/job_already_applied/' + data.jobId + "/" + data.studentId)
                         .then(response => {
                             console.log("in frontend after response");

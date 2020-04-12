@@ -82,16 +82,6 @@ async function handleTopicRequestAsync(topic_name,fname){
         var data = JSON.parse(message.value);
         
         let res = await fname.handle_request(data.data)
-        // fname.handle_request(data.data, (err,res) => {
-            // console.log(res)
-            // console.log(err)
-            // if (res){
-            //     result = res
-            // }else{
-            //     result = err
-            // }
-            // console.log(`after handle :`);
-            // console.log(result)
             var payloads = [
                 { topic: data.replyTo,
                     messages:JSON.stringify({
@@ -107,11 +97,8 @@ async function handleTopicRequestAsync(topic_name,fname){
             return;
         });
         
-    // });
 }
-// Add your TOPICs here
-//first argument is topic name
-//second argument is a function that will handle this topic request
+
 handleTopicRequest("login-signup",signup)
 handleTopicRequest("signup-login",signin)
 handleTopicRequest("company-signup",c_signup)
@@ -119,7 +106,6 @@ handleTopicRequest("company-signin",c_signin)
 handleTopicRequest("company-jobs",c_jobs)
 handleTopicRequest("company-events",c_events)
 handleTopicRequest("profile",profile)
-// //handleTopicRequest("chat",chat)
 handleTopicRequestAsync("chat",chat)
 
 

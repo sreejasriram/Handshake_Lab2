@@ -50,6 +50,7 @@ class ViewEventApplicants extends Component {
             id: cmpny_id,
             event_id:this.state.event_id
         }
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
         axios.get(environment.baseUrl+'/company/list_event_applicants/'+data.event_id)
             .then(response => {

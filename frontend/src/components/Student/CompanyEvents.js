@@ -64,6 +64,8 @@ class CompanyEvents extends Component {
 
 
     componentDidMount() {
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.get(environment.baseUrl + '/student/all_events_retrieve')
             .then(response => {
                 console.log("in frontend after response");

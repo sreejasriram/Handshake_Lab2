@@ -6,16 +6,17 @@ import * as serviceWorker from './serviceWorker';
 ///
 //  import 'bootstrap/dist/css/bootstrap.min.css';
  ///
-import {createStore} from 'redux';
-import {login_logout} from './components/Reducers/login_logout';
+// import {createStore} from 'redux';
 import {Provider} from 'react-redux';
-import allReducers from './components/Reducers';
+// import allReducers from './components/Reducers';
+import store from "./redux/store/index";
 
-const store = createStore(
-    login_logout,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+// const store = createStore(
+//     login_logout,
+//     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
 ReactDOM.render(
-<Provider store={store}>
+ <Provider store={store}> 
 <App />
 </Provider>, 
 

@@ -112,7 +112,7 @@ class ViewProfile extends Component {
             update: {
                 id1: {
                     sender: sessionStorage.getItem('id'),
-                    persona: "companies"
+                    persona: "students"
                 },
                 id2: {
                     receiver: this.state.stud_id,
@@ -132,7 +132,7 @@ class ViewProfile extends Component {
         console.log(data)
         axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.post(environment.baseUrl + '/company/send_message', data)
+        axios.post(environment.baseUrl + '/student/send_message', data)
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data)
@@ -157,7 +157,7 @@ class ViewProfile extends Component {
         console.log(data)
         axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.get(environment.baseUrl + '/company/get_student_profile/' + data.id)
+        axios.get(environment.baseUrl + '/student/get_student_profile/' + data.id)
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)

@@ -5,6 +5,10 @@ var StudRepo = require('../Repository/Student_Repository');
 var kafka = require('../kafka/client');
 var multer  = require('multer')
 var path = require('path');
+const { checkAuth } = require("../utils/passport");
+const jwt = require('jsonwebtoken');
+var { secret } = require("../utils/config");
+const { studauth } = require("../utils/passport");
 ///////////////////////
 const fs = require('fs');
 	const AWS = require('aws-sdk');
@@ -95,6 +99,7 @@ router.post('/student_signup',(req,res)=>{
 
 
 router.get('/student_signin/:email/:password',(req,res)=>{
+    studauth();
     console.log("In student signin get request");
     console.log(req.params.email);
     console.log(req.params.password);
@@ -110,8 +115,19 @@ router.get('/student_signin/:email/:password',(req,res)=>{
             {     
             console.log(`student found`)
             console.log(rows)
+            const payload = { _id: rows[0]._id, username: req.params.email};
+            console.log(rows[0]._id)
+            console.log(req.params.email)
+
+            const token = jwt.sign(payload, secret, {
+                expiresIn: 1008000
+            });
             res.cookie('student',req.params.email,{maxAge: 90000000, httpOnly: false, path : '/'});
-            res.json({"result": rows[0]._id})
+            console.log("token is")
+            console.log(token)
+            // res.json({"result": rows[0]._id})
+            res.json({"result":"JWT " +token})
+
         }
         else{
             res.json({"result": "Not found"})
@@ -121,7 +137,7 @@ router.get('/student_signin/:email/:password',(req,res)=>{
 })
 
 
-router.get('/student_profile_info/:id',(req,res)=>{
+router.get('/student_profile_info/:id',checkAuth,(req,res)=>{
     console.log("In student get complete profile request");
     console.log(req.params);
     // StudRepo.student_profile_info(req.params,(err,rows)=>{
@@ -141,7 +157,7 @@ router.get('/student_profile_info/:id',(req,res)=>{
 })
 
 
-router.post('/student_basic_edited',(req,res)=>{
+router.post('/student_basic_edited',checkAuth,(req,res)=>{
     console.log("In student basic post request");
     console.log(req.body);
     req.body.type = "add_basic";
@@ -160,7 +176,7 @@ router.post('/student_basic_edited',(req,res)=>{
 })
 
 
-router.post('/student_education_edited',(req,res)=>{
+router.post('/student_education_edited',checkAuth,(req,res)=>{
     console.log("In student education post request");
     console.log(req.body);
     req.body.type = "add_education";
@@ -179,7 +195,7 @@ router.post('/student_education_edited',(req,res)=>{
 })
 
 
-router.post('/student_experience_edited',(req,res)=>{
+router.post('/student_experience_edited',checkAuth,(req,res)=>{
     console.log("In student experience post request");
     console.log(req.body);
     req.body.type = "add_experience";
@@ -195,7 +211,7 @@ router.post('/student_experience_edited',(req,res)=>{
     })  
 })
 
-router.post('/student_skill_edited',(req,res)=>{
+router.post('/student_skill_edited',checkAuth,(req,res)=>{
     console.log("In student skills post request");
     console.log(req.body);
     req.body.type = "add_skill";
@@ -213,7 +229,7 @@ router.post('/student_skill_edited',(req,res)=>{
     })  
 })
 
-router.post('/student_journey_edited',(req,res)=>{
+router.post('/student_journey_edited',checkAuth,(req,res)=>{
     console.log("In student journey post request");
     console.log(req.body);
     req.body.type = "add_journey";
@@ -232,7 +248,7 @@ router.post('/student_journey_edited',(req,res)=>{
 })
 
 
-router.post('/student_contact_edited',(req,res)=>{
+router.post('/student_contact_edited',checkAuth,(req,res)=>{
     console.log("In student contact post request");
     console.log(req.body);
     req.body.type = "add_contact";
@@ -250,7 +266,7 @@ router.post('/student_contact_edited',(req,res)=>{
     })  
 })
 
-router.post('/student_profilepic_edited',(req,res)=>{
+router.post('/student_profilepic_edited',checkAuth,(req,res)=>{
     console.log("In student profile pic post request");
     console.log(req.body);
     req.body.type = "add_profilepic";
@@ -465,7 +481,7 @@ else
 })
 
 
-router.get('/all_events_retrieve',(req,res)=>{
+router.get('/all_events_retrieve',checkAuth,(req,res)=>{
     console.log("In student all events retrieve get request");
     req.body.type = "retrieve_all_events";
     kafka.make_request('company-events',req.body,(err,rows)=>{
@@ -481,7 +497,7 @@ router.get('/all_events_retrieve',(req,res)=>{
     }) 
 })
 
-router.get('/all_jobs_retrieve',(req,res)=>{
+router.get('/all_jobs_retrieve',checkAuth,(req,res)=>{
     console.log("In company all jobs retrieve get request");
     req.body.type = "retrieve_all_jobs";
     kafka.make_request('company-jobs',req.body,(err,rows)=>{
@@ -497,7 +513,7 @@ router.get('/all_jobs_retrieve',(req,res)=>{
     }) 
 })
 
-router.get('/jobs_details/:jobId',(req,res)=>{
+router.get('/jobs_details/:jobId',checkAuth,(req,res)=>{
     console.log("In company jobs retrieve post request");
     console.log(req.params)
     req.body.type = "retrieve_job_details_with_id";
@@ -515,7 +531,7 @@ router.get('/jobs_details/:jobId',(req,res)=>{
     }) 
 })
 
-router.get('/events_details/:eventId',(req,res)=>{
+router.get('/events_details/:eventId',checkAuth,(req,res)=>{
     console.log("In event details by id retrieve get request");
     console.log(req.params)
     req.body.type = "retrieve_event_details_with_id";
@@ -534,7 +550,7 @@ router.get('/events_details/:eventId',(req,res)=>{
 })
 
 
-router.post('/apply_event',(req,res)=>{
+router.post('/apply_event',checkAuth,(req,res)=>{
     console.log("In company apply event post request");
     console.log(req.body);
     req.body.type = "apply_event";
@@ -549,7 +565,7 @@ router.post('/apply_event',(req,res)=>{
     }) 
 })
 
-router.get('/list_applied_events/:studentId',(req,res)=>{
+router.get('/list_applied_events/:studentId',checkAuth,(req,res)=>{
     console.log("In company list_applied_events get request");
     console.log(req.params)
     req.body.type = "list_applied_events";
@@ -566,7 +582,7 @@ router.get('/list_applied_events/:studentId',(req,res)=>{
     }) 
 })
 
-router.get('/list_applied_jobs/:studentId',(req,res)=>{
+router.get('/list_applied_jobs/:studentId',checkAuth,(req,res)=>{
     console.log("In company list list_applied_jobs get request");
     console.log(req.params)
     req.body.type = "list_applied_jobs";
@@ -588,7 +604,7 @@ router.get('/list_applied_jobs/:studentId',(req,res)=>{
 
 
 
-router.post('/uploadpic', upload.single('image'), async (req, response) => {
+router.post('/uploadpic',checkAuth, upload.single('image'), async (req, response) => {
     try {
       if (req.file) {
         const fileContent = fs.readFileSync(`./public/images/${req.body.studentId}${path.extname(req.file.originalname)}`);
@@ -641,11 +657,83 @@ router.post('/uploadpic', upload.single('image'), async (req, response) => {
   });
 
 
+
+  /////////////////////////////
   
+///////////////#################///////////////////////
+router.get('/get_student_profile/:studentId',checkAuth,(req,res)=>{
+    console.log("In get_student_profile get request");
+    console.log(req.params);
+    req.body.type = "list_event_applicants_profile";
+    req.body.studentId = req.params.studentId;
+
+    kafka.make_request('company-events',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})}
+        
+    }) 
+})
+
+
+///////////////#################///////////////////////
+router.get('/list_all_students',checkAuth,(req,res)=>{
+    console.log("In list_all_students from company retrieve post request");
+    req.body.type = "list_all_students_company";
+    kafka.make_request('profile',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})
+    }
+        
+    }) 
+})
+
+///////////////#################///////////////////////
+router.post('/send_message',checkAuth,(req,res)=>{
+    console.log("In company send_message request");
+    console.log(req.body);
+    req.body.type = "send_message";
+    kafka.make_request('chat',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})
+        }
+    }) 
+})
+
+///////////////#################///////////////////////
+router.get('/fetch_convos/:id',checkAuth,(req,res)=>{
+    console.log("In company fetch_convos request");
+    console.log(req.params);
+    req.body.id = req.params.id;
+    req.body.type = "fetch_convos";
+    kafka.make_request('chat',req.body,(err,rows)=>{
+        if (err){
+            console.log(`${err.code}:${err.sqlMessage}`)
+            res.json({"error":"failure"})
+        }
+        else{
+        console.log(rows)
+        res.json({rows})
+        }
+    }) 
+})
 
 
 
-
-
+///////////////////////////////
 
 module.exports = router

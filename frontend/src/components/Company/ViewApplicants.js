@@ -61,6 +61,8 @@ class ViewApplicants extends Component {
             status:this.state.showStatus
         }
         console.log(data)
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.put(environment.baseUrl+'/company/updateStudentstatus', data)
             .then(response => {
                 console.log(response)
@@ -85,6 +87,7 @@ class ViewApplicants extends Component {
         const data = {
             job_id:this.state.job_id
         }
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
         axios.get(environment.baseUrl+'/company/list_applicants/'+data.job_id)
             .then(response => {

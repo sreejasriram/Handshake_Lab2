@@ -68,8 +68,9 @@ class Students extends Component {
         })
     }
     componentDidMount() {
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.get(environment.baseUrl + '/company/list_all_students')
+        axios.get(environment.baseUrl + '/student/list_all_students')
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)
@@ -97,7 +98,7 @@ class Students extends Component {
         let clgsearch = this.state.clgsearch;
         let renderRedirect = null
         if (this.state.view_profile === true) {
-            renderRedirect = <Redirect to={`/ViewProfile/${this.state.studId}`} />
+            renderRedirect = <Redirect to={`/StudViewProfile/${this.state.studId}`} />
         }
         if (this.state.stuData) {
 

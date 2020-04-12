@@ -34,6 +34,8 @@ import HandshakeStudents from './Student/Students'
 import StudApplications from './Student/Applications';
 import CompanyEvents from './Student/CompanyEvents';
 import Messages from './Student/Messages';
+import StudViewProfile from './Student/ViewProfile'
+
 
 
 
@@ -68,6 +70,8 @@ class Main extends Component {
                <Route path="/ViewApplicants/:jobId" component={ViewApplicants}/>
                <Route path="/ViewEventApplicants/:eventId" component={ViewEventApplicants}/>
                <Route path="/companyMessages" component={CmpyMessages}/>
+               
+               <Route path="/StudViewProfile/:stud_id" component={StudViewProfile}/>
 
                
 

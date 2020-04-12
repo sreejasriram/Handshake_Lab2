@@ -52,6 +52,7 @@ class ViewRegisteredEvents extends Component {
             studentId: sessionStorage.getItem('id')
 
         }
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
         axios.get(environment.baseUrl + '/student/list_applied_events/' + data.studentId)
             .then(response => {

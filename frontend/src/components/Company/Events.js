@@ -68,6 +68,10 @@ class Events extends Component {
         const data = {
             companyId: cmpny_id
         }
+        console.log(sessionStorage.getItem('id'))
+        console.log(sessionStorage.getItem('token'))
+
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
         axios.get(environment.baseUrl+'/company/getevents/'+data.companyId)//company_events_retrieve
             .then(response => {

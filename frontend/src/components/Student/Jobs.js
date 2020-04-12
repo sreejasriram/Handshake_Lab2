@@ -12,6 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import StudentNavbar from './StudentNavbar';
 import {environment} from '../../Utils/constants';
 import TablePagination from '@material-ui/core/TablePagination';
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import { Dropdown } from 'react-bootstrap'
 
 
 class Jobs extends Component {
@@ -84,7 +86,102 @@ class Jobs extends Component {
         }
     }
 
+
+    /////////////////////////////////
+    sortbyloc() {
+        let jobData = this.state.jobData
+        let compare = (a,b) =>{
+            let comparison = 0
+            if (a.location > b.location) {
+                comparison = 1;
+              } else if (a.location < b.location) {
+                comparison = -1;
+              }
+              return comparison;
+        }
+        if (jobData.length)
+            jobData.sort(compare);
+        this.setState({
+            jobData:jobData
+        })
+    }
+    sortbyPostingDate() {
+        let jobData = this.state.jobData
+        let compare = (a,b) =>{
+            let comparison = 0
+            if (a.posting_date > b.posting_date) {
+                comparison = 1;
+              } else if (a.posting_date < b.posting_date) {
+                comparison = -1;
+              }
+              return comparison;
+        }
+        if (jobData.length)
+            jobData.sort(compare);
+        this.setState({
+            jobData:jobData
+        })
+    }
+    sortbyPostingDatedesc() {
+        let jobData = this.state.jobData
+        let compare = (a,b) =>{
+            let comparison = 0
+            if (a.posting_date < b.posting_date) {
+                comparison = 1;
+              } else if (a.posting_date > b.posting_date) {
+                comparison = -1;
+              }
+              return comparison;
+        }
+        if (jobData.length)
+            jobData.sort(compare);
+        this.setState({
+            jobData:jobData
+        })
+    }
+    sortbyDeadline() {
+        let jobData = this.state.jobData
+        let compare = (a,b) =>{
+            let comparison = 0
+            if (a.deadline > b.deadline) {
+                comparison = 1;
+              } else if (a.deadline < b.deadline) {
+                comparison = -1;
+              }
+              return comparison;
+        }
+        if (jobData.length)
+            jobData.sort(compare);
+        this.setState({
+            jobData:jobData
+        })
+    }
+    sortbyDeadlinedesc() {
+        console.log("sortbyDeadlinedesc")
+        let jobData = this.state.jobData
+        let compare = (a,b) =>{
+            let comparison = 0
+            if (a.deadline < b.deadline) {
+                comparison = 1;
+              } else if (a.deadline > b.deadline) {
+                comparison = -1;
+              }
+              return comparison;
+        }
+        if (jobData.length)
+            jobData.sort(compare);
+        this.setState({
+            jobData:jobData
+        })
+    }
+
+
+
+    ////////////////////////////////
+
     componentDidMount() {
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.get(environment.baseUrl+'/student/all_jobs_retrieve')
             .then(response => {
                 console.log("in frontend after response");
@@ -180,6 +277,28 @@ class Jobs extends Component {
                     <div class="col-md-3">
                         <Card>
                             <CardContent>
+
+                                {/* //////////////////////// */}
+
+                                <div class='row' style={{width:'315px'}}>
+                                <div class='col-md-4' style={{ position:'relative', top:'5px'}}>Jobs</div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-4" style={{width:'50px'}}>
+                                        <DropdownButton  variant="secondary" size="sm" title="Sort By" style={{width:'50px'}}>
+                                            <div style={{width:'170px'}}>
+                                            <Dropdown.Item onClick={()=>{this.sortbyloc()}} style={{paddingLeft:'5px', color:'black'}}>Location</Dropdown.Item><br />
+                                            <Dropdown.Item onClick={()=>{this.sortbyPostingDate()}} style={{paddingLeft:'5px', color:'black'}}>Posting Date Ascending</Dropdown.Item><br />
+                                            <Dropdown.Item onClick={()=>{this.sortbyPostingDatedesc()}} style={{paddingLeft:'5px', color:'black'}}>Posting Date Descending</Dropdown.Item><br />
+                                            <Dropdown.Item onClick={()=>{this.sortbyDeadline()}} style={{paddingLeft:'5px', color:'black'}}>Deadline Ascending</Dropdown.Item><br />
+                                            <Dropdown.Item onClick={()=>{this.sortbyDeadlinedesc()}} style={{paddingLeft:'5px', color:'black'}}>Deadline Descending</Dropdown.Item><br />
+                                            </div>
+                                        </DropdownButton>
+                                </div>
+                            </div>
+
+
+
+                                {/* ///////////////////////// */}
                             {jobData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
 
                                 // {jobData.map((data, index) => {

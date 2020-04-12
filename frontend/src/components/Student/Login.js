@@ -5,6 +5,8 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import {Redirect} from 'react-router';
 import {environment} from '../../Utils/constants';
+const jwt_decode = require("jsonwebtoken");
+
 
 class Login extends Component{
     constructor(props){
@@ -13,7 +15,9 @@ class Login extends Component{
             email : "",
             password : "",
             authFlag : false,
-            cred:false
+            cred:false,
+            token:""
+
             
         }
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
@@ -45,10 +49,11 @@ class Login extends Component{
               console.log("in frontend after response");
               console.log("response" + response.data.result)
               if (response.data.result) {
-                  sessionStorage.setItem('id', response.data.result);
-                  let stud_id = sessionStorage.getItem('id');
-                  console.log(stud_id)
+                //   sessionStorage.setItem('id', response.data.result);
+                //   let stud_id = sessionStorage.getItem('id');
+                //   console.log(stud_id)
                   this.setState({
+                    token:response.data.result,
                     authFlag : true,
                     cred : false
                   })
@@ -63,6 +68,21 @@ class Login extends Component{
     render(){
         let credvalue = null;
         let redirectVar = null
+
+        console.log(this.state.token)
+        if (this.state.token.length > 0) {
+            sessionStorage.setItem("token", this.state.token);
+
+            var decoded = jwt_decode.decode(this.state.token.split(' ')[1]);
+
+            // console.log(decoded.payload)
+            sessionStorage.setItem("id", decoded._id);
+            sessionStorage.setItem("username", decoded.username);
+            console.log(decoded._id)
+            console.log(decoded.username)
+        }
+
+
         if(cookie.load('student')){
             redirectVar = <Redirect to= "/StudProfile"/>
         }

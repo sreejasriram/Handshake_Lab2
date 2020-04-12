@@ -62,6 +62,8 @@ class Jobs extends Component{
         console.log(data)  
         axios.defaults.withCredentials = true;       
         console.log("in frontend before axios");
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.post(environment.baseUrl+'/company/post_job',data)
             .then(response => {
               console.log("in frontend after response");

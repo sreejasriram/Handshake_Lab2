@@ -4,6 +4,8 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import {Redirect} from 'react-router';
 import {environment} from '../../Utils/constants';
+// const jwt_decode = require('jwt-decode');
+const jwt_decode = require("jsonwebtoken");
 
 
 class Login extends Component{
@@ -13,7 +15,8 @@ class Login extends Component{
             email : "",
             password : "",
             authFlag : false,
-            cred:false
+            cred:false,
+            token:""
             
         }
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
@@ -35,13 +38,19 @@ class Login extends Component{
         e.preventDefault();
         axios.defaults.withCredentials = true;
         console.log("in frontend before axios");
+        /////////
+        // axios.defaults.withCredentials = true;
+//////////////////
         axios.get(environment.baseUrl+'/company/company_signin/'+this.state.email+"/"+this.state.password)
             .then(response => {
               console.log("in frontend after response");  
              
               if (response.data.result) {
-                sessionStorage.setItem('id', response.data.result);  
+                console.log(response.data.result);  
+
+                // sessionStorage.setItem('id', response.data.result);  
                   this.setState({
+                      token:response.data.result,
                     authFlag : true,
                     cred : false
                   })
@@ -60,6 +69,21 @@ class Login extends Component{
     render(){
         let redirectVar=null;
         console.log("outside cookie")
+        console.log(this.state.token)
+        if (this.state.token.length > 0) {
+            sessionStorage.setItem("token", this.state.token);
+// console.log(this.state.token.split(' ')[1])
+            // var decoded = jwt_decode.decode(this.state.token.split(' ')[1]);
+            var decoded = jwt_decode.decode(this.state.token.split(' ')[1]);
+
+            // console.log(decoded.payload)
+            sessionStorage.setItem("id", decoded._id);
+            sessionStorage.setItem("username", decoded.username);
+            console.log(decoded._id)
+            console.log(decoded.username)
+            redirectVar = <Redirect to="/home" />
+        }
+
         if(cookie.load('company')){
             console.log("inside cookie")
             redirectVar = <Redirect to="/home"/>

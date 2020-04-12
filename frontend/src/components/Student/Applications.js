@@ -47,7 +47,10 @@ class Applications extends Component {
             studentId: sessionStorage.getItem('id')
         }
         console.log("before axios")
-        axios.get(environment.baseUrl+'/student/list_applied_jobs/'+data.studentId)
+        console.log(sessionStorage.getItem('token'));
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        console.log(data.studentId)
+        axios.get(environment.baseUrl+'/student/list_applied_jobs/'+sessionStorage.getItem('id'))
             .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data.rows)

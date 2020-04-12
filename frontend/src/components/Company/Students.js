@@ -67,6 +67,7 @@ class Students extends Component {
         })
     }
     componentDidMount() {
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
         axios.get(environment.baseUrl+'/company/list_all_students')
             .then(response => {

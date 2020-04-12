@@ -74,6 +74,8 @@ class Home extends Component {
             companyId: this.state.companyId
         }
         console.log(data)
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.get(environment.baseUrl+'/company/getjobs/'+data.companyId)
             .then(response => {
                 console.log("in frontend after response");

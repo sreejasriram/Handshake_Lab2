@@ -126,6 +126,8 @@ class Experience extends Component {
            
         }
         console.log(edit_data)
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.post(environment.baseUrl+'/student/student_experience_edited', edit_data)
             .then(response => {
                 console.log("in frontend after response");

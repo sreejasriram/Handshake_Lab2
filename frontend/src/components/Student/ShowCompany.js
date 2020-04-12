@@ -34,6 +34,7 @@ class ShowCompany extends Component {
             jobId: this.state.jobId.jobId
         }
         console.log(data)
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
         axios.get(environment.baseUrl+'/student/jobs_details/'+data.jobId)
             .then(response => {

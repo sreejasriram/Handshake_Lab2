@@ -49,7 +49,8 @@ class Basic extends Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         await axios.post(environment.baseUrl+"/student/uploadpic",formData, config)
             .then((response) => {
                 this.setState({
@@ -103,6 +104,8 @@ class Basic extends Component {
             name: this.state.name
         }
         console.log(edit_data)
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
         axios.post(environment.baseUrl+'/student/student_profilepic_edited', edit_data)
             .then(response => {
                 console.log("in frontend after response");
