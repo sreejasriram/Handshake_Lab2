@@ -1,6 +1,6 @@
-export const signin = ()=>{
+// export const signin = ()=>{
 
-    return{
-        type: 'SIGNIN'
-    }
-}
+//     return{
+//         type: 'SIGNIN'
+//     }
+// }

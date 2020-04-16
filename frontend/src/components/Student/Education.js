@@ -2,21 +2,15 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
-import { Redirect } from 'react-router';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
-import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
 import SchoolRoundedIcon from '@material-ui/icons/SchoolRounded';
 import GradeOutlinedIcon from '@material-ui/icons/GradeOutlined';
 import {environment} from '../../Utils/constants';
-import CakeOutlinedIcon from '@material-ui/icons/CakeOutlined';
-import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
+import { connect } from "react-redux";
+import { editEducation } from "../../redux/actions/index";
 
 
 class Education extends Component {
@@ -97,10 +91,10 @@ class Education extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.education)
-        if (this.props.education!==nextProps.education)
-        this.setState({ education:nextProps.education});    
-            if (this.state.education.length) {
+        console.log(nextProps.profile.education)
+        if (this.props.education!==nextProps.profile.education)
+        this.setState({ education:nextProps.profile.education});    
+            if (nextProps.profile.education.length) {
                     console.log("aaa")
                 this.setState({redirect:false})}
         }
@@ -132,34 +126,41 @@ class Education extends Component {
            
         }
         console.log(edit_data)
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+     
+        this.props.editEducation(edit_data)
+           ///
+           this.setState({
+            b_id:""
+       })
+/////////////
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.post(environment.baseUrl+'/student/student_education_edited', edit_data)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.result)
-                if (response.data.result) {
-                    this.setState({
+        // axios.post(environment.baseUrl+'/student/student_education_edited', edit_data)
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.result)
+        //         if (response.data.result) {
+        //             this.setState({
                         
-                        rerender: false,
-                        b_id:"",
-                        college_name: response.data.result.college_name,
-                        location: response.data.result.location,
-                        degree: response.data.result.degree,
-                        major: response.data.result.major,
-                        cgpa: response.data.result.cgpa,
-                        year_of_starting: response.data.result.year_of_starting,
-                        month_of_starting: response.data.result.month_of_starting,
-                        year_of_passing: response.data.result.year_of_passing,
-                        month_of_passing: response.data.result.month_of_passing,
-                        education:response.data.result.education
+        //                 rerender: false,
+        //                 b_id:"",
+        //                 college_name: response.data.result.college_name,
+        //                 location: response.data.result.location,
+        //                 degree: response.data.result.degree,
+        //                 major: response.data.result.major,
+        //                 cgpa: response.data.result.cgpa,
+        //                 year_of_starting: response.data.result.year_of_starting,
+        //                 month_of_starting: response.data.result.month_of_starting,
+        //                 year_of_passing: response.data.result.year_of_passing,
+        //                 month_of_passing: response.data.result.month_of_passing,
+        //                 education:response.data.result.education
 
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            }
-            )
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     }
+        //     )
     }
 
 
@@ -348,4 +349,18 @@ else
         )
     }
 }
-export default Education;
+// export default Education;
+const mapStateToProps = state => {
+    return {
+       
+
+    };
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        editEducation: payload => dispatch(editEducation(payload))
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Education);

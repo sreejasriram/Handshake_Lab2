@@ -11,6 +11,8 @@ import PhoneOutlinedIcon from '@material-ui/icons/PhoneOutlined';
 import {environment} from '../../Utils/constants';
 import emptyPic from '../../images/empty-profile-picture.png';
 import { Avatar } from '@material-ui/core';
+import { connect } from "react-redux";
+import { viewEventApplicants } from "../../redux/actions/index";
 
 
 
@@ -50,25 +52,27 @@ class ViewEventApplicants extends Component {
             id: cmpny_id,
             event_id:this.state.event_id
         }
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.viewEventApplicants(data);
 
-        axios.get(environment.baseUrl+'/company/list_event_applicants/'+data.event_id)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows.length>0) {
-                    this.setState({
-                        dataRetrieved: true,
-                        stuData: response.data.rows,
-                        name: response.data.rows[0].name,
-                        email: response.data.rows[0].email,
-                        mobile: response.data.rows[0].mobile
-                    });
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
+        // axios.get(environment.baseUrl+'/company/list_event_applicants/'+data.event_id)
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.rows)
+        //         if (response.data.rows.length>0) {
+        //             this.setState({
+        //                 dataRetrieved: true,
+        //                 stuData: response.data.rows,
+        //                 name: response.data.rows[0].name,
+        //                 email: response.data.rows[0].email,
+        //                 mobile: response.data.rows[0].mobile
+        //             });
                   
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            })
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     })
     }
 
 
@@ -79,7 +83,7 @@ class ViewEventApplicants extends Component {
             renderRedirect = <Redirect to={`/ViewProfile/${this.state.studId}`}/>
         }
         
-        let stuData = this.state.stuData;
+        let stuData = this.props.stuData;
         console.log(stuData)
         return (
             <div>
@@ -94,7 +98,7 @@ class ViewEventApplicants extends Component {
                 <div class="col-md-2"></div>
                     <div class="col-md-7">
                                 <div>
-                                    {stuData.map((data, index) => {
+                                    {stuData.length?stuData.map((data, index) => {
                                         return (
                                             <div key={data.stud_id}>
                                                   <Card>
@@ -122,7 +126,7 @@ class ViewEventApplicants extends Component {
                                                 </CardContent></Card>
                                             </div>
                                         )
-                    })}
+                    }):""}
 
                 </div> </div> <div class="col-md-2"></div></div>
 
@@ -131,4 +135,21 @@ class ViewEventApplicants extends Component {
         )
     }
 }
-export default ViewEventApplicants;
+// export default ViewEventApplicants;
+const mapStateToProps = state => {
+    console.log(state.eventapplicants)
+    
+    return {
+
+        stuData:state.eventapplicants
+
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+        viewEventApplicants: payload => dispatch(viewEventApplicants(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(ViewEventApplicants);

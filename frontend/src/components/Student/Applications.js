@@ -13,6 +13,8 @@ import {environment} from '../../Utils/constants';
 import TablePagination from '@material-ui/core/TablePagination';
 import emptyPic from '../../images/empty-profile-picture.png';
 import {Avatar} from '@material-ui/core';
+import { connect } from "react-redux";
+import { fetchRegisteredJobs } from "../../redux/actions/index";
 
 
 class Applications extends Component {
@@ -48,21 +50,23 @@ class Applications extends Component {
         }
         console.log("before axios")
         console.log(sessionStorage.getItem('token'));
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-        console.log(data.studentId)
-        axios.get(environment.baseUrl+'/student/list_applied_jobs/'+sessionStorage.getItem('id'))
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows) {
-                    this.setState({
-                        dataRetrieved: true,
-                        jobData: response.data.rows
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            })
+        this.props.fetchRegisteredJobs();
+
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        // console.log(data.studentId)
+        // axios.get(environment.baseUrl+'/student/list_applied_jobs/'+sessionStorage.getItem('id'))
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.rows)
+        //         if (response.data.rows) {
+        //             this.setState({
+        //                 dataRetrieved: true,
+        //                 jobData: response.data.rows
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     })
     }
 
 
@@ -71,11 +75,11 @@ class Applications extends Component {
         if(!cookie.load('student')){
             logincookie = <Redirect to= "/"/>
         }
-        let jobData = this.state.jobData;
+        let jobData = this.props.jobData;
         console.log(jobData)
         let navbar =  <StudentNavbar comp="jobapplications" />
         
-        if (jobData){
+        if (jobData.length){
             if (this.state.status){
                 console.log(this.state.status)
 
@@ -114,7 +118,7 @@ class Applications extends Component {
                 <div class="row">
                 <div class="col-md-2"></div>
                     <div class="col-md-8">
-                {jobData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+                {jobData.length?jobData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
 
                 // {jobData.map((data, index) => {
                     return (
@@ -150,7 +154,7 @@ class Applications extends Component {
                             <br /><br />
                         </div>
                     )
-                })}</div>
+                }):""}</div>
               
                 <div class="col-md-2"></div>
                 </div>
@@ -159,7 +163,7 @@ class Applications extends Component {
                     <div class="col-md-4">
                         <TablePagination
                             rowsPerPageOptions={[2]}
-                            count={this.state.jobData.length}
+                            count={this.props.jobData.length}
                             page={this.state.page}
                             rowsPerPage={this.state.rowsPerPage}
                             onChangePage={this.handleChangePage}
@@ -171,4 +175,21 @@ class Applications extends Component {
         )
     }
 }
-export default Applications;
+// export default Applications;
+const mapStateToProps = state => {
+    console.log(state.registeredJobs)
+    
+    return {
+
+        jobData:state.registeredJobs
+
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+      fetchRegisteredJobs: payload => dispatch(fetchRegisteredJobs(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Applications);

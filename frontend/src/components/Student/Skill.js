@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
-import { Redirect } from 'react-router';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import {environment} from '../../Utils/constants';
+import { connect } from "react-redux";
+import { editSkill } from "../../redux/actions/index";
 
 
 class Skill extends Component {
@@ -44,12 +42,12 @@ class Skill extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-            if (this.props.skills!==nextProps.skills)
-            this.setState({ skills:nextProps.skills});
+            if (this.props.skills!==nextProps.profile.skills)
+            this.setState({ skills:nextProps.profile.skills});
           
             
 
-            if (this.state.skills) {
+            if (nextProps.profile.skills) {
                 this.setState({redirect:false})}
 
 
@@ -67,30 +65,31 @@ class Skill extends Component {
             skills: this.state.skills
         }
         console.log(edit_data)
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.editSkill(edit_data)
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.post(environment.baseUrl+'/student/student_skill_edited', edit_data)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.result)
-                if (response.data.result) {
-                    this.setState({
+        // axios.post(environment.baseUrl+'/student/student_skill_edited', edit_data)
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.result)
+        //         if (response.data.result) {
+        //             this.setState({
                         
-                        rerender: false,
-                        skills: response.data.result.skills
+        //                 rerender: false,
+        //                 skills: response.data.result.skills
 
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            }
-            )
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     }
+        //     )
     }
 
 
     render() {
         let renderRedirect = null;
-      
+        console.log(this.state.redirect)
         if (this.state.redirect === true){
             renderRedirect = (
                 <div>
@@ -142,4 +141,18 @@ class Skill extends Component {
 }
 
 
-export default Skill;
+// export default Skill;
+const mapStateToProps = state => {
+    return {
+       
+
+    };
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        editSkill: payload => dispatch(editSkill(payload))
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Skill);

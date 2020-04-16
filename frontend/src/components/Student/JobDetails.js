@@ -9,6 +9,9 @@ import { environment } from '../../Utils/constants';
 import emptyPic from '../../images/empty-profile-picture.png';
 import {Avatar} from '@material-ui/core';
 import CategoryIcon from '@material-ui/icons/Category';
+import { connect } from "react-redux";
+import { fetchJobDetails,jobAlreadyApplied } from "../../redux/actions/index";
+
 
 
 class JobDetails extends Component {
@@ -36,114 +39,133 @@ class JobDetails extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.jobId !== nextProps.jobId)
-            this.setState({ jobId: nextProps.jobId, already_applied: false });
+        if (this.props.jobId !== nextProps.jobId){
+
+           this.setState({ jobId: nextProps.jobId });
+
         const data = {
             jobId: nextProps.jobId
         }
         console.log(this.props.jobId)
         console.log(data.jobId)
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.fetchJobDetails(data)
+        console.log("i m here")
+            var bdata = {
+                jobId: nextProps.jobId,
+                studentId: sessionStorage.getItem('id')
+            }
+            console.log(bdata)
+            this.props.jobAlreadyApplied(bdata)
+    
+    }
 
-        axios.get(environment.baseUrl + '/student/jobs_details/' + data.jobId)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows) {
-                    this.setState({
-                        dataRetrieved: true,
-                        jobData: response.data.rows,
-                        cmpy_id: response.data.rows.cmpy_id
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-                }
-            })
-            .then(response => {
-                console.log("i m here")
-                if (this.state.jobData.length) {
-                    var data = {
-                        //  cmpy_id:this.state.jobData[0].companydetails[0]._id,
-                        jobId: nextProps.jobId,
-                        studentId: sessionStorage.getItem('id')
-                    }
-                    console.log(data)
-                    console.log(this.state.already_applied)
-                    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        // axios.get(environment.baseUrl + '/student/jobs_details/' + data.jobId)
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.rows)
+        //         if (response.data.rows) {
+        //             this.setState({
+        //                 dataRetrieved: true,
+        //                 jobData: response.data.rows,
+        //                 cmpy_id: response.data.rows.cmpy_id
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
 
-                    axios.get(environment.baseUrl + '/company/job_already_applied/' + data.jobId + "/" + data.studentId)
-                        .then(response => {
-                            console.log("in frontend after response");
-                            console.log(response.data)
-                            if (response.data.result) {
-                                this.setState({
-                                    already_applied: true
-                                });
-                            } else if (response.data.error) {
-                                console.log("response" + response.data.error)
-                                console.log(this.state.already_applied)
+        //         }
+        //     })
+            // .then(response => {
+                
+                // console.log("i m here")
+                // // if (this.state.jobData.length) {
+                //     var bdata = {
+                //         jobId: nextProps.jobId,
+                //         studentId: sessionStorage.getItem('id')
+                //     }
+                //     console.log(bdata)
+                //     this.props.jobAlreadyApplied(bdata)
 
-                            }
-                        })
-                }
-            })
+                    // console.log(this.props.already_applied)
+                    // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
+                    // axios.get(environment.baseUrl + '/company/job_already_applied/' + data.jobId + "/" + data.studentId)
+                    //     .then(response => {
+                    //         console.log("in frontend after response");
+                    //         console.log(response.data)
+                    //         if (response.data.result) {
+                    //             this.setState({
+                    //                 already_applied: true
+                    //             });
+                    //         } else if (response.data.error) {
+                    //             console.log("response" + response.data.error)
+                    //             console.log(this.state.already_applied)
 
+                    //         }
+                    //     })
+                // }
+            // })
 
     }
-    componentDidMount() {
-        console.log("did mount")
-        const data = {
-            jobId: this.props.jobId
-        }
-        console.log(data.id)
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.get(environment.baseUrl + '/student/jobs_details/' + data.jobId)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows.length) {
-                    this.setState({
-                        dataRetrieved: true,
-                        jobData: response.data.rows,
-                        cmpy_id: response.data.rows.cmpy_id
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
 
-                }
-            })
-            .then(response => {
-                console.log("i m here")
-                if (this.state.jobData.length) {
-                    var data = {
-                        // cmpy_id:this.state.jobData[0].cmpy_id,
-                        jobId: this.state.jobId,
-                        studentId: sessionStorage.getItem('id')
-                    }
-                    console.log(data)
-                    axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+    // componentDidMount() {
+    //     console.log("did mount")
+    //     const data = {
+    //         jobId: this.props.jobId
+    //     }
+    //     // console.log(data.id)
+    //     this.props.fetchJobDetails(data)
 
-                    axios.get(environment.baseUrl + '/company/job_already_applied/' + data.jobId + "/" + data.studentId)
-                        .then(response => {
-                            console.log("in frontend after response");
-                            console.log(response.data.result)
-                            if (response.data.result) {
-                                this.setState({
-                                    already_applied: true
-                                });
-                            } else if (response.data.error) {
-                                console.log("response" + response.data.error)
+    //     // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-                            }
-                        })
+    //     // axios.get(environment.baseUrl + '/student/jobs_details/' + data.jobId)
+    //     //     .then(response => {
+    //     //         console.log("in frontend after response");
+    //     //         console.log(response.data.rows)
+    //     //         if (response.data.rows.length) {
+    //     //             this.setState({
+    //     //                 dataRetrieved: true,
+    //     //                 jobData: response.data.rows,
+    //     //                 cmpy_id: response.data.rows.cmpy_id
+    //     //             });
+    //     //         } else if (response.data.error) {
+    //     //             console.log("response" + response.data.error)
 
-                }
-            })
+    //     //         }
+    //     //     })
+    //         // .then(response => {
+    //             console.log("i m here")
+    //             // if (this.state.jobData.length) {
+    //                 var bdata = {
+    //                     // cmpy_id:this.state.jobData[0].cmpy_id,
+    //                     jobId: this.state.jobId,
+    //                     studentId: sessionStorage.getItem('id')
+    //                 }
+    //                 console.log(bdata)
+    //                 this.props.jobAlreadyApplied(bdata)
 
-    }
+    //                 // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
+    //                 // axios.get(environment.baseUrl + '/company/job_already_applied/' + data.jobId + "/" + data.studentId)
+    //                 //     .then(response => {
+    //                 //         console.log("in frontend after response");
+    //                 //         console.log(response.data.result)
+    //                 //         if (response.data.result) {
+    //                 //             this.setState({
+    //                 //                 already_applied: true
+    //                 //             });
+    //                 //         } else if (response.data.error) {
+    //                 //             console.log("response" + response.data.error)
+
+    //                 //         }
+    //                 //     })
+
+    //             // }
+    //         // })
+
+    // }
 
 
     render() {
@@ -154,7 +176,7 @@ class JobDetails extends Component {
         if (!cookie.load('student')) {
             logincookie = <Redirect to="/" />
         }
-        let jobData = this.state.jobData;
+        let jobData = this.props.jobData;
         console.log(jobData)
         if (this.state.applied == true) {
             console.log(jobData[0].cmpy_id)
@@ -166,7 +188,7 @@ class JobDetails extends Component {
         }
         console.log("outside")
         console.log(this.state.already_applied)
-        if (this.state.already_applied == false && jobData[0]) {
+        if (this.props.already_applied == false && jobData[0]) {
             console.log("inside")
             // applied = <button onClick={this.ApplyJob} class="btn btn-primary">Apply</button>
             applied = <JobApply cmpy_id={jobData[0].companydetails[0]._id} job_id={this.props.jobId} />
@@ -176,7 +198,7 @@ class JobDetails extends Component {
                 {/* <button onClick={this.postJobs} class="btn btn-primary">Add New Job</button> */}
                 {logincookie}
 
-                {jobData.map((data, index) => {
+                {jobData.length?jobData.map((data, index) => {
                     return (
                         <div key={data._id}>
                             <div class="row">
@@ -222,7 +244,7 @@ class JobDetails extends Component {
                             {applied}
                         </div>
                     )
-                })}<br />
+                }):""}<br />
 
                 {renderRedirect}
             </div>
@@ -230,4 +252,24 @@ class JobDetails extends Component {
         )
     }
 }
-export default JobDetails;
+// export default JobDetails;
+const mapStateToProps = state => {
+    console.log(state.jobDetails)
+    
+    return {
+        jobData:state.jobDetails,
+        already_applied:state.job_already_applied
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+        // applyEvent: payload => dispatch(applyEvent(payload)),
+        jobAlreadyApplied: payload => dispatch(jobAlreadyApplied(payload)),
+        fetchJobDetails: payload => dispatch(fetchJobDetails(payload))
+      
+        
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(JobDetails);

@@ -4,7 +4,8 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import {Redirect} from 'react-router';
 import {environment} from '../../Utils/constants';
-// const jwt_decode = require('jwt-decode');
+import { connect } from "react-redux";
+import { companyLogin } from "../../redux/actions/index";
 const jwt_decode = require("jsonwebtoken");
 
 
@@ -16,19 +17,18 @@ class Login extends Component{
             password : "",
             authFlag : false,
             cred:false,
-            token:""
-            
+            token:""           
         }
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
         this.submitLogin = this.submitLogin.bind(this);
     }
-    componentWillMount(){
-        this.setState({
-            authFlag : false
+    // componentWillMount(){
+    //     this.setState({
+    //         authFlag : false
             
-        })
-    }
+    //     })
+    // }
     inputChangeHandler = (e) => {
         this.setState({
             [e.target.name]: e.target.value
@@ -36,21 +36,22 @@ class Login extends Component{
     }
     submitLogin = (e) => {
         e.preventDefault();
-        axios.defaults.withCredentials = true;
-        console.log("in frontend before axios");
-        /////////
         // axios.defaults.withCredentials = true;
-//////////////////
+        console.log("in frontend before axios");
+        console.log(this.state.password)
+        let data={
+            email:this.state.email,
+            password:this.state.password,
+        }
+        // this.props.companyLogin(data);
+
         axios.get(environment.baseUrl+'/company/company_signin/'+this.state.email+"/"+this.state.password)
             .then(response => {
               console.log("in frontend after response");  
-             
               if (response.data.result) {
                 console.log(response.data.result);  
-
-                // sessionStorage.setItem('id', response.data.result);  
                   this.setState({
-                      token:response.data.result,
+                    token:response.data.result,
                     authFlag : true,
                     cred : false
                   })
@@ -59,9 +60,7 @@ class Login extends Component{
                     authFlag : false,
                     cred:true
                   })
-              }
-
-                
+              }                
             })
             
     }
@@ -70,13 +69,9 @@ class Login extends Component{
         let redirectVar=null;
         console.log("outside cookie")
         console.log(this.state.token)
-        if (this.state.token.length > 0) {
-            sessionStorage.setItem("token", this.state.token);
-// console.log(this.state.token.split(' ')[1])
-            // var decoded = jwt_decode.decode(this.state.token.split(' ')[1]);
+        if (this.state.token) {
+            sessionStorage.setItem("token", this.state.token);          
             var decoded = jwt_decode.decode(this.state.token.split(' ')[1]);
-
-            // console.log(decoded.payload)
             sessionStorage.setItem("id", decoded._id);
             sessionStorage.setItem("username", decoded.username);
             console.log(decoded._id)
@@ -119,14 +114,31 @@ class Login extends Component{
                             </div>
                             <button onClick = {this.submitLogin} class="btn btn-primary">Login</button>                 
                     </div>{credvalue}
-                </div>
-
-               
-                    
+                </div>                 
             </div> 
             </div>
         )
     }
 }
 //export Login Component
-export default Login;
+// export default Login;
+const mapStateToProps = state => {
+    console.log(state.authFlag)
+    console.log(state.cred)
+
+
+    return {
+        authFlag:state.authFlag,
+        cred:state.cred
+
+    };
+
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        companyLogin: payload => dispatch(companyLogin(payload))
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

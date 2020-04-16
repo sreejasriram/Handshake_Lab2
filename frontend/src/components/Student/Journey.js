@@ -2,20 +2,13 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
-import { Redirect } from 'react-router';
-// import { Button } from 'react-bootstrap';
-
-///
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
-import CakeOutlinedIcon from '@material-ui/icons/CakeOutlined';
-import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import {environment} from '../../Utils/constants';
+import { connect } from "react-redux";
+import { editJourney } from "../../redux/actions/index";
 
 
 
@@ -52,12 +45,12 @@ class Journey extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-            if (this.props.career_objective!==nextProps.career_objective)
-            this.setState({ career_objective:nextProps.career_objective});
+            if (this.props.career_objective!==nextProps.profile.career_objective)
+            this.setState({ career_objective:nextProps.profile.career_objective});
           
             
 
-            if (this.state.career_objective) {
+            if (nextProps.profile.career_objective) {
                 this.setState({redirect:false})}
 
 
@@ -75,24 +68,25 @@ class Journey extends Component {
             career_objective: this.state.career_objective
         }
         console.log(edit_data)
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.editJourney(edit_data)
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.post(environment.baseUrl+'/student/student_journey_edited', edit_data)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.result)
-                if (response.data.result) {
-                    this.setState({
+        // axios.post(environment.baseUrl+'/student/student_journey_edited', edit_data)
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.result)
+        //         if (response.data.result) {
+        //             this.setState({
                         
-                        rerender: false,
-                        career_objective: response.data.result.career_objective
+        //                 rerender: false,
+        //                 career_objective: response.data.result.career_objective
 
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            }
-            )
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     }
+        //     )
     }
 
 
@@ -151,4 +145,18 @@ class Journey extends Component {
 
 
 
-export default Journey;
+// export default Journey;
+const mapStateToProps = state => {
+    return {
+       
+
+    };
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        editJourney: payload => dispatch(editJourney(payload))
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Journey);

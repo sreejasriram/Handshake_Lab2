@@ -18,9 +18,21 @@ class NavbarPage extends Component {
     handleLogout = () => {
         if (cookie.load('company')) {
             cookie.remove('company', { path: '/' })
+            // sessionStorage.removeItem("token");
+            // sessionStorage.removeItem("id");
+            // sessionStorage.removeItem("username");
+
+
+
         }
         else if (cookie.load('student')) {
             cookie.remove('student', { path: '/' })
+            // sessionStorage.removeItem("token");
+            // sessionStorage.removeItem("id");
+            // sessionStorage.removeItem("username");
+
+
+
         }
     }
 

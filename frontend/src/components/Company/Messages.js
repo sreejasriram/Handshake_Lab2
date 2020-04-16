@@ -7,7 +7,8 @@ import { Card, CardContent, Avatar} from '@material-ui/core/';
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 import emptyPic from '../../images/empty-profile-picture.png';
 import {environment} from '../../Utils/constants'
-
+import { connect } from "react-redux";
+import { fetchConversations } from "../../redux/actions/index";
 
 class Messages extends Component {
     constructor(props) {
@@ -101,18 +102,26 @@ class Messages extends Component {
 
     fetchmessages = () =>{
         console.log(sessionStorage.getItem('id'))
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.setState({
+            messagetext:"",
+            messageindex:0
 
-        axios.get(environment.baseUrl+'/company/fetch_convos/' + sessionStorage.getItem('id'))
-            .then((response) => {
-                console.log(response.data)
-                if (response.data.rows.length>0) {
-                    this.setState({
-                        messagelist: response.data,
-                        messagetext:""
-                    })
-            }
         })
+        this.props.fetchConversations();
+
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
+        // axios.get(environment.baseUrl+'/company/fetch_convos/' + sessionStorage.getItem('id'))
+        //     .then((response) => {
+        //         console.log(response.data)
+        //         if (response.data.rows.length>0) {
+        //             this.setState({
+        //                 messagelist: response.data,
+        //                 messagetext:""
+        //             })
+        //     }
+        // })
+        
         console.log(this.state.messagelist)
     }
 
@@ -124,10 +133,10 @@ class Messages extends Component {
         let namesearch = this.state.namesearch;
         let locsearch = this.state.locsearch;
     
-
-        if (this.state.messagelist) {
-            console.log(this.state.messagelist)
-            let messagelist = this.state.messagelist.rows
+        let messagelist = this.props.messagelist
+        console.log(typeof(messagelist))
+        if (messagelist.length) {
+         
             let compare = (a,b) =>{
                 let comparison = 0
                 console.log(a)
@@ -148,7 +157,7 @@ class Messages extends Component {
                 console.log("aa")
                 conversations = (
                     <div  style = {{height : '310px', paddingTop:'10px', overflow:'auto',paddingLeft:'10px'}}>
-                            {messagelist.map((message, index) => {
+                            {messagelist.length?messagelist.map((message, index) => {
                             var lastmsg = message[0].messages
                             console.log(lastmsg.length)
                             return (<div>
@@ -165,7 +174,7 @@ class Messages extends Component {
                                     </Link>
                             </div>
                             )
-                        })}
+                        }):""}
                         
                     </div>
                 )
@@ -243,4 +252,21 @@ class Messages extends Component {
 
 }
 
-export default Messages;
+// export default Messages;
+const mapStateToProps = state => {
+    console.log(state.messagelist)
+    
+    return {
+
+        messagelist:state.messagelist
+
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+        fetchConversations: payload => dispatch(fetchConversations(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Messages);

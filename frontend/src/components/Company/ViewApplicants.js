@@ -14,6 +14,8 @@ import {environment} from '../../Utils/constants';
 import emptyPic from '../../images/empty-profile-picture.png';
 import { Avatar } from '@material-ui/core';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
+import { connect } from "react-redux";
+import { viewJobApplicants } from "../../redux/actions/index";
 
 class ViewApplicants extends Component {
     constructor(props) {
@@ -87,26 +89,28 @@ class ViewApplicants extends Component {
         const data = {
             job_id:this.state.job_id
         }
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.viewJobApplicants(data);
 
-        axios.get(environment.baseUrl+'/company/list_applicants/'+data.job_id)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows.length>0) {
-                    this.setState({
-                        dataRetrieved: true,
-                        stuData: response.data.rows[0].listApplicants,
-                        applications:response.data.rows[0].applications
-                        // name: response.data.rows[0].name,
-                        // email: response.data.rows[0].email,
-                        // mobile: response.data.rows[0].mobile
-                    });
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
+        // axios.get(environment.baseUrl+'/company/list_applicants/'+data.job_id)
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.rows)
+        //         if (response.data.rows.length>0) {
+        //             this.setState({
+        //                 dataRetrieved: true,
+        //                 stuData: response.data.rows[0].listApplicants,
+        //                 applications:response.data.rows[0].applications
+        //                 // name: response.data.rows[0].name,
+        //                 // email: response.data.rows[0].email,
+        //                 // mobile: response.data.rows[0].mobile
+        //             });
                   
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            })
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     })
 
 
     }
@@ -134,10 +138,13 @@ class ViewApplicants extends Component {
         if (this.state.view_profile === true) {
             renderRedirect = <Redirect to={`/ViewProfile/${this.state.studId}`}/>
         }
-        
-        let stuData = this.state.stuData;
-        let applications = this.state.applications
+        let stuData
+        let applications
+        if (this.props.stuData.length){
+        stuData = this.props.stuData[0].listApplicants;
+        applications = this.props.stuData[0].applications;
         console.log(stuData)
+        }
         return (
             <div>
                 <div class="container">
@@ -151,7 +158,7 @@ class ViewApplicants extends Component {
                             </div>
                            
                                 <div>
-                                    {stuData.map((data, index) => {
+                                    {stuData?stuData.map((data, index) => {
                                         return (
                                             <div key={data._id}>
                                                 <Card>
@@ -235,7 +242,7 @@ class ViewApplicants extends Component {
                                                     </Dialog> 
                                             </div>
                                         )
-                                    })}
+                                    }):""}
                                 </div>                          
                         </div>
                     </div>
@@ -244,5 +251,21 @@ class ViewApplicants extends Component {
         )
     }
 }
-//export Login Component
-export default ViewApplicants;
+// export default ViewApplicants;
+const mapStateToProps = state => {
+    console.log(state.jobapplicants)
+    
+    return {
+
+        stuData:state.jobapplicants
+
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+        viewJobApplicants: payload => dispatch(viewJobApplicants(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(ViewApplicants);

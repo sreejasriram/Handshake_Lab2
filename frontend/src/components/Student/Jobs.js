@@ -1,20 +1,19 @@
 
 import React, { Component } from 'react';
 import '../../App.css';
-import axios from 'axios';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import JobDetails from './JobDetails';
 import cookie from 'react-cookies';
-import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardContent, Button } from '@material-ui/core/';
 import Typography from '@material-ui/core/Typography';
 import StudentNavbar from './StudentNavbar';
-import {environment} from '../../Utils/constants';
 import TablePagination from '@material-ui/core/TablePagination';
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import { Dropdown } from 'react-bootstrap'
 
+import { connect } from "react-redux";
+import { fetchJobs } from "../../redux/actions/index";
 
 class Jobs extends Component {
     constructor(props) {
@@ -89,7 +88,7 @@ class Jobs extends Component {
 
     /////////////////////////////////
     sortbyloc() {
-        let jobData = this.state.jobData
+        let jobData = this.props.jobData
         let compare = (a,b) =>{
             let comparison = 0
             if (a.location > b.location) {
@@ -106,7 +105,7 @@ class Jobs extends Component {
         })
     }
     sortbyPostingDate() {
-        let jobData = this.state.jobData
+        let jobData = this.props.jobData
         let compare = (a,b) =>{
             let comparison = 0
             if (a.posting_date > b.posting_date) {
@@ -123,7 +122,7 @@ class Jobs extends Component {
         })
     }
     sortbyPostingDatedesc() {
-        let jobData = this.state.jobData
+        let jobData = this.props.jobData
         let compare = (a,b) =>{
             let comparison = 0
             if (a.posting_date < b.posting_date) {
@@ -140,7 +139,7 @@ class Jobs extends Component {
         })
     }
     sortbyDeadline() {
-        let jobData = this.state.jobData
+        let jobData = this.props.jobData
         let compare = (a,b) =>{
             let comparison = 0
             if (a.deadline > b.deadline) {
@@ -158,7 +157,7 @@ class Jobs extends Component {
     }
     sortbyDeadlinedesc() {
         console.log("sortbyDeadlinedesc")
-        let jobData = this.state.jobData
+        let jobData = this.props.jobData
         let compare = (a,b) =>{
             let comparison = 0
             if (a.deadline < b.deadline) {
@@ -180,27 +179,29 @@ class Jobs extends Component {
     ////////////////////////////////
 
     componentDidMount() {
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.fetchJobs();
 
-        axios.get(environment.baseUrl+'/student/all_jobs_retrieve')
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows) {
-                    this.setState({
-                        dataRetrieved: true,
-                        jobData: response.data.rows
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            })
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
+        // axios.get(environment.baseUrl+'/student/all_jobs_retrieve')
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.rows)
+        //         if (response.data.rows) {
+        //             this.setState({
+        //                 dataRetrieved: true,
+        //                 jobData: response.data.rows
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     })
     }
 
 
     render() {
      
-        let jobData = this.state.jobData;
+        let jobData = this.props.jobData;
         console.log(jobData)
         let jobfilter = [];
         let namesearch = this.state.namesearch;
@@ -216,7 +217,7 @@ class Jobs extends Component {
             console.log(this.state.jobid)
             renderDetails = <JobDetails jobId={this.state.jobid} />
       
-        if (this.state.jobData) {
+        if (this.props.jobData.length) {
             jobfilter = this.state.jobfilter
             console.log(jobfilter)
             if (namesearch.length > 0) {
@@ -298,8 +299,7 @@ class Jobs extends Component {
 
 
 
-                                {/* ///////////////////////// */}
-                            {jobData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+                            {jobData.length?jobData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
 
                                 // {jobData.map((data, index) => {
                                     return (
@@ -312,14 +312,14 @@ class Jobs extends Component {
                                                 <hr/>
                                         </div>
                                     )
-                                })}
+                                }):""}
 
                 <div class="row">
                         {/* <div class="col-md-4"></div> */}
                         {/* <div class="col-md-4"> */}
                             <TablePagination
                                 rowsPerPageOptions={[2]}
-                                count={this.state.jobData.length}
+                                count={this.props.jobData.length}
                                 page={this.state.page}
                                 rowsPerPage={this.state.rowsPerPage}
                                 onChangePage={this.handleChangePage}
@@ -347,4 +347,21 @@ class Jobs extends Component {
                 )
             }
         }
-export default Jobs;
+// export default Jobs;
+const mapStateToProps = state => {
+    console.log(state.allJobs)
+    
+    return {
+
+        jobData:state.allJobs
+
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+      fetchJobs: payload => dispatch(fetchJobs(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Jobs);

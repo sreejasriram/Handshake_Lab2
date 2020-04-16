@@ -2,16 +2,13 @@ import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import {environment} from '../../Utils/constants';
 import TablePagination from '@material-ui/core/TablePagination';
-
+import { connect } from "react-redux";
+import { fetchCompanyEvents } from "../../redux/actions/index";
 
 
 class Events extends Component {
@@ -68,25 +65,27 @@ class Events extends Component {
         const data = {
             companyId: cmpny_id
         }
+        this.props.fetchCompanyEvents(data);
+
         console.log(sessionStorage.getItem('id'))
         console.log(sessionStorage.getItem('token'))
 
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.get(environment.baseUrl+'/company/getevents/'+data.companyId)//company_events_retrieve
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows) {
-                    this.setState({
-                        dataRetrieved: true,
-                        eventData: response.data.rows
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
+        // axios.get(environment.baseUrl+'/company/getevents/'+data.companyId)//company_events_retrieve
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.rows)
+        //         if (response.data.rows) {
+        //             this.setState({
+        //                 dataRetrieved: true,
+        //                 eventData: response.data.rows
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
 
-                }
-            })
+        //         }
+        //     })
     }
 
 
@@ -99,7 +98,7 @@ class Events extends Component {
             renderRedirect = <Redirect to={`/ViewEventApplicants/${this.state.editEvent}`} />
         }
 
-        let eventData = this.state.eventData;
+        let eventData = this.props.eventData;
         console.log(eventData)
         return (
             <div>
@@ -112,7 +111,7 @@ class Events extends Component {
                 <div class="row">
                 <div class="col-md-1"> </div>
                     <div class="col-md-10"> 
-                    {eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+                    {eventData.length?eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
 
                     // {eventData.map((data, index) => {
                         return (
@@ -129,13 +128,13 @@ class Events extends Component {
                                     </CardContent></Card>
                             </div>
                         )
-                    })}
+                    }):""}
                       <div class="row">
                     <div class="col-md-4"></div>
                     <div class="col-md-4">
                         <TablePagination
                             rowsPerPageOptions={[2]}
-                            count={this.state.eventData.length}
+                            count={this.props.eventData.length}
                             page={this.state.page}
                             rowsPerPage={this.state.rowsPerPage}
                             onChangePage={this.handleChangePage}
@@ -151,4 +150,21 @@ class Events extends Component {
         )
     }
 }
-export default Events;
+// export default Events;
+const mapStateToProps = state => {
+    console.log(state.allCompanyEvents)
+    
+    return {
+
+        eventData:state.allCompanyEvents
+
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+        fetchCompanyEvents: payload => dispatch(fetchCompanyEvents(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Events);

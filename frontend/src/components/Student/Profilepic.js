@@ -7,9 +7,11 @@ import Typography from '@material-ui/core/Typography';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import {environment} from '../../Utils/constants';
 import emptyPic from '../../images/empty-profile-picture.png';
+import { connect } from "react-redux";
+import { editProfilePic } from "../../redux/actions/index";
 
 
-class Basic extends Component {
+class Profilepic extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -74,19 +76,19 @@ class Basic extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-            if (this.props.name!==nextProps.name)
-            this.setState({ name:nextProps.name});
-            if (this.props.degree!==nextProps.degree)
-            this.setState({ degree:nextProps.degree});
-            if (this.props.college!==nextProps.college)
-            this.setState({ college:nextProps.college});
-            if (this.props.major!==nextProps.major)
-            this.setState({ major:nextProps.major});
+            if (this.props.name!==nextProps.profile.name)
+            this.setState({ name:nextProps.profile.name});
+            if (this.props.degree!==nextProps.profile.degree)
+            this.setState({ degree:nextProps.profile.degree});
+            if (this.props.college!==nextProps.profile.college)
+            this.setState({ college:nextProps.profile.college});
+            if (this.props.major!==nextProps.profile.major)
+            this.setState({ major:nextProps.profile.major});
             
-            if (this.props.image!==nextProps.image)
-            this.setState({ image:nextProps.image});
+            if (this.props.image!==nextProps.profile.image)
+            this.setState({ image:nextProps.profile.image});
             
-            if (this.state.name || this.state.degree || this.state.college || this.state.major || this.state.image) {
+            if (nextProps.profile.name || nextProps.profile.degree || nextProps.profile.college || nextProps.profile.major || nextProps.profile.image) {
                 this.setState({redirect:false})}
 
 
@@ -104,26 +106,28 @@ class Basic extends Component {
             name: this.state.name
         }
         console.log(edit_data)
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.editProfilePic(edit_data)
 
-        axios.post(environment.baseUrl+'/student/student_profilepic_edited', edit_data)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.result)
-                if (response.data.result) {
-                    this.setState({  
-                        rerender: false,
-                        name: response.data.result.name,
-                        degree: response.data.result.degree,
-                        major: response.data.result.major,
-                        college: response.data.result.college,
-                        image: response.data.result.image
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            }
-            )
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
+        // axios.post(environment.baseUrl+'/student/student_profilepic_edited', edit_data)
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.result)
+        //         if (response.data.result) {
+        //             this.setState({  
+        //                 rerender: false,
+        //                 name: response.data.result.name,
+        //                 degree: response.data.result.degree,
+        //                 major: response.data.result.major,
+        //                 college: response.data.result.college,
+        //                 image: response.data.result.image
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     }
+        //     )
     }
 
 
@@ -189,6 +193,21 @@ class Basic extends Component {
     }
 }
 
-export default Basic;
+// export default Profilepic;
+const mapStateToProps = state => {
+    return {
+       
+
+    };
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        editProfilePic: payload => dispatch(editProfilePic(payload))
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profilepic);
+
 
 

@@ -229,7 +229,9 @@ router.post('/student_skill_edited',checkAuth,(req,res)=>{
     })  
 })
 
-router.post('/student_journey_edited',checkAuth,(req,res)=>{
+// router.post('/student_journey_edited',checkAuth,(req,res)=>{
+    router.post('/student_journey_edited',(req,res)=>{
+
     console.log("In student journey post request");
     console.log(req.body);
     req.body.type = "add_journey";
@@ -289,196 +291,196 @@ router.post('/student_profilepic_edited',checkAuth,(req,res)=>{
 
 
 
-router.post('/get_student_basic',(req,res)=>{
-    console.log("In student basic retrieve post request");
-    console.log(req.body);
-    StudRepo.basic_retrieve(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
+// router.post('/get_student_basic',(req,res)=>{
+//     console.log("In student basic retrieve post request");
+//     console.log(req.body);
+//     StudRepo.basic_retrieve(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})
+//     }
         
-    }) 
-})
-router.post('/get_student_contact',(req,res)=>{
-    console.log("In student contact retrieve post request");
-    console.log(req.body);
-    StudRepo.contact_retrieve(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
+//     }) 
+// })
+// router.post('/get_student_contact',(req,res)=>{
+//     console.log("In student contact retrieve post request");
+//     console.log(req.body);
+//     StudRepo.contact_retrieve(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})
+//     }
         
-    }) 
-})
-router.post('/get_student_skill',(req,res)=>{
-    console.log("In student skill retrieve post request");
-    console.log(req.body);
-    StudRepo.skill_retrieve(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
+//     }) 
+// })
+// router.post('/get_student_skill',(req,res)=>{
+//     console.log("In student skill retrieve post request");
+//     console.log(req.body);
+//     StudRepo.skill_retrieve(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})
+//     }
         
-    }) 
-})
-router.post('/get_student_profpic',(req,res)=>{
-    console.log("In student get_student_profpic retrieve post request");
-    console.log(req.body);
-    StudRepo.get_student_profpic(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
+//     }) 
+// })
+// router.post('/get_student_profpic',(req,res)=>{
+//     console.log("In student get_student_profpic retrieve post request");
+//     console.log(req.body);
+//     StudRepo.get_student_profpic(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})
+//     }
         
-    }) 
-})
+//     }) 
+// })
 
 
-router.post('/get_student_education',(req,res)=>{
-    console.log("In student education retrieve post request");
-    console.log(req.body);
-    StudRepo.education_retrieve(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
+// router.post('/get_student_education',(req,res)=>{
+//     console.log("In student education retrieve post request");
+//     console.log(req.body);
+//     StudRepo.education_retrieve(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})
+//     }
         
-    }) 
-})
+//     }) 
+// })
 
 
-router.post('/get_student_experience',(req,res)=>{
-    console.log("In student experience retrieve post request");
-    console.log(req.body);
-    StudRepo.experience_retrieve(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
+// router.post('/get_student_experience',(req,res)=>{
+//     console.log("In student experience retrieve post request");
+//     console.log(req.body);
+//     StudRepo.experience_retrieve(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})
+//     }
         
-    }) 
-})
+//     }) 
+// })
 
-router.post('/student_profile',(req,res)=>{
-    console.log(req.body);
-    if (req.body.type=="basic"){
-    StudRepo.stud_basic(req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
+// router.post('/student_profile',(req,res)=>{
+//     console.log(req.body);
+//     if (req.body.type=="basic"){
+//     StudRepo.stud_basic(req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
 
-        }
-        else{
-            console.log(rows)
-            res.json({rows})
-         }
-                                        }) 
-    }
-    else
-    if (req.body.type=="education"){
-        StudRepo.stud_edu(req.body,(err,rows)=>{
-            if (err){
-                console.log(`${err.code}:${err.sqlMessage}`)
-                res.json({"error":"failure"})
+//         }
+//         else{
+//             console.log(rows)
+//             res.json({rows})
+//          }
+//                                         }) 
+//     }
+//     else
+//     if (req.body.type=="education"){
+//         StudRepo.stud_edu(req.body,(err,rows)=>{
+//             if (err){
+//                 console.log(`${err.code}:${err.sqlMessage}`)
+//                 res.json({"error":"failure"})
     
-            }
-            else{
-                console.log(rows)
-                res.json({rows})
-             }
-                                            }) 
-        }
+//             }
+//             else{
+//                 console.log(rows)
+//                 res.json({rows})
+//              }
+//                                             }) 
+//         }
 
-        else
-        if (req.body.type=="experience"){
-            StudRepo.stud_experience(req.body,(err,rows)=>{
-                if (err){
-                    console.log(`${err.code}:${err.sqlMessage}`)
-                    res.json({"error":"failure"})
+//         else
+//         if (req.body.type=="experience"){
+//             StudRepo.stud_experience(req.body,(err,rows)=>{
+//                 if (err){
+//                     console.log(`${err.code}:${err.sqlMessage}`)
+//                     res.json({"error":"failure"})
         
-                }
-                else{
-                    console.log(rows)
-                    res.json({rows})
-                 }
-                                                }) 
-            }
+//                 }
+//                 else{
+//                     console.log(rows)
+//                     res.json({rows})
+//                  }
+//                                                 }) 
+//             }
 
 
-        else
-    if (req.body.type=="contact"){
-        console.log("in contact1")
-        StudRepo.stud_contact(req.body,(err,rows)=>{
-            console.log("in contact2")
+//         else
+//     if (req.body.type=="contact"){
+//         console.log("in contact1")
+//         StudRepo.stud_contact(req.body,(err,rows)=>{
+//             console.log("in contact2")
 
-            if (err){
-                console.log(`${err.code}:${err.sqlMessage}`)
-                res.json({"error":"failure"})
+//             if (err){
+//                 console.log(`${err.code}:${err.sqlMessage}`)
+//                 res.json({"error":"failure"})
     
-            }
-            else{
-                console.log(rows)
-                res.json({rows})
-             }
-                                            }) 
-        }
-else
-        if (req.body.type=="skill"){
-            StudRepo.stud_skill(req.body,(err,rows)=>{
-                if (err){
-                    console.log(`${err.code}:${err.sqlMessage}`)
-                    res.json({"error":"failure"})
+//             }
+//             else{
+//                 console.log(rows)
+//                 res.json({rows})
+//              }
+//                                             }) 
+//         }
+// else
+//         if (req.body.type=="skill"){
+//             StudRepo.stud_skill(req.body,(err,rows)=>{
+//                 if (err){
+//                     console.log(`${err.code}:${err.sqlMessage}`)
+//                     res.json({"error":"failure"})
         
-                }
-                else{
-                    console.log(rows)
-                    res.json({rows})
-                 }
-                                                }) 
-            }
-            else
-            if (req.body.type=="prof_pic"){
-                console.log("in prof_pic")
-                StudRepo.student_profile(req.body,(err,rows)=>{      
-                    if (err){
-                        console.log(`${err.code}:${err.sqlMessage}`)
-                        res.json({"error":"failure"})
-                    }
-                    else{
-                        console.log(rows)
-                        res.json({rows})
-                     }
-                                                    }) 
-                }
+//                 }
+//                 else{
+//                     console.log(rows)
+//                     res.json({rows})
+//                  }
+//                                                 }) 
+//             }
+//             else
+//             if (req.body.type=="prof_pic"){
+//                 console.log("in prof_pic")
+//                 StudRepo.student_profile(req.body,(err,rows)=>{      
+//                     if (err){
+//                         console.log(`${err.code}:${err.sqlMessage}`)
+//                         res.json({"error":"failure"})
+//                     }
+//                     else{
+//                         console.log(rows)
+//                         res.json({rows})
+//                      }
+//                                                     }) 
+//                 }
         
         
 
-})
+// })
 
 
 router.get('/all_events_retrieve',checkAuth,(req,res)=>{
@@ -661,76 +663,76 @@ router.post('/uploadpic',checkAuth, upload.single('image'), async (req, response
   /////////////////////////////
   
 ///////////////#################///////////////////////
-router.get('/get_student_profile/:studentId',checkAuth,(req,res)=>{
-    console.log("In get_student_profile get request");
-    console.log(req.params);
-    req.body.type = "list_event_applicants_profile";
-    req.body.studentId = req.params.studentId;
+// router.get('/get_student_profile/:studentId',checkAuth,(req,res)=>{
+//     console.log("In get_student_profile get request");
+//     console.log(req.params);
+//     req.body.type = "list_event_applicants_profile";
+//     req.body.studentId = req.params.studentId;
 
-    kafka.make_request('company-events',req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})}
+//     kafka.make_request('company-events',req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})}
         
-    }) 
-})
+//     }) 
+// })
 
 
 ///////////////#################///////////////////////
-router.get('/list_all_students',checkAuth,(req,res)=>{
-    console.log("In list_all_students from company retrieve post request");
-    req.body.type = "list_all_students_company";
-    kafka.make_request('profile',req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-    }
+// router.get('/list_all_students',checkAuth,(req,res)=>{
+//     console.log("In list_all_students from company retrieve post request");
+//     req.body.type = "list_all_students_company";
+//     kafka.make_request('profile',req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})
+//     }
         
-    }) 
-})
+//     }) 
+// })
 
 ///////////////#################///////////////////////
-router.post('/send_message',checkAuth,(req,res)=>{
-    console.log("In company send_message request");
-    console.log(req.body);
-    req.body.type = "send_message";
-    kafka.make_request('chat',req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-        }
-    }) 
-})
+// router.post('/send_message',checkAuth,(req,res)=>{
+//     console.log("In company send_message request");
+//     console.log(req.body);
+//     req.body.type = "send_message";
+//     kafka.make_request('chat',req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})
+//         }
+//     }) 
+// })
 
 ///////////////#################///////////////////////
-router.get('/fetch_convos/:id',checkAuth,(req,res)=>{
-    console.log("In company fetch_convos request");
-    console.log(req.params);
-    req.body.id = req.params.id;
-    req.body.type = "fetch_convos";
-    kafka.make_request('chat',req.body,(err,rows)=>{
-        if (err){
-            console.log(`${err.code}:${err.sqlMessage}`)
-            res.json({"error":"failure"})
-        }
-        else{
-        console.log(rows)
-        res.json({rows})
-        }
-    }) 
-})
+// router.get('/fetch_convos/:id',checkAuth,(req,res)=>{
+//     console.log("In company fetch_convos request");
+//     console.log(req.params);
+//     req.body.id = req.params.id;
+//     req.body.type = "fetch_convos";
+//     kafka.make_request('chat',req.body,(err,rows)=>{
+//         if (err){
+//             console.log(`${err.code}:${err.sqlMessage}`)
+//             res.json({"error":"failure"})
+//         }
+//         else{
+//         console.log(rows)
+//         res.json({rows})
+//         }
+//     }) 
+// })
 
 
 

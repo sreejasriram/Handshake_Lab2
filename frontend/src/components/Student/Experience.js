@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
-import { Redirect } from 'react-router';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import WorkOutlineOutlinedIcon from '@material-ui/icons/WorkOutlineOutlined';
 import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
 import {environment} from '../../Utils/constants';
+import { connect } from "react-redux";
+import { editExperience } from "../../redux/actions/index";
 
 
 
@@ -92,10 +90,10 @@ class Experience extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.experience)
-        if (this.props.experience!==nextProps.experience)
-        this.setState({ experience:nextProps.experience});    
-            if (this.state.experience.length) {
+        console.log(nextProps.profile.experience)
+        if (this.props.experience!==nextProps.profile.experience)
+        this.setState({ experience:nextProps.profile.experience});    
+            if (nextProps.profile.experience.length) {
                     console.log("aaa")
                 this.setState({redirect:false})}
         }
@@ -126,33 +124,39 @@ class Experience extends Component {
            
         }
         console.log(edit_data)
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.editExperience(edit_data)
+        ///
+        this.setState({
+            b_id:""
+       })
+       ////
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.post(environment.baseUrl+'/student/student_experience_edited', edit_data)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.result)
-                if (response.data.result) {
-                    this.setState({
+        // axios.post(environment.baseUrl+'/student/student_experience_edited', edit_data)
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.result)
+        //         if (response.data.result) {
+        //             this.setState({
                         
-                        rerender: false,
-                        b_id:"",
-                        company: response.data.result.company,
-                        title: response.data.result.title,
-                        location: response.data.result.location,
-                        description: response.data.result.description,
-                        year_of_starting: response.data.result.year_of_starting,
-                        month_of_starting: response.data.result.month_of_starting,
-                        year_of_ending: response.data.result.year_of_ending,
-                        month_of_ending: response.data.result.month_of_ending,
-                        experience:response.data.result.experience
+        //                 rerender: false,
+        //                 b_id:"",
+        //                 company: response.data.result.company,
+        //                 title: response.data.result.title,
+        //                 location: response.data.result.location,
+        //                 description: response.data.result.description,
+        //                 year_of_starting: response.data.result.year_of_starting,
+        //                 month_of_starting: response.data.result.month_of_starting,
+        //                 year_of_ending: response.data.result.year_of_ending,
+        //                 month_of_ending: response.data.result.month_of_ending,
+        //                 experience:response.data.result.experience
 
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            }
-            )
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     }
+        //     )
     }
 
 
@@ -340,8 +344,21 @@ else
         )
     }
 }
-export default Experience;
+// export default Experience;
+const mapStateToProps = state => {
+    return {
+       
 
+    };
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        editExperience: payload => dispatch(editExperience(payload))
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Experience);
 
 
 

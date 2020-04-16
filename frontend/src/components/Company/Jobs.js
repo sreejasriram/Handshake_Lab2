@@ -4,7 +4,8 @@ import axios from 'axios';
 import {Redirect} from 'react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import {environment} from '../../Utils/constants';
-
+import { connect } from "react-redux";
+import { postCompanyJobs } from "../../redux/actions/index";
 
 class Jobs extends Component{
     constructor(props){
@@ -59,34 +60,35 @@ class Jobs extends Component{
             companyId: cmpny_id
 
         }
+
         console.log(data)  
-        axios.defaults.withCredentials = true;       
+        // axios.defaults.withCredentials = true;       
         console.log("in frontend before axios");
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.postCompanyJobs(data);
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.post(environment.baseUrl+'/company/post_job',data)
-            .then(response => {
-              console.log("in frontend after response");
-
-              console.log("response" + response.data.result)
-              if (response.data.result) {
-                  this.setState({
-                    added: true
-                  })
+        // axios.post(environment.baseUrl+'/company/post_job',data)
+        //     .then(response => {
+        //       console.log("in frontend after response");
+        //       console.log("response" + response.data.result)
+        //       if (response.data.result) {
+        //           this.setState({
+        //             added: true
+        //           })
                  
-              } else if (response.data.error) {
-                  this.setState({
-                    added: false
-                  })
-              }
+        //       } else if (response.data.error) {
+        //           this.setState({
+        //             added: false
+        //           })
+        //       }
                 
-            })
+        //     })
            
     }
 
     render(){
         let redirectVar = null;
-       if (this.state.added==true || this.state.canceled==true){
+       if (this.props.added==true || this.state.canceled==true){
         redirectVar = <Redirect to= "/home"/>
        }
         return(
@@ -139,4 +141,18 @@ class Jobs extends Component{
         )
     }
 }
-export default Jobs;
+// export default Jobs;
+const mapStateToProps = state => {    
+    return {
+        added:state.jobposted
+
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+        postCompanyJobs: payload => dispatch(postCompanyJobs(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Jobs);

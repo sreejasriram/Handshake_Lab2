@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
 import StudentNavbar from './StudentNavbar'
 import cookie from 'react-cookies';
-import { Card, CardContent, Button, IconButton, InputBase } from '@material-ui/core/';
+import { Card, CardContent } from '@material-ui/core/';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
-import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
 import { environment } from '../../Utils/constants';
 import TablePagination from '@material-ui/core/TablePagination';
 import emptyPic from '../../images/empty-profile-picture.png';
 import { Avatar } from '@material-ui/core';
+
+import { connect } from "react-redux";
+import { fetchRegisteredEvents } from "../../redux/actions/index";
 
 
 class ViewRegisteredEvents extends Component {
@@ -47,6 +47,8 @@ class ViewRegisteredEvents extends Component {
     };
 
     componentDidMount() {
+        this.props.fetchRegisteredEvents();
+
         const data = {
 
             studentId: sessionStorage.getItem('id')
@@ -54,19 +56,19 @@ class ViewRegisteredEvents extends Component {
         }
         axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.get(environment.baseUrl + '/student/list_applied_events/' + data.studentId)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows) {
-                    this.setState({
-                        dataRetrieved: true,
-                        eventData: response.data.rows
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            })
+        // axios.get(environment.baseUrl + '/student/list_applied_events/' + data.studentId)
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.rows)
+        //         if (response.data.rows) {
+        //             this.setState({
+        //                 dataRetrieved: true,
+        //                 eventData: response.data.rows
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     })
     }
 
 
@@ -77,7 +79,9 @@ class ViewRegisteredEvents extends Component {
         if (!cookie.load('student')) {
             logincookie = <Redirect to="/" />
         }
-        let eventData = this.state.eventData;
+        // let eventData = this.state.eventData;
+        let eventData = this.props.eventData;
+
         console.log(eventData)
         return (
             <div>
@@ -87,8 +91,7 @@ class ViewRegisteredEvents extends Component {
                 <div class="row">
                     <div class="col-md-2"></div>
                     <div class="col-md-8">
-                        {eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
-                            // {eventData.map((data, index) => {
+                        {eventData.length?eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
                             return (
                                 <div key={data.event_id}>
                                     <Card>
@@ -117,7 +120,7 @@ class ViewRegisteredEvents extends Component {
                                 </div>
 
                             )
-                        })}
+                        }):""}
 
 
                     </div>
@@ -126,7 +129,7 @@ class ViewRegisteredEvents extends Component {
                         <div class="col-md-4">
                             <TablePagination
                                 rowsPerPageOptions={[2]}
-                                count={this.state.eventData.length}
+                                count={this.props.eventData.length}
                                 page={this.state.page}
                                 rowsPerPage={this.state.rowsPerPage}
                                 onChangePage={this.handleChangePage}
@@ -140,4 +143,21 @@ class ViewRegisteredEvents extends Component {
         )
     }
 }
-export default ViewRegisteredEvents;
+// export default ViewRegisteredEvents;
+const mapStateToProps = state => {
+    console.log(state.registeredEvents)
+    
+    return {
+
+        eventData:state.registeredEvents
+
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+      fetchRegisteredEvents: payload => dispatch(fetchRegisteredEvents(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(ViewRegisteredEvents);

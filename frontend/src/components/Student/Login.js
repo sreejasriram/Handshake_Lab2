@@ -5,8 +5,9 @@ import axios from 'axios';
 import cookie from 'react-cookies';
 import {Redirect} from 'react-router';
 import {environment} from '../../Utils/constants';
+import { connect } from "react-redux";
+import { editContact } from "../../redux/actions/index";
 const jwt_decode = require("jsonwebtoken");
-
 
 class Login extends Component{
     constructor(props){
@@ -28,12 +29,12 @@ class Login extends Component{
             [e.target.name]: e.target.value
         })
     }
-    componentWillMount(){
-        this.setState({
-            authFlag : false
+    // componentWillMount(){
+    //     this.setState({
+    //         authFlag : false
             
-        })
-    }
+    //     })
+    // }
       submitLogin = (e) => {
         var headers = new Headers();
         e.preventDefault();

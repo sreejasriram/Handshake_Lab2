@@ -1,17 +1,15 @@
 import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
-import { Redirect } from 'react-router';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import CakeOutlinedIcon from '@material-ui/icons/CakeOutlined';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import {environment} from '../../Utils/constants';
+import { connect } from "react-redux";
+import { editBasic } from "../../redux/actions/index";
 
 class Basic extends Component {
     constructor(props) {
@@ -48,18 +46,18 @@ class Basic extends Component {
         })
     }
     componentWillReceiveProps(nextProps) {
-            if (this.props.dob!==nextProps.dob)
-            this.setState({ dob:nextProps.dob});
-            if (this.props.city!==nextProps.city)
-            this.setState({ city:nextProps.city});
-            if (this.props.state!==nextProps.state)
-            this.setState({ state:nextProps.state});
-            if (this.props.country!==nextProps.country)
-            this.setState({ country:nextProps.country});
+            if (this.props.dob!==nextProps.profile.dob)
+            this.setState({ dob:nextProps.profile.dob});
+            if (this.props.city!==nextProps.profile.city)
+            this.setState({ city:nextProps.profile.city});
+            if (this.props.state!==nextProps.profile.state)
+            this.setState({ state:nextProps.profile.state});
+            if (this.props.country!==nextProps.profile.country)
+            this.setState({ country:nextProps.profile.country});
 
             
 
-            if (this.state.dob || this.state.city || this.state.state || this.state.country) {
+            if (nextProps.profile.dob || nextProps.profile.city || nextProps.profile.state || nextProps.profile.country) {
                 this.setState({redirect:false})}
 
 
@@ -80,27 +78,28 @@ class Basic extends Component {
             country: this.state.country
         }
         console.log(edit_data)
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.editBasic(edit_data)
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.post(environment.baseUrl+'/student/student_basic_edited', edit_data)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.result)
-                if (response.data.result) {
-                    this.setState({
+        // axios.post(environment.baseUrl+'/student/student_basic_edited', edit_data)
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.result)
+        //         if (response.data.result) {
+        //             this.setState({
                         
-                        rerender: false,
-                        dob: response.data.result.dob,
-                        city: response.data.result.city,
-                        state: response.data.result.state,
-                        country: response.data.result.country
+        //                 rerender: false,
+        //                 dob: response.data.result.dob,
+        //                 city: response.data.result.city,
+        //                 state: response.data.result.state,
+        //                 country: response.data.result.country
 
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            }
-            )
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     }
+        //     )
     }
 
 
@@ -161,4 +160,18 @@ class Basic extends Component {
     }
 }
 
-export default Basic;
+// export default Basic;
+const mapStateToProps = state => {
+    return {
+       
+
+    };
+};
+
+function mapDispatchToProps(dispatch) {
+    return {
+        editBasic: payload => dispatch(editBasic(payload))
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Basic);

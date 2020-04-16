@@ -10,7 +10,8 @@ import TablePagination from '@material-ui/core/TablePagination';
 import emptyPic from '../../images/empty-profile-picture.png';
 import { Avatar } from '@material-ui/core';
 
-
+import { connect } from "react-redux";
+import { fetchStudents } from "../../redux/actions/index";
 
 class Students extends Component {
     constructor(props) {
@@ -67,27 +68,29 @@ class Students extends Component {
         })
     }
     componentDidMount() {
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.fetchStudents();
 
-        axios.get(environment.baseUrl+'/company/list_all_students')
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows) {
-                    this.setState({
-                        dataRetrieved: true,
-                        stuData: response.data.rows
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            })
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+
+        // axios.get(environment.baseUrl+'/company/list_all_students')
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.rows)
+        //         if (response.data.rows) {
+        //             this.setState({
+        //                 dataRetrieved: true,
+        //                 stuData: response.data.rows
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     })
     }
 
 
     render() {
 
-        let stuData = this.state.stuData;
+        let stuData = this.props.stuData;
         console.log(stuData)
         let namesearch = this.state.namesearch;
         let clgsearch = this.state.clgsearch;
@@ -96,7 +99,7 @@ class Students extends Component {
         if (this.state.view_profile === true) {
             renderRedirect = <Redirect to={`/ViewProfile/${this.state.studId}`} />
         }
-        if (this.state.stuData) {
+        if (stuData) {
 
             if (namesearch.length > 0) {
                 stuData = stuData.filter((job) => {
@@ -142,7 +145,7 @@ class Students extends Component {
                 </Card>
                 </div>
                 <div class="col-md-7">
-                {stuData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+                {stuData.length?stuData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
 
                 {/* {stuData.map((data, index) => { */}
                     return (
@@ -171,14 +174,14 @@ class Students extends Component {
                             <br /><br />
                         </div>
                     )
-                })}
+                }):""}
                 
                 <div class="row">
                     <div class="col-md-4"></div>
                     <div class="col-md-4">
                         <TablePagination
                             rowsPerPageOptions={[2]}
-                            count={this.state.stuData.length}
+                            count={this.props.stuData.length}
                             page={this.state.page}
                             rowsPerPage={this.state.rowsPerPage}
                             onChangePage={this.handleChangePage}
@@ -193,4 +196,21 @@ class Students extends Component {
         )
     }
 }
-export default Students;
+// export default Students;
+const mapStateToProps = state => {
+    console.log(state.allStudents)
+    
+    return {
+
+        stuData:state.allStudents
+
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+      fetchStudents: payload => dispatch(fetchStudents(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Students);

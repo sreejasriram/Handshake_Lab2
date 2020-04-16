@@ -160,7 +160,7 @@ router.get('/company_signin/:email/:password',(req,res)=>{
             console.log(rows[0]._id)
             console.log(req.params.email)
             const token = jwt.sign(payload, secret, {
-                expiresIn: 1008000
+                expiresIn: 100800000
             });
             // res.status(200).end("JWT " + token);
             res.cookie('company',req.params.email,{maxAge: 90000000, httpOnly: false, path : '/'});
@@ -183,6 +183,8 @@ router.get('/company_signin/:email/:password',(req,res)=>{
 
 
 router.get('/getjobs/:companyId', checkAuth,(req,res)=>{
+    // router.get('/getjobs/:companyId',(req,res)=>{
+
     console.log("In company jobs retrieve post request");
     console.log(req.params);
     req.body.type = "retrieve";
@@ -225,7 +227,9 @@ router.post('/company_signup',(req,res)=>{
 
 
 
-router.post('/post_job',checkAuth,(req,res)=>{
+// router.post('/post_job',checkAuth,(req,res)=>{
+    router.post('/post_job',(req,res)=>{
+
     console.log("In company jobs post request");
     console.log(req.body);
     req.body.type = "add";
@@ -353,6 +357,8 @@ router.get('/get_student_profile/:studentId',checkAuth,(req,res)=>{
 
 ///////////////#################///////////////////////
 router.get('/list_all_students',checkAuth,(req,res)=>{
+    // router.get('/list_all_students',(req,res)=>{
+
     console.log("In list_all_students from company retrieve post request");
     req.body.type = "list_all_students_company";
     kafka.make_request('profile',req.body,(err,rows)=>{
@@ -438,7 +444,9 @@ router.get('/job_already_applied/:jobId/:studentId',checkAuth,(req,res)=>{
     }) 
 })
 
-router.get('/event_already_applied/:eventId/:studentId',checkAuth,(req,res)=>{
+// router.get('/event_already_applied/:eventId/:studentId',checkAuth,(req,res)=>{
+    router.get('/event_already_applied/:eventId/:studentId',(req,res)=>{
+
     console.log("In company events already applied get request");
     req.body.type="event_already_applied"
     req.body.eventId = req.params.eventId;
@@ -462,6 +470,7 @@ router.get('/event_already_applied/:eventId/:studentId',checkAuth,(req,res)=>{
 
 router.get('/get_student_eligibility/:eventId/:studentId',checkAuth,(req,res)=>{
     console.log("In get_student_eligibility get request");
+    console.log("aaaaaaaaaa")
     req.body.type="check_student_eligibility"
     req.body.eventId = req.params.eventId;
     req.body.studentId = req.params.studentId;
@@ -474,8 +483,7 @@ router.get('/get_student_eligibility/:eventId/:studentId',checkAuth,(req,res)=>{
         else{
         console.log(rows)
         res.json({rows})
-    }
-        
+    }     
     }) 
 })
 
@@ -498,7 +506,8 @@ router.get('/profile/:id',checkAuth,(req,res)=>{
     })  
 })
 
-router.put('/updateprofile',checkAuth,(req,res)=>{
+// router.put('/updateprofile',checkAuth,(req,res)=>{
+    router.put('/updateprofile',(req,res)=>{
     console.log("In company profile post request");
     console.log(req.body);
     req.body.type = "profile_company_update";

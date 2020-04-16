@@ -6,12 +6,15 @@ import { Link } from 'react-router-dom';
 import cookie from 'react-cookies';
 import { Card, CardContent, Button, IconButton, InputBase } from '@material-ui/core/';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import StudentNavbar from './StudentNavbar'
 import { environment } from '../../Utils/constants';
 import TablePagination from '@material-ui/core/TablePagination';
+
+import { connect } from "react-redux";
+import { fetchEvents } from "../../redux/actions/index";
+
 
 class CompanyEvents extends Component {
     constructor(props) {
@@ -64,27 +67,31 @@ class CompanyEvents extends Component {
 
 
     componentDidMount() {
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.fetchEvents();
+        
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-        axios.get(environment.baseUrl + '/student/all_events_retrieve')
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows) {
-                    this.setState({
-                        dataRetrieved: true,
-                        eventData: response.data.rows
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
-                }
-            })
+        // axios.get(environment.baseUrl + '/student/all_events_retrieve')
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.rows)
+        //         if (response.data.rows) {
+        //             this.setState({
+        //                 dataRetrieved: true,
+        //                 eventData: response.data.rows
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+        //         }
+        //     })
     }
 
 
     render() {
         let navbar = <StudentNavbar comp="events" />
-        let eventData = this.state.eventData;
+        // let eventData = this.state.eventData;
+        let eventData = this.props.eventData;
+
         let renderRedirect = null
         let logincookie = null
         if (!cookie.load('student')) {
@@ -128,7 +135,7 @@ class CompanyEvents extends Component {
                     <div class="col-md-1"></div>
                     <div class="col-md-9">
 
-                        {eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
+                        {eventData.length?eventData.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((data, index) => {
                             // {eventData.map((data, index) => {
                             return (
                                 <div key={data._id}>
@@ -153,7 +160,8 @@ class CompanyEvents extends Component {
                                     <br /><br />
                                 </div>
                             )
-                        })}</div>
+                        }
+                        ):""}</div>
                     <div class="col-md-2"></div>
                 </div>
 
@@ -162,7 +170,7 @@ class CompanyEvents extends Component {
                     <div class="col-md-4">
                         <TablePagination
                             rowsPerPageOptions={[2]}
-                            count={this.state.eventData.length}
+                            count={this.props.eventData.length}
                             page={this.state.page}
                             rowsPerPage={this.state.rowsPerPage}
                             onChangePage={this.handleChangePage}
@@ -174,4 +182,21 @@ class CompanyEvents extends Component {
         )
     }
 }
-export default CompanyEvents;
+// export default CompanyEvents;
+const mapStateToProps = state => {
+    console.log(state.allEvents)
+    
+    return {
+
+        eventData:state.allEvents
+
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+      fetchEvents: payload => dispatch(fetchEvents(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(CompanyEvents);

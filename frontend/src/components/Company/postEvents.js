@@ -4,7 +4,8 @@ import '../../App.css';
 import axios from 'axios';
 import {Redirect} from 'react-router';
 import {environment} from '../../Utils/constants';
-
+import { connect } from "react-redux";
+import { postCompanyEvents} from "../../redux/actions/index";
 
 class postEvents extends Component{
     constructor(props){
@@ -54,30 +55,30 @@ class postEvents extends Component{
 
         }
        
-        axios.defaults.withCredentials = true;
+        // axios.defaults.withCredentials = true;
         console.log("in frontend before axios");
-        // axios.post(environment.baseUrl+'/company/company_events',data)
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.postCompanyEvents(data);
 
-        axios.post(environment.baseUrl+'/company/post_events',data)
-            .then(response => {
-              console.log("in frontend after response");
-              console.log("response" + response.data.result)
-              if (response.data.result) {
-                  this.setState({
-                    added: true
-                  })
-              } else if (response.data.error) {
-                  this.setState({
-                    added: false
-                  })
-              }                
-            })       
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        // axios.post(environment.baseUrl+'/company/post_events',data)
+        //     .then(response => {
+        //       console.log("in frontend after response");
+        //       console.log("response" + response.data.result)
+        //       if (response.data.result) {
+        //           this.setState({
+        //             added: true
+        //           })
+        //       } else if (response.data.error) {
+        //           this.setState({
+        //             added: false
+        //           })
+        //       }                
+        //     })       
     }
 
     render(){
         let redirectVar = null; 
-       if (this.state.added==true || this.state.canceled==true){
+       if (this.props.added==true || this.state.canceled==true){
         redirectVar = <Redirect to= "/events"/>
        }
         return(
@@ -117,4 +118,18 @@ class postEvents extends Component{
         )
     }
 }
-export default postEvents;
+// export default postEvents;
+const mapStateToProps = state => {
+    return {
+        added:state.eventposted
+
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+        postCompanyEvents: payload => dispatch(postCompanyEvents(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(postEvents);

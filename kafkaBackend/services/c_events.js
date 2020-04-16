@@ -140,6 +140,7 @@ handle_request=(eventDetails, callback)=>{
         console.log(eventDetails.studentId)
         console.log(eventDetails.eventId)
         console.log("check_student_eligibility")
+        console.log("aaaaaaaaaa")
         try{
             query.getProfile(Students.createModel(),{_id:ObjectId(eventDetails.studentId)},(err,rows)=>{
             // query.getProfile(Events.createModel(),{_id:ObjectId(eventDetails.eventId),'registrations.studentId':ObjectId(eventDetails.studentId)},(err,rows)=>{

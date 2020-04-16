@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import '../../App.css';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
 import cookie from 'react-cookies';
-import { Card, CardContent, Button, IconButton, InputBase } from '@material-ui/core/';
+import { Card, CardContent } from '@material-ui/core/';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined';
@@ -14,6 +12,12 @@ import StudentNavbar from './StudentNavbar'
 import { environment } from '../../Utils/constants';
 import emptyPic from '../../images/empty-profile-picture.png';
 import { Avatar } from '@material-ui/core';
+import { connect } from "react-redux";
+import { fetchEventDetails,eventAlreadyApplied,studentEligibility } from "../../redux/actions/index";
+
+
+
+
 
 
 class EventDetails extends Component {
@@ -40,10 +44,11 @@ class EventDetails extends Component {
         e.preventDefault();
         const edit_data = {
             stud_id: sessionStorage.getItem('id'),
-            // cmpy_id: this.state.eventData[0].cmpy_id,
             event_id: this.state.eventId.eventId,
         }
         console.log(edit_data)
+        // this.props.applyEvent(edit_data)
+
         axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
         axios.post(environment.baseUrl + '/student/apply_event', edit_data)
@@ -62,89 +67,97 @@ class EventDetails extends Component {
 
     }
 
+   
+
     componentDidMount() {
         console.log("did mount")
         const data = {
             eventId: this.state.eventId.eventId,
         }
         console.log(data)
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        this.props.fetchEventDetails(data)
 
-        axios.get(environment.baseUrl + '/student/events_details/' + data.eventId)
-            .then(response => {
-                console.log("in frontend after response");
-                console.log(response.data.rows)
-                if (response.data.rows) {
-                    this.setState({
-                        dataRetrieved: true,
-                        eventData: response.data.rows,
-                        cmpy_id: response.data.rows.cmpy_id
-                    });
-                } else if (response.data.error) {
-                    console.log("response" + response.data.error)
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-                }
-            })
-            .then(response => {
+        // axios.get(environment.baseUrl + '/student/events_details/' + data.eventId)
+        //     .then(response => {
+        //         console.log("in frontend after response");
+        //         console.log(response.data.rows)
+        //         if (response.data.rows) {
+        //             this.setState({
+        //                 dataRetrieved: true,
+        //                 eventData: response.data.rows,
+        //                 cmpy_id: response.data.rows.cmpy_id
+        //             });
+        //         } else if (response.data.error) {
+        //             console.log("response" + response.data.error)
+
+        //         }
+        //     })
+            // .then(response => {
                 console.log("checking if event already applied")
-                let data = {
+                let adata = {
                     // cmpy_id: this.state.eventData[0].cmpy_id,
                     eventId: this.state.eventId.eventId,
                     studentId: sessionStorage.getItem('id')
                 }
-                console.log(data)
-                axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+                console.log(adata)
+                this.props.eventAlreadyApplied(adata)
 
-                axios.get(environment.baseUrl + '/company/event_already_applied/' + data.eventId + "/" + data.studentId)
-                    .then(response => {
-                        console.log("in frontend after response");
-                        console.log(response.data.result)
-                        if (response.data.result) {
-                            this.setState({
-                                already_applied: true
-                            });
-                        } else if (response.data.error) {
-                            console.log("response" + response.data.error)
+                // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-                        }
-                    })
-            })
-            .then(response => {
+                // axios.get(environment.baseUrl + '/company/event_already_applied/' + data.eventId + "/" + data.studentId)
+                //     .then(response => {
+                //         console.log("in frontend after response");
+                //         console.log(response.data.result)
+                //         if (response.data.result) {
+                //             this.setState({
+                //                 already_applied: true
+                //             });
+                //         } else if (response.data.error) {
+                //             console.log("response" + response.data.error)
+
+                //         }
+                //     })
+            // })
+            // .then(response => {
                 console.log("get student eligibility")
-                let data = {
+                let bdata = {
                     // cmpy_id: this.state.eventData[0].cmpy_id,
                     eventId: this.state.eventId.eventId,
                     studentId: sessionStorage.getItem('id')
                 }
-                console.log(data)
-                axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+                console.log(bdata)
+                this.props.studentEligibility(bdata)
 
-                axios.get(environment.baseUrl + '/company/get_student_eligibility/' + data.eventId + "/" + data.studentId)
-                    .then(response => {
-                        console.log("in frontend after response");
-                        console.log(response.data.rows)
-                        if (response.data.rows) {
-                            this.setState({
-                                stud_major: response.data.rows,
-                                // event_elig: response.data.rows[1]
-                            });
-                        } else if (response.data.error) {
-                            console.log("response" + response.data.error)
+                // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
-                        }
-                    })
-            })
+                // axios.get(environment.baseUrl + '/company/get_student_eligibility/' + data.eventId + "/" + data.studentId)
+                //     .then(response => {
+                //         console.log("in frontend after response");
+                //         console.log(response.data.rows)
+                //         if (response.data.rows) {
+                //             this.setState({
+                //                 stud_major: response.data.rows,
+                //                 // event_elig: response.data.rows[1]
+                //             });
+                //         } else if (response.data.error) {
+                //             console.log("response" + response.data.error)
+
+                //         }
+                //     })
+            // })
     }
 
 
     render() {
         let renderRedirect = null;
         let applied = null
-        let eventData = this.state.eventData;
+        let eventData = this.props.eventData;
         let stud_major
-        console.log(this.state.stud_major)
-        if (this.state.stud_major.length)
-            stud_major = this.state.stud_major[0].education[0].major;
+        // console.log(this.props.stud_major)
+        if (this.props.stud_major.length)
+            stud_major = this.props.stud_major[0].education[0].major;
         // let event_elig = this.state.event_elig;
         let event_elig
         if (eventData.length)
@@ -163,7 +176,7 @@ class EventDetails extends Component {
 
         }
         console.log("outside")
-        console.log(this.state.already_applied)
+        console.log(this.props.already_applied)
         console.log(stud_major)
         console.log(event_elig)
 
@@ -189,7 +202,7 @@ class EventDetails extends Component {
         }
 
 
-        if (this.state.already_applied == false && eligibility == true) {
+        if (this.props.already_applied == false && eligibility == true) {
             console.log("inside")
             applied = <button onClick={this.ApplyEvent} class="btn btn-primary">Apply</button>
         }
@@ -203,7 +216,7 @@ class EventDetails extends Component {
                         <Card>
                             <CardContent>
 
-                                {eventData.map((data, index) => {
+                                {eventData.length?eventData.map((data, index) => {
                                     return (
                                         <div key={data._id}>
                                             <div class="row">
@@ -228,7 +241,7 @@ class EventDetails extends Component {
                                             {applied}
                                         </div>
                                     )
-                                })}<br /> </CardContent>
+                                }):""}<br /> </CardContent>
                         </Card></div>
                     <div class="col-md-2"></div>
                 </div>
@@ -241,4 +254,27 @@ class EventDetails extends Component {
         )
     }
 }
-export default EventDetails;
+// export default EventDetails;
+
+const mapStateToProps = state => {
+    console.log(state.eventDetails)
+    
+    return {
+        eventData:state.eventDetails,
+        already_applied:state.already_applied,
+        stud_major:state.stud_major
+    };
+  };
+  
+  function mapDispatchToProps(dispatch) {
+    return {
+        // applyEvent: payload => dispatch(applyEvent(payload)),
+        eventAlreadyApplied: payload => dispatch(eventAlreadyApplied(payload)),
+        fetchEventDetails: payload => dispatch(fetchEventDetails(payload)),
+      
+        
+        studentEligibility: payload => dispatch(studentEligibility(payload))
+    };
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(EventDetails);
