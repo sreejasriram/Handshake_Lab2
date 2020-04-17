@@ -59,8 +59,8 @@ handle_request=(cmpny_details, callback)=>{
 
     else  if (cmpny_details.type ===  "apply_job") {
         console.log(cmpny_details)
-        if  (!cmpny_details.job_id)
-        cmpny_details.job_id='5e994a5c8ceab440c076bf6f'
+        // if  (!cmpny_details.job_id)
+        // cmpny_details.job_id='5e994a5c8ceab440c076bf6f'
         console.log(typeof(cmpny_details.job_id))
         const update_data= { $push:{applications:[{
             studentId: ObjectId(cmpny_details.stud_id),
