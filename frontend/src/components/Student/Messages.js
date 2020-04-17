@@ -197,18 +197,31 @@ class Messages extends Component {
                             {console.log(convodetailed[0].messages[0].fromId)}
                             {convodetailed[0].messages.map((data,index) => {
                                 if(data.fromId===this.state.studentId){
-                                    return(
-                                    <div>
-                                    <div style={{display:'flex',flexWrap:'row wrap', alignItems:'flex-start',float:'right'}}>
-                                        <div style={{backgroundColor:'#e6f0f',marginRight:'10px'}}>{data.message}</div>
-                                    </div><br/></div>)
+                                    return (
+                                        <div style={{ margin: '5px',textAlign:"right" }}>
+                                            <span style={{ textAlign:"right",backgroundColor: '#E6F0FF', marginbottom: '10px', padding: '5px', borderRadius: '15px 15px 0px 15px' }}>{data.message}</span>
+                                            <div style={{fontSize:'10px'}}>{data.dateTime.substring(0,6)+" "+data.dateTime.substring(11,16)}</div>
+                                        </div>)
+                                    // return(
+                                    // <div>
+                                    // <div style={{display:'flex',flexWrap:'row wrap', alignItems:'flex-start',float:'right'}}>
+                                    //     <div style={{backgroundColor:'#e6f0f',marginRight:'10px'}}> <b>{data.message}</b>:You</div>
+                                    // </div><br/></div>)
                                 }
                                 else{
-                                    return(
-                                    <div style={{display:'flex',flexWrap:'row wrap', alignItems:'flex-end'}}>
-                                        <Avatar src={convodetailed[0].info[0].image} style={{height:'25px',width:'25px'}}></Avatar>
-                                        <div style={{paddingLeft:'10px'}}>{data.message}</div>
-                                    </div>)
+                                    return (
+                                        <div style={{ margin: '5px'}}>
+                                            <span style={{ padding: '5px', backgroundColor: '#F0F0F0', borderRadius: '0px 15px 15px 15px' }}>{data.message}</span>
+                                            <div style={{fontSize:'10px'}}>{data.dateTime.substring(0,6)+" "+data.dateTime.substring(11,16)}</div>
+                                         </div>)
+                                    // return(
+                                    // <div style={{display:'flex',flexWrap:'row wrap', alignItems:'flex-end'}}><br/><br/>
+                                    //     {/* <div style={{paddingLeft:'10px'}}>{data.dateTime}<br/><br/></div> */}
+
+                                    //     <Avatar src={convodetailed[0].info[0].image} style={{height:'25px',width:'25px'}}></Avatar>
+
+                                    //     <div style={{paddingLeft:'10px'}}><b>{data.message}</b></div>
+                                    // </div>)
                                 }
                             })}
                         </div>

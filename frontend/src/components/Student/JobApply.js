@@ -63,6 +63,8 @@ class JobApply extends Component {
         e.preventDefault();
         let fdata = new FormData();
         fdata.append('cmpy_id', this.state.cmpy_id);
+        // fdata.append('job_id', '5e852fb5240b073600cc43ee');
+
         fdata.append('job_id', this.state.job_id);
         fdata.append('stud_id',sessionStorage.getItem('id'));
         fdata.append('app_date',new Date().toISOString().slice(0, 19).replace('T', ' '));

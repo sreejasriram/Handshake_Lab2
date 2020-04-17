@@ -899,6 +899,9 @@ export const fetchConversations = (payload) => {
                     console.log("response" + response.data.error)
                     dispatch(fetchMessageData([]));
                 }
+                else{
+                    dispatch(fetchMessageData([]));
+                }
             })           
         
 
@@ -914,7 +917,9 @@ export const fetchCompanyProfile = (payload) => {
     return dispatch => {
         axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
         axios.defaults.withCredentials = true;
-        axios.get(environment.baseUrl+'/company/profile/' + sessionStorage.getItem('id'))
+        // axios.get(environment.baseUrl+'/company/profile/' + sessionStorage.getItem('id'))
+        axios.get(environment.baseUrl+'/company/profile/' + payload)
+
         .then(response => {
                 console.log("in frontend after response");
                 console.log(response.data)
@@ -929,6 +934,50 @@ export const fetchCompanyProfile = (payload) => {
 
     };
 };
+
+
+
+
+// export function uploadCompanyPictureData(payload) {
+//     return { type: FETCH_COMPANY_PROFILE_DATA,payload };
+// }
+export const uploadCompanyPicture = (formData, config) => {
+    return dispatch => {
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        axios.defaults.withCredentials = true;
+        axios.post(environment.baseUrl+"/company/uploadpic",formData, config)     
+             .then((response) => {
+                dispatch(fetchCompanyProfile(sessionStorage.getItem('id')));               
+            }).catch((error) => {
+                console.log("error" + error)
+
+            });     
+
+    };
+};
+
+
+
+
+
+export function uploadStudentPictureData(payload) {
+    return { type: FETCH_COMPANY_PROFILE_DATA,payload };
+}
+export const uploadStudentPicture = (formData, config) => {
+    return dispatch => {
+        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        axios.defaults.withCredentials = true;
+        axios.post(environment.baseUrl+"/student/uploadpic",formData, config)   
+             .then((response) => {
+                dispatch(saveeditedContact(response.data));
+            }).catch((error) => {
+                console.log("error" + error)
+
+            });     
+
+    };
+};
+
 
 
 

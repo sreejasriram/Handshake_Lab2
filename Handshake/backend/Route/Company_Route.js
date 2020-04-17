@@ -53,6 +53,7 @@ const fs = require('fs');
 router.post('/apply_job',checkAuth,upload.single('file'),(req,res)=>{
     console.log("In company apply jobs post request");
     console.log(req.body);
+    // req.body.job_id='5e852fb5240b073600cc43ee'
     if (req.file) {
         const fileContent = fs.readFileSync('./public/applications/' + req.body.job_id + req.body.stud_id + path.extname(req.file.originalname));
         const params = {
@@ -116,7 +117,9 @@ router.post('/uploadpic',checkAuth, upload.single('profilepic'), async (req, res
             }
             profilepic.type = 'companyprofilepic'
             console.log(profilepic)
-            kafka.make_request('profile',profilepic, (err,result) => {
+            // kafka.make_request('profile',profilepic, (err,result) => {
+                kafka.make_request('testTopic',profilepic, (err,result) => {
+
                 console.log('in result');
                 console.log(result);
                 if (err){
@@ -145,7 +148,6 @@ router.post('/uploadpic',checkAuth, upload.single('profilepic'), async (req, res
 ///////////////////////////////
 router.get('/company_signin/:email/:password',(req,res)=>{
     auth();
-    // studauth();
     console.log("In company signin post request");
     console.log(req.params);
     kafka.make_request('company-signin',req.params,(err,rows)=>{
@@ -227,8 +229,8 @@ router.post('/company_signup',(req,res)=>{
 
 
 
-// router.post('/post_job',checkAuth,(req,res)=>{
-    router.post('/post_job',(req,res)=>{
+router.post('/post_job',checkAuth,(req,res)=>{
+    // router.post('/post_job',(req,res)=>{
 
     console.log("In company jobs post request");
     console.log(req.body);
@@ -356,12 +358,14 @@ router.get('/get_student_profile/:studentId',checkAuth,(req,res)=>{
 
 
 ///////////////#################///////////////////////
-router.get('/list_all_students',checkAuth,(req,res)=>{
-    // router.get('/list_all_students',(req,res)=>{
+// router.get('/list_all_students',checkAuth,(req,res)=>{
+    router.get('/list_all_students',(req,res)=>{
 
     console.log("In list_all_students from company retrieve post request");
     req.body.type = "list_all_students_company";
-    kafka.make_request('profile',req.body,(err,rows)=>{
+    // kafka.make_request('profile',req.body,(err,rows)=>{
+        kafka.make_request('testTopic',req.body,(err,rows)=>{
+
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -444,14 +448,14 @@ router.get('/job_already_applied/:jobId/:studentId',checkAuth,(req,res)=>{
     }) 
 })
 
-// router.get('/event_already_applied/:eventId/:studentId',checkAuth,(req,res)=>{
-    router.get('/event_already_applied/:eventId/:studentId',(req,res)=>{
+router.get('/event_already_applied/:eventId/:studentId',checkAuth,(req,res)=>{
+    // router.get('/event_already_applied/:eventId/:studentId',(req,res)=>{
 
     console.log("In company events already applied get request");
     req.body.type="event_already_applied"
     req.body.eventId = req.params.eventId;
     req.body.studentId = req.params.studentId;
-    console.log(req.body);
+    // console.log(req.body);
     kafka.make_request('company-events',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
@@ -493,7 +497,9 @@ router.get('/profile/:id',checkAuth,(req,res)=>{
     console.log(req.params);
         req.body.type = "retrieve_company_profile";
         req.body.companyId = req.params.id;
-        kafka.make_request('profile',req.body,(err,rows)=>{
+        // kafka.make_request('profile',req.body,(err,rows)=>{
+            kafka.make_request('testTopic',req.body,(err,rows)=>{
+
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)  
             res.json({"error":"failure"})
@@ -506,12 +512,14 @@ router.get('/profile/:id',checkAuth,(req,res)=>{
     })  
 })
 
-// router.put('/updateprofile',checkAuth,(req,res)=>{
-    router.put('/updateprofile',(req,res)=>{
+router.put('/updateprofile',checkAuth,(req,res)=>{
+    // router.put('/updateprofile',(req,res)=>{
     console.log("In company profile post request");
     console.log(req.body);
     req.body.type = "profile_company_update";
-    kafka.make_request('profile',req.body,(err,rows)=>{
+    // kafka.make_request('profile',req.body,(err,rows)=>{
+        kafka.make_request('testTopic',req.body,(err,rows)=>{
+
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)  
             res.json({"error":"failure"})

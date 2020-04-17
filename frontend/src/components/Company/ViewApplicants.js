@@ -151,7 +151,7 @@ class ViewApplicants extends Component {
                     <div class="login-form">
                         <div class="main-div">
                             <div class="panel">
-                                <h2>Students Applied </h2>
+                                {/* <h2>Students Applied </h2> */}
                             </div>
                             <div>
                                 {renderRedirect}
@@ -161,6 +161,9 @@ class ViewApplicants extends Component {
                                     {stuData?stuData.map((data, index) => {
                                         return (
                                             <div key={data._id}>
+                                    <div class="row">
+                                                     <div class="col-md-2"></div>
+                                                     <div class="col-md-8">
                                                 <Card>
                                                     <CardContent>
                                                     <div class="row">
@@ -202,7 +205,7 @@ class ViewApplicants extends Component {
                                                      <button onClick={this.viewProfile} class="btn btn-primary"  value={data._id}>View Profile</button> 
 
                                              
-                                                     </div> <div class="col-md-8">
+                                                     </div> <div class="col-md-6">
                                                     </div> <div class="col-md-2">
                                                     <select name="showStatus" onChange={this.inputChangeHandler} >
                                                         <option value="Change Status" disabled selected>Change Status</option>
@@ -212,11 +215,17 @@ class ViewApplicants extends Component {
 
                                                     </select></div> </div>
                                                     <div class="row">
-                                                    <div class="col-md-10"></div>
+                                                    <div class="col-md-8"></div>
                                                     <div class="col-md-2">
                                                     <button class="btn btn-primary"  onClick={()=>(this.updateStatus(data._id))}>Update Status</button>
                                                     </div></div>
-                                                </CardContent></Card>
+                                                </CardContent>
+                                                
+                                                </Card></div>
+                                                     <div class="col-md-2">
+                                                         </div></div>
+                                                
+                                                <br/>
                                                     <Dialog
                                                         aria-labelledby="simple-modal-title"
                                                         aria-describedby="simple-modal-description" 

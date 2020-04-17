@@ -35,6 +35,7 @@ function handleTopicRequest(topic_name,fname){
    
     consumer.on('message', function (message) {
         console.log('message received for ' + topic_name +" ", fname);
+
         console.log(JSON.stringify(message.value));
         var data = JSON.parse(message.value);
         
@@ -106,6 +107,7 @@ handleTopicRequest("company-signin",c_signin)
 handleTopicRequest("company-jobs",c_jobs)
 handleTopicRequest("company-events",c_events)
 handleTopicRequest("profile",profile)
+handleTopicRequest("testTopic",profile)
 handleTopicRequestAsync("chat",chat)
 
 

@@ -29,7 +29,7 @@ class Home extends Component {
             view_applicants:false,
             companyId:cmpny_id,
             page: 0,
-            rowsPerPage: 2
+            rowsPerPage: 5
 
 
 
@@ -149,7 +149,7 @@ class Home extends Component {
                     <div class="col-md-4"></div>
                     <div class="col-md-4">
                         <TablePagination
-                            rowsPerPageOptions={[2]}
+                            rowsPerPageOptions={[5]}
                             count={this.props.jobData.length}
                             page={this.state.page}
                             rowsPerPage={this.state.rowsPerPage}

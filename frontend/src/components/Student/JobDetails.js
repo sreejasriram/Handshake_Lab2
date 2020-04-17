@@ -180,6 +180,7 @@ class JobDetails extends Component {
         console.log(jobData)
         if (this.state.applied == true) {
             console.log(jobData[0].cmpy_id)
+            console.log(this.props.jobId)
             renderRedirect = <JobApply cmpy_id={jobData[0].companydetails[0]._id} job_id={this.props.jobId} open="true" />
         }
         if (!jobData.length) {
@@ -206,7 +207,7 @@ class JobDetails extends Component {
                                 <Avatar src={data.companydetails[0].image?data.companydetails[0].image:this.state.emptyprofilepic} style={{ width: '36px', height: '36px', borderRadius: '50%', textAlign: 'center',marginTop:'20px',marginBottom:'10px' }}></Avatar>
                                 </div>
                                 <div class="col-md-2">
-                                    <Link to={`/companydetails/${data._id}`} activeClassName="active">
+                                    <Link to={`/companydetails/${data.companydetails[0]._id}`} activeClassName="active">
                                         <h2>{data.companydetails[0].name?data.companydetails[0].name:""}</h2>
 
                                     </Link>

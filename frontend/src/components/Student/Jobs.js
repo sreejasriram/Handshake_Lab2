@@ -27,7 +27,7 @@ class Jobs extends Component {
             jobindex: 0,
             jobid: "",
             page: 0,
-            rowsPerPage: 2
+            rowsPerPage: 4
         }
 
         this.inputChangeHandler = this.inputChangeHandler.bind(this);
@@ -318,7 +318,7 @@ class Jobs extends Component {
                         {/* <div class="col-md-4"></div> */}
                         {/* <div class="col-md-4"> */}
                             <TablePagination
-                                rowsPerPageOptions={[2]}
+                                rowsPerPageOptions={[4]}
                                 count={this.props.jobData.length}
                                 page={this.state.page}
                                 rowsPerPage={this.state.rowsPerPage}

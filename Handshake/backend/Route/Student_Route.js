@@ -143,7 +143,9 @@ router.get('/student_profile_info/:id',checkAuth,(req,res)=>{
     // StudRepo.student_profile_info(req.params,(err,rows)=>{
         req.body.type = "retrieve_student_profile";
         req.body.studentId = req.params.id;
-        kafka.make_request('profile',req.body,(err,rows)=>{
+        // kafka.make_request('profile',req.body,(err,rows)=>{
+            kafka.make_request('testTopic',req.body,(err,rows)=>{
+
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)  
             res.json({"error":"failure"})
@@ -162,7 +164,10 @@ router.post('/student_basic_edited',checkAuth,(req,res)=>{
     console.log(req.body);
     req.body.type = "add_basic";
     // StudRepo.student_basic_edited(req.body,(err,rows)=>{
-    kafka.make_request('profile',req.body,(err,rows)=>{
+    // kafka.make_request('profile',req.body,(err,rows)=>{
+        kafka.make_request('testTopic',req.body,(err,rows)=>{
+
+        
 
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)  
@@ -181,7 +186,9 @@ router.post('/student_education_edited',checkAuth,(req,res)=>{
     console.log(req.body);
     req.body.type = "add_education";
     // StudRepo.student_basic_edited(req.body,(err,rows)=>{
-    kafka.make_request('profile',req.body,(err,rows)=>{
+    // kafka.make_request('profile',req.body,(err,rows)=>{
+        kafka.make_request('testTopic',req.body,(err,rows)=>{
+
 
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)  
@@ -199,7 +206,9 @@ router.post('/student_experience_edited',checkAuth,(req,res)=>{
     console.log("In student experience post request");
     console.log(req.body);
     req.body.type = "add_experience";
-    kafka.make_request('profile',req.body,(err,rows)=>{
+    // kafka.make_request('profile',req.body,(err,rows)=>{
+        kafka.make_request('testTopic',req.body,(err,rows)=>{
+
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)  
             res.json({"error":"failure"})
@@ -215,7 +224,9 @@ router.post('/student_skill_edited',checkAuth,(req,res)=>{
     console.log("In student skills post request");
     console.log(req.body);
     req.body.type = "add_skill";
-    kafka.make_request('profile',req.body,(err,rows)=>{
+    // kafka.make_request('profile',req.body,(err,rows)=>{
+        kafka.make_request('testTopic',req.body,(err,rows)=>{
+
 
     // StudRepo.student_skill_edited(req.body,(err,rows)=>{
         if (err){
@@ -229,15 +240,18 @@ router.post('/student_skill_edited',checkAuth,(req,res)=>{
     })  
 })
 
-// router.post('/student_journey_edited',checkAuth,(req,res)=>{
-    router.post('/student_journey_edited',(req,res)=>{
+
+
+router.post('/student_journey_edited',checkAuth,(req,res)=>{
+    // router.post('/student_journey_edited',(req,res)=>{
 
     console.log("In student journey post request");
     console.log(req.body);
     req.body.type = "add_journey";
-    kafka.make_request('profile',req.body,(err,rows)=>{
+    // kafka.make_request('profile',req.body,(err,rows)=>{
+        kafka.make_request('testTopic',req.body,(err,rows)=>{
 
-    // StudRepo.student_journey_edited(req.body,(err,rows)=>{
+
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)  
             res.json({"error":"failure"})
@@ -254,7 +268,9 @@ router.post('/student_contact_edited',checkAuth,(req,res)=>{
     console.log("In student contact post request");
     console.log(req.body);
     req.body.type = "add_contact";
-    kafka.make_request('profile',req.body,(err,rows)=>{
+    // kafka.make_request('profile',req.body,(err,rows)=>{
+        kafka.make_request('testTopic',req.body,(err,rows)=>{
+
 
     // StudRepo.student_contact_edited(req.body,(err,rows)=>{
         if (err){
@@ -272,7 +288,9 @@ router.post('/student_profilepic_edited',checkAuth,(req,res)=>{
     console.log("In student profile pic post request");
     console.log(req.body);
     req.body.type = "add_profilepic";
-    kafka.make_request('profile',req.body,(err,rows)=>{
+    // kafka.make_request('profile',req.body,(err,rows)=>{
+        kafka.make_request('testTopic',req.body,(err,rows)=>{
+
 
     // StudRepo.student_profilepic_edited(req.body,(err,rows)=>{
         if (err){
@@ -633,7 +651,9 @@ router.post('/uploadpic',checkAuth, upload.single('image'), async (req, response
             }
             profilepic.type = 'studentprofilepic'
             console.log(profilepic)
-            kafka.make_request('profile',profilepic, (err,result) => {
+            // kafka.make_request('profile',profilepic, (err,result) => {
+                kafka.make_request('testTopic',profilepic, (err,result) => {
+
                 console.log('in result');
                 console.log(result);
                 if (err){

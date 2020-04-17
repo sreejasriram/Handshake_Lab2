@@ -8,7 +8,7 @@ import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
 import {environment} from '../../Utils/constants';
 import emptyPic from '../../images/empty-profile-picture.png';
 import { connect } from "react-redux";
-import { editProfilePic } from "../../redux/actions/index";
+import { editProfilePic,uploadStudentPicture } from "../../redux/actions/index";
 
 
 class Profilepic extends Component {
@@ -51,15 +51,16 @@ class Profilepic extends Component {
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
-
-        await axios.post(environment.baseUrl+"/student/uploadpic",formData, config)
-            .then((response) => {
-                this.setState({
-                    image:response.data.image
-                })
-            }).catch((error) => {
-            });
+        
+        await this.props.uploadStudentPicture(formData, config);
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        // await axios.post(environment.baseUrl+"/student/uploadpic",formData, config)
+        //     .then((response) => {
+        //         this.setState({
+        //             image:response.data.image
+        //         })
+        //     }).catch((error) => {
+        //     });
     }
 
 
@@ -203,7 +204,8 @@ const mapStateToProps = state => {
 
 function mapDispatchToProps(dispatch) {
     return {
-        editProfilePic: payload => dispatch(editProfilePic(payload))
+        editProfilePic: payload => dispatch(editProfilePic(payload)),
+        uploadStudentPicture: payload => dispatch(uploadStudentPicture(payload))
     };
 }
 

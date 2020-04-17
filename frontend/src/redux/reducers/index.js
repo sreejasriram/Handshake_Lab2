@@ -240,7 +240,9 @@ function rootReducer(state = initialState, action) {
         console.log(action.payload)
         return Object.assign({}, state, {
 
-            allCompanyEvents: action.payload
+            allCompanyEvents: action.payload,
+            eventposted:false
+
             
 
         });
@@ -249,7 +251,8 @@ function rootReducer(state = initialState, action) {
         console.log(action.payload)
         return Object.assign({}, state, {
 
-            allCompanyJobs: action.payload
+            allCompanyJobs: action.payload,
+            jobposted:false
             
 
         });

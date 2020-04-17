@@ -6,7 +6,7 @@ import Company_Logo from '../../images/Cover_Letter_Social.jpg'
 import {environment} from '../../Utils/constants'
 import emptyPic from '../../images/empty-profile-picture.png';
 import { connect } from "react-redux";
-import { fetchCompanyProfile } from "../../redux/actions/index";
+import { fetchCompanyProfile,uploadCompanyPicture } from "../../redux/actions/index";
 
     class Profile extends Component{
     constructor(props) {
@@ -37,9 +37,9 @@ import { fetchCompanyProfile } from "../../redux/actions/index";
     }
     fetchCompanydetails(){
         console.log(sessionStorage.getItem('id'))
-        this.props.fetchCompanyProfile();
-        
+        this.props.fetchCompanyProfile(sessionStorage.getItem('id'));
 
+        
         // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
 
         // axios.get(environment.baseUrl+'/company/profile/' + sessionStorage.getItem('id'))
@@ -76,12 +76,12 @@ import { fetchCompanyProfile } from "../../redux/actions/index";
            
         }))
     }
-    arrayBufferToBase64(buffer) {
-        var binary = '';
-        var bytes = [].slice.call(new Uint8Array(buffer));
-        bytes.forEach((b) => binary += String.fromCharCode(b));
-        return window.btoa(binary);
-    };
+    // arrayBufferToBase64(buffer) {
+    //     var binary = '';
+    //     var bytes = [].slice.call(new Uint8Array(buffer));
+    //     bytes.forEach((b) => binary += String.fromCharCode(b));
+    //     return window.btoa(binary);
+    // };
     showProfilepic = async (e) => {
         console.log("profilepic")
         this.setState({
@@ -97,17 +97,19 @@ import { fetchCompanyProfile } from "../../redux/actions/index";
                 'content-type': 'multipart/form-data'
             }
         };
-        axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        // axios.defaults.headers.common['authorization'] = sessionStorage.getItem('token');
+        let rest = await this.props.uploadCompanyPicture(formData, config);
+        
 
-        let rest = await axios.post(environment.baseUrl+"/company/uploadpic",formData, config)
-            .then((response) => {
-                this.fetchCompanydetails();
-                this.setState({
-                    openimage: false,
-                    file:null
-                })
-            }).catch((error) => {
-            });
+        // let rest = await axios.post(environment.baseUrl+"/company/uploadpic",formData, config)
+        //     .then((response) => {
+        //         this.fetchCompanydetails();
+        //         this.setState({
+        //             openimage: false,
+        //             file:null
+        //         })
+        //     }).catch((error) => {
+        //     });
     }
     saveProfile = () =>{
         console.log(this.state.companydesc)
@@ -273,8 +275,8 @@ const mapStateToProps = state => {
   
   function mapDispatchToProps(dispatch) {
     return {
-        fetchCompanyProfile: payload => dispatch(fetchCompanyProfile(payload))
-        // saveCompanyProfile: payload => dispatch(saveCompanyProfile(payload))       
+        fetchCompanyProfile: payload => dispatch(fetchCompanyProfile(payload)),
+        uploadCompanyPicture: payload => dispatch(uploadCompanyPicture(payload))       
     };
   }
   
