@@ -1,8 +1,8 @@
 export const environment = {
    
-     baseUrl : "http://localhost:3001"
+    //  baseUrl : "http://localhost:3001"
 
-   // baseUrl: "http://3.12.139.83:3001"
+   baseUrl: "http://35.226.29.225:3001"
 
 
 
