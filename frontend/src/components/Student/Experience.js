@@ -74,6 +74,7 @@ class Experience extends Component {
             redirect: true,
             b_id:value,
             existingEdit:true
+
           
 
         })
@@ -164,7 +165,15 @@ class Experience extends Component {
        
         this.setState({
             addExp: true,
-            b_id:""
+            b_id:"",
+            company: "",
+            title: "",
+            location: "",
+            description: "",
+            year_of_starting: "",
+            month_of_starting: "",
+            year_of_ending: "",
+            month_of_ending: ""
         })
     }
 
