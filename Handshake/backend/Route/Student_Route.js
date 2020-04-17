@@ -520,7 +520,7 @@ router.get('/all_events_retrieve',checkAuth,(req,res)=>{
 router.get('/all_jobs_retrieve',checkAuth,(req,res)=>{
     console.log("In company all jobs retrieve get request");
     req.body.type = "retrieve_all_jobs";
-    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+    kafka.make_request('jobs',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -538,7 +538,7 @@ router.get('/jobs_details/:jobId',checkAuth,(req,res)=>{
     console.log(req.params)
     req.body.type = "retrieve_job_details_with_id";
     req.body.jobId = req.params.jobId;
-    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+    kafka.make_request('jobs',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -607,7 +607,7 @@ router.get('/list_applied_jobs/:studentId',checkAuth,(req,res)=>{
     console.log(req.params)
     req.body.type = "list_applied_jobs";
     req.body.studentId = req.params.studentId;
-    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+    kafka.make_request('jobs',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})

@@ -76,7 +76,7 @@ router.post('/apply_job',checkAuth,upload.single('file'),(req,res)=>{
 
             appDat.type = "apply_job";
 
-            kafka.make_request('company-jobs',appDat,(err,rows)=>{
+            kafka.make_request('jobs',appDat,(err,rows)=>{
     // CmpnyRepo.job_apply(appDat,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
@@ -191,7 +191,7 @@ router.get('/getjobs/:companyId', checkAuth,(req,res)=>{
     console.log(req.params);
     req.body.type = "retrieve";
     req.body.companyId = req.params.companyId;
-    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+    kafka.make_request('jobs',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -235,7 +235,7 @@ router.post('/post_job',checkAuth,(req,res)=>{
     console.log("In company jobs post request");
     console.log(req.body);
     req.body.type = "add";
-    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+    kafka.make_request('jobs',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -310,7 +310,7 @@ router.get('/list_applicants/:jobId',checkAuth,(req,res)=>{
     req.body.type = "list_job_applicants";
     req.body.jobId = req.params.jobId;
 
-    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+    kafka.make_request('jobs',req.body,(err,rows)=>{
         if (err){
             console.log(`${err.code}:${err.sqlMessage}`)
             res.json({"error":"failure"})
@@ -326,7 +326,7 @@ router.get('/list_applicants/:jobId',checkAuth,(req,res)=>{
 router.put('/updateStudentstatus',checkAuth, (req,res)=>{
     console.log(req.body);
     req.body.type = "update_job_status";
-    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+    kafka.make_request('jobs',req.body,(err,rows)=>{
         console.log(req.body)
         if (err){
             res.json({"error":err})
@@ -429,7 +429,7 @@ router.get('/job_already_applied/:jobId/:studentId',checkAuth,(req,res)=>{
     req.body.jobId = req.params.jobId;
     req.body.studentId = req.params.studentId;
     console.log(req.body);
-    kafka.make_request('company-jobs',req.body,(err,rows)=>{
+    kafka.make_request('jobs',req.body,(err,rows)=>{
         console.log("already job applied result");
 
         console.log(rows);

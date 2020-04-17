@@ -104,10 +104,12 @@ handleTopicRequest("login-signup",signup)
 handleTopicRequest("signup-login",signin)
 handleTopicRequest("company-signup",c_signup)
 handleTopicRequest("company-signin",c_signin)
-handleTopicRequest("company-jobs",c_jobs)
+// handleTopicRequest("company-jobs",c_jobs)
 handleTopicRequest("company-events",c_events)
 handleTopicRequest("profile",profile)
 handleTopicRequest("testTopic",profile)
 handleTopicRequestAsync("chat",chat)
+handleTopicRequest("jobs",c_jobs)
+
 
 

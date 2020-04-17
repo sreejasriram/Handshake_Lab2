@@ -168,7 +168,16 @@ class Education extends Component {
        
         this.setState({
             addEdu: true,
-            b_id:""
+            b_id:"",
+            college_name: "",
+            location: "",
+            degree: "",
+            major: "",
+            cgpa: "",
+            year_of_starting: "",
+            month_of_starting: "",
+            year_of_passing: "",
+            month_of_passing: ""
         })
     }
 

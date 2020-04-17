@@ -48,6 +48,7 @@ class JobDetails extends Component {
         }
         console.log(this.props.jobId)
         console.log(data.jobId)
+
         this.props.fetchJobDetails(data)
         console.log("i m here")
             var bdata = {
@@ -181,7 +182,7 @@ class JobDetails extends Component {
         if (this.state.applied == true) {
             console.log(jobData[0].cmpy_id)
             console.log(this.props.jobId)
-            renderRedirect = <JobApply cmpy_id={jobData[0].companydetails[0]._id} job_id={this.props.jobId} open="true" />
+            renderRedirect = <JobApply cmpy_id={jobData[0].companydetails[0]._id} job_id={this.state.jobId} open="true" />
         }
         if (!jobData.length) {
 
