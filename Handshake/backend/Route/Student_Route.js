@@ -14,9 +14,9 @@ const fs = require('fs');
 	const AWS = require('aws-sdk');
 	const s3 = new AWS.S3({
 	    accessKeyId:
-	        "AKIAIIQC7PV4X6Z66WNA",
+	        "",
 	    secretAccessKey:
-	        "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"
+	        ""
 	})
 	var storage = multer.diskStorage({
 	    destination: (req, file, cb) => {
